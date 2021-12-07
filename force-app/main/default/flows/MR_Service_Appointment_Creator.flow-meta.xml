@@ -4,7 +4,7 @@
         <name>Schedule_Multiple_Visits</name>
         <label>Schedule Multiple Visits</label>
         <locationX>226</locationX>
-        <locationY>2102</locationY>
+        <locationY>2222</locationY>
         <actionName>SchedMultiVisit</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -81,7 +81,7 @@
         <name>add_ids_to_list</name>
         <label>add ids to list</label>
         <locationX>314</locationX>
-        <locationY>1766</locationY>
+        <locationY>1886</locationY>
         <assignmentItems>
             <assignToReference>listTechIds</assignToReference>
             <operator>Add</operator>
@@ -118,11 +118,11 @@
         </value>
     </choices>
     <choices>
-        <name>LNameFName</name>
-        <choiceText>LName/FName</choiceText>
+        <name>GanttLabel</name>
+        <choiceText>Gantt Label</choiceText>
         <dataType>String</dataType>
         <value>
-            <stringValue>LNameFName</stringValue>
+            <stringValue>FSL__GanttLabel__c</stringValue>
         </value>
     </choices>
     <choices>
@@ -131,6 +131,14 @@
         <dataType>String</dataType>
         <value>
             <stringValue>Monday</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Name</name>
+        <choiceText>Name</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Name</stringValue>
         </value>
     </choices>
     <choices>
@@ -187,7 +195,7 @@
         <locationX>226</locationX>
         <locationY>734</locationY>
         <defaultConnector>
-            <targetReference>get_the_default_territory</targetReference>
+            <targetReference>Select_Technicians</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -223,7 +231,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>get_the_default_territory</targetReference>
+                <targetReference>Select_Technicians</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -347,7 +355,7 @@
         <name>loop_through_techs</name>
         <label>loop through techs</label>
         <locationX>226</locationX>
-        <locationY>1646</locationY>
+        <locationY>1766</locationY>
         <assignNextValueToReference>thisSTM</assignNextValueToReference>
         <collectionReference>foundSTMs</collectionReference>
         <iterationOrder>Asc</iterationOrder>
@@ -355,7 +363,7 @@
             <targetReference>add_ids_to_list</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
-            <targetReference>Select_Technicians</targetReference>
+            <targetReference>Select_Technicians_0</targetReference>
         </noMoreValuesConnector>
     </loops>
     <processMetadataValues>
@@ -410,7 +418,7 @@
         <name>get_the_default_territory</name>
         <label>get the default territory</label>
         <locationX>226</locationX>
-        <locationY>1406</locationY>
+        <locationY>1526</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>get_the_STM_s_for_the_territory</targetReference>
@@ -420,7 +428,7 @@
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>foundWO.ServiceTerritoryId</elementReference>
+                <elementReference>Territory</elementReference>
             </value>
         </filters>
         <object>ServiceTerritory</object>
@@ -433,7 +441,7 @@
         <name>get_the_STM_s_for_the_territory</name>
         <label>get the STM&apos;s for the territory</label>
         <locationX>226</locationX>
-        <locationY>1526</locationY>
+        <locationY>1646</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>loop_through_techs</targetReference>
@@ -478,7 +486,7 @@
         <name>info1</name>
         <label>info1</label>
         <locationX>226</locationX>
-        <locationY>2222</locationY>
+        <locationY>2342</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -521,12 +529,12 @@
         <name>Select_Technicians</name>
         <label>Select Technicians</label>
         <locationX>226</locationX>
-        <locationY>1982</locationY>
+        <locationY>1406</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Schedule_Multiple_Visits</targetReference>
+            <targetReference>get_the_default_territory</targetReference>
         </connector>
         <fields>
             <name>MultiTitle</name>
@@ -626,15 +634,40 @@
         </fields>
         <fields>
             <name>Sort_By</name>
-            <choiceReferences>LNameFName</choiceReferences>
+            <choiceReferences>Name</choiceReferences>
+            <choiceReferences>GanttLabel</choiceReferences>
             <dataType>String</dataType>
-            <defaultSelectedChoiceReference>LNameFName</defaultSelectedChoiceReference>
+            <defaultSelectedChoiceReference>Name</defaultSelectedChoiceReference>
             <fieldText>Sort By</fieldText>
             <fieldType>DropdownBox</fieldType>
             <isRequired>true</isRequired>
         </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Select_Technicians_0</name>
+        <label>Select Technicians</label>
+        <locationX>226</locationX>
+        <locationY>2102</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Schedule_Multiple_Visits</targetReference>
+        </connector>
         <fields>
-            <name>ServiceResourceDatatable</name>
+            <name>MultiTitle_0</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 18px;&quot;&gt;Multi Technician Scheduling&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>selectTechniciansText_0</name>
+            <fieldText>&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 18px; color: rgb(0, 0, 0);&quot;&gt;Technicians&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>ServiceResourceDatatable_0</name>
             <extensionName>FDGPack:GilmoreLabs_FlowDataGrid</extensionName>
             <fieldType>ComponentInstance</fieldType>
             <inputParameters>
@@ -653,6 +686,18 @@
                 <name>strFields</name>
                 <value>
                     <stringValue>Name,FSL__GanttLabel__c</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>sortBy</name>
+                <value>
+                    <elementReference>Sort_By</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>sortDirection</name>
+                <value>
+                    <stringValue>asc</stringValue>
                 </value>
             </inputParameters>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
