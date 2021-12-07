@@ -5,9 +5,11 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>*</members>
-        <name>CustomObject</name>
-    </types>
+        <members>ServiceAppointment.FSLDemoTools_Service_Resource__c</members>
+        <members>ServiceAppointment.Parent_Work_Order__c</members>
+        <members>WorkType.MV_Eligible__c</members>
+        <name>CustomField</name>
+    </types> 
     <types>
         <members>*</members>
         <name>AuraDefinitionBundle</name>
@@ -18,7 +20,7 @@
     </types>    
     <types>
         <members>*</members>
-        <name>Flows</name>
+        <name>Flow</name>
     </types>
 
     <version>52.0</version>
