@@ -3,14 +3,13 @@
     <actionCalls>
         <name>Schedule_Multiple_Visits</name>
         <label>Schedule Multiple Visits</label>
-        <locationX>754</locationX>
+        <locationX>613</locationX>
         <locationY>134</locationY>
         <actionName>SchedMultiVisit</actionName>
         <actionType>apex</actionType>
         <connector>
             <targetReference>info1</targetReference>
         </connector>
-        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>dow</name>
             <value>
@@ -80,7 +79,7 @@
     <assignments>
         <name>add_ids_to_list</name>
         <label>add ids to list</label>
-        <locationX>764</locationX>
+        <locationX>623</locationX>
         <locationY>521</locationY>
         <assignmentItems>
             <assignToReference>listTechIds</assignToReference>
@@ -184,7 +183,7 @@
     <decisions>
         <name>was_RecordId_provided</name>
         <label>was RecordId provided</label>
-        <locationX>390</locationX>
+        <locationX>249</locationX>
         <locationY>60</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -218,9 +217,7 @@
             <label>NoRecordId</label>
         </rules>
     </decisions>
-    <description>Provides co-ordinator with an easy to use point and click scheduler. It allows the co-ordinator to select team members and schedule jobs to them.
-
-this version has the flow data grid pack dependency removed  check version 11 for the select technicians screen step</description>
+    <description>Provides co-ordinator with an easy to use point and click scheduler. It allows the co-ordinator to select team members and schedule jobs to them.</description>
     <dynamicChoiceSets>
         <name>rcsServiceTerritory</name>
         <dataType>String</dataType>
@@ -301,7 +298,7 @@ this version has the flow data grid pack dependency removed  check version 11 fo
     <loops>
         <name>loop_through_techs</name>
         <label>loop through techs</label>
-        <locationX>569</locationX>
+        <locationX>428</locationX>
         <locationY>408</locationY>
         <assignNextValueToReference>thisSTM</assignNextValueToReference>
         <collectionReference>foundSTMs</collectionReference>
@@ -320,12 +317,6 @@ this version has the flow data grid pack dependency removed  check version 11 fo
         </value>
     </processMetadataValues>
     <processMetadataValues>
-        <name>CanvasMode</name>
-        <value>
-            <stringValue>FREE_FORM_CANVAS</stringValue>
-        </value>
-    </processMetadataValues>
-    <processMetadataValues>
         <name>OriginBuilderType</name>
         <value>
             <stringValue>LightningFlowBuilder</stringValue>
@@ -336,7 +327,7 @@ this version has the flow data grid pack dependency removed  check version 11 fo
         <description>find San Francisco</description>
         <name>get_the_default_territory</name>
         <label>get the default territory</label>
-        <locationX>195</locationX>
+        <locationX>54</locationX>
         <locationY>545</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -359,7 +350,7 @@ this version has the flow data grid pack dependency removed  check version 11 fo
     <recordLookups>
         <name>get_the_STM_s_for_the_territory</name>
         <label>get the STM&apos;s for the territory</label>
-        <locationX>347</locationX>
+        <locationX>206</locationX>
         <locationY>553</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -381,7 +372,7 @@ this version has the flow data grid pack dependency removed  check version 11 fo
     <recordLookups>
         <name>getWorkOrder</name>
         <label>getWorkOrder</label>
-        <locationX>195</locationX>
+        <locationX>54</locationX>
         <locationY>305</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -404,7 +395,7 @@ this version has the flow data grid pack dependency removed  check version 11 fo
     <screens>
         <name>info1</name>
         <label>info1</label>
-        <locationX>927</locationX>
+        <locationX>786</locationX>
         <locationY>142</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -425,7 +416,7 @@ this version has the flow data grid pack dependency removed  check version 11 fo
     <screens>
         <name>Please_select_Work_Order</name>
         <label>Please select Work Order</label>
-        <locationX>401</locationX>
+        <locationX>260</locationX>
         <locationY>306</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -447,7 +438,7 @@ this version has the flow data grid pack dependency removed  check version 11 fo
     <screens>
         <name>Select_Technicians</name>
         <label>Select Technicians</label>
-        <locationX>566</locationX>
+        <locationX>425</locationX>
         <locationY>136</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -519,7 +510,6 @@ this version has the flow data grid pack dependency removed  check version 11 fo
             <name>DOWInput</name>
             <extensionName>c:DOWInput</extensionName>
             <fieldType>ComponentInstance</fieldType>
-            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <outputParameters>
                 <assignToReference>responsedow</assignToReference>
@@ -575,6 +565,38 @@ this version has the flow data grid pack dependency removed  check version 11 fo
             <fieldText>Sort By</fieldText>
             <fieldType>DropdownBox</fieldType>
             <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>ServiceResourceDatatable</name>
+            <extensionName>FDGPack:GilmoreLabs_FlowDataGrid</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>strObjectName</name>
+                <value>
+                    <stringValue>ServiceResource</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>lstIds</name>
+                <value>
+                    <elementReference>listTechIds</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>strFields</name>
+                <value>
+                    <stringValue>Name,FSL__GanttLabel__c</stringValue>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>selectedTechIds</assignToReference>
+                <name>lstSelectedIds</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>selectedTechId</assignToReference>
+                <name>firstSelectedId</name>
+            </outputParameters>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
