@@ -5,8 +5,8 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>ServiceAppointment.FSLDemoTools_Service_Resource__c</members>
-        <members>ServiceAppointment.Parent_Work_Order__c</members>
+        <members>ServiceAppointment.MR_Service_Resource__c</members>
+        <members>ServiceAppointment.MR_Parent_Work_Order__c</members>
         <members>WorkType.MV_Eligible__c</members>
         <name>CustomField</name>
     </types> 

@@ -3,13 +3,14 @@
     <actionCalls>
         <name>Schedule_Multiple_Visits</name>
         <label>Schedule Multiple Visits</label>
-        <locationX>613</locationX>
-        <locationY>134</locationY>
+        <locationX>226</locationX>
+        <locationY>2102</locationY>
         <actionName>SchedMultiVisit</actionName>
         <actionType>apex</actionType>
         <connector>
             <targetReference>info1</targetReference>
         </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>dow</name>
             <value>
@@ -79,8 +80,8 @@
     <assignments>
         <name>add_ids_to_list</name>
         <label>add ids to list</label>
-        <locationX>623</locationX>
-        <locationY>521</locationY>
+        <locationX>314</locationX>
+        <locationY>1766</locationY>
         <assignmentItems>
             <assignToReference>listTechIds</assignToReference>
             <operator>Add</operator>
@@ -181,10 +182,57 @@
         </value>
     </choices>
     <decisions>
+        <name>Existing_SAs_found</name>
+        <label>Existing SAs found?</label>
+        <locationX>226</locationX>
+        <locationY>734</locationY>
+        <defaultConnector>
+            <targetReference>get_the_default_territory</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>YesExistingSAs</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>find_Existing_Service_Appointments</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Warning_Screen</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Proceed_Box_Checked</name>
+        <label>Proceed Box Checked?</label>
+        <locationX>50</locationX>
+        <locationY>974</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>YesProceed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Check_this_box_to_create_additional_SAs</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>get_the_default_territory</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>was_RecordId_provided</name>
         <label>was RecordId provided</label>
-        <locationX>249</locationX>
-        <locationY>60</locationY>
+        <locationX>226</locationX>
+        <locationY>158</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordId</name>
@@ -217,7 +265,7 @@
             <label>NoRecordId</label>
         </rules>
     </decisions>
-    <description>Provides co-ordinator with an easy to use point and click scheduler. It allows the co-ordinator to select team members and schedule jobs to them.</description>
+    <description>Provides co-ordinator with an easy to use point and click service appointment creator. It allows the co-ordinator to select team members and assign service appointments to them.</description>
     <dynamicChoiceSets>
         <name>rcsServiceTerritory</name>
         <dataType>String</dataType>
@@ -286,20 +334,20 @@
     <formulas>
         <name>formulaToday</name>
         <dataType>Date</dataType>
-        <expression>date(2020,6,7)</expression>
+        <expression>{!$Flow.CurrentDate}</expression>
     </formulas>
     <formulas>
         <name>todayplus7</name>
         <dataType>Date</dataType>
         <expression>{!formulaToday}+7</expression>
     </formulas>
-    <interviewLabel>WO Scheduling {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>WO Scheduling</label>
+    <interviewLabel>MR Service Appointment Creator {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>MR Service Appointment Creator</label>
     <loops>
         <name>loop_through_techs</name>
         <label>loop through techs</label>
-        <locationX>428</locationX>
-        <locationY>408</locationY>
+        <locationX>226</locationX>
+        <locationY>1646</locationY>
         <assignNextValueToReference>thisSTM</assignNextValueToReference>
         <collectionReference>foundSTMs</collectionReference>
         <iterationOrder>Asc</iterationOrder>
@@ -317,6 +365,12 @@
         </value>
     </processMetadataValues>
     <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
         <name>OriginBuilderType</name>
         <value>
             <stringValue>LightningFlowBuilder</stringValue>
@@ -324,11 +378,39 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <recordLookups>
+        <name>find_Existing_Service_Appointments</name>
+        <label>find Existing Service Appointments</label>
+        <locationX>226</locationX>
+        <locationY>614</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Existing_SAs_found</targetReference>
+        </connector>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>MR_Parent_Work_Order__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>ParentRecordId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ServiceAppointment</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <description>find San Francisco</description>
         <name>get_the_default_territory</name>
         <label>get the default territory</label>
-        <locationX>54</locationX>
-        <locationY>545</locationY>
+        <locationX>226</locationX>
+        <locationY>1406</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>get_the_STM_s_for_the_territory</targetReference>
@@ -350,8 +432,8 @@
     <recordLookups>
         <name>get_the_STM_s_for_the_territory</name>
         <label>get the STM&apos;s for the territory</label>
-        <locationX>206</locationX>
-        <locationY>553</locationY>
+        <locationX>226</locationX>
+        <locationY>1526</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>loop_through_techs</targetReference>
@@ -372,11 +454,11 @@
     <recordLookups>
         <name>getWorkOrder</name>
         <label>getWorkOrder</label>
-        <locationX>54</locationX>
-        <locationY>305</locationY>
+        <locationX>226</locationX>
+        <locationY>494</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>get_the_default_territory</targetReference>
+            <targetReference>find_Existing_Service_Appointments</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -395,8 +477,8 @@
     <screens>
         <name>info1</name>
         <label>info1</label>
-        <locationX>786</locationX>
-        <locationY>142</locationY>
+        <locationX>226</locationX>
+        <locationY>2222</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -407,7 +489,7 @@
         </fields>
         <fields>
             <name>Confirmation</name>
-            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 18px; color: rgb(0, 0, 0);&quot;&gt;Success!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The assignments are being created.&lt;/p&gt;&lt;p&gt;They will appear on the gantt momentarily.&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-size: 18px;&quot;&gt;Success!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The assignments are being created. This process may take a minute or 2. Please refresh your screen to review the new service appointments.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
@@ -416,8 +498,8 @@
     <screens>
         <name>Please_select_Work_Order</name>
         <label>Please select Work Order</label>
-        <locationX>260</locationX>
-        <locationY>306</locationY>
+        <locationX>182</locationX>
+        <locationY>278</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -438,8 +520,8 @@
     <screens>
         <name>Select_Technicians</name>
         <label>Select Technicians</label>
-        <locationX>425</locationX>
-        <locationY>136</locationY>
+        <locationX>226</locationX>
+        <locationY>1982</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -476,10 +558,10 @@
             </validationRule>
         </fields>
         <fields>
-            <name>Task</name>
+            <name>WorkType</name>
             <choiceReferences>rcsWorkType</choiceReferences>
             <dataType>String</dataType>
-            <fieldText>Task</fieldText>
+            <fieldText>Work Type</fieldText>
             <fieldType>DropdownBox</fieldType>
             <isRequired>true</isRequired>
         </fields>
@@ -495,14 +577,7 @@
         <fields>
             <name>If_there_is_already_Site_Visit_scheduled_on_date_do_NOT_create_new_one</name>
             <dataType>Boolean</dataType>
-            <fieldText>If there is already Site Visit scheduled on date do NOT create new one</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Save_hours_as_Charged</name>
-            <dataType>Boolean</dataType>
-            <fieldText>Save hours as &quot;Charged&quot;</fieldText>
+            <fieldText>If there is already a Service Appointment scheduled on this date do NOT create a new one</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>true</isRequired>
         </fields>
@@ -510,6 +585,7 @@
             <name>DOWInput</name>
             <extensionName>c:DOWInput</extensionName>
             <fieldType>ComponentInstance</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <outputParameters>
                 <assignToReference>responsedow</assignToReference>
@@ -540,20 +616,11 @@
             <isRequired>true</isRequired>
         </fields>
         <fields>
-            <name>Department</name>
+            <name>Skill</name>
             <choiceReferences>All</choiceReferences>
             <dataType>String</dataType>
             <defaultSelectedChoiceReference>All</defaultSelectedChoiceReference>
-            <fieldText>Department</fieldText>
-            <fieldType>DropdownBox</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Tech_Type</name>
-            <choiceReferences>All</choiceReferences>
-            <dataType>String</dataType>
-            <defaultSelectedChoiceReference>All</defaultSelectedChoiceReference>
-            <fieldText>Tech Type</fieldText>
+            <fieldText>Skill</fieldText>
             <fieldType>DropdownBox</fieldType>
             <isRequired>true</isRequired>
         </fields>
@@ -588,6 +655,7 @@
                     <stringValue>Name,FSL__GanttLabel__c</stringValue>
                 </value>
             </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <outputParameters>
                 <assignToReference>selectedTechIds</assignToReference>
@@ -601,9 +669,35 @@
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
-    <start>
+    <screens>
+        <name>Warning_Screen</name>
+        <label>Warning Screen</label>
         <locationX>50</locationX>
-        <locationY>50</locationY>
+        <locationY>854</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Proceed_Box_Checked</targetReference>
+        </connector>
+        <fields>
+            <name>WarningTextInfo</name>
+            <fieldText>&lt;p&gt;Warning, at least 1 Service Appointment exists for this Work Order.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Service Appointment: {!find_Existing_Service_Appointments.AppointmentNumber}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Do you wish to create additional Service Appointments?&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Check_this_box_to_create_additional_SAs</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Check this box to create additional SAs</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>100</locationX>
+        <locationY>0</locationY>
         <connector>
             <targetReference>was_RecordId_provided</targetReference>
         </connector>

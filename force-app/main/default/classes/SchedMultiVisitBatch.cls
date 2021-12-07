@@ -81,22 +81,19 @@ public class SchedMultiVisitBatch implements Database.Batchable<sObject>{
             thesa.serviceterritoryid = territoryid;
             thesa.durationtype = 'hours';
             thesa.duration = duration;
-//            thesa.earlieststarttime = datetime.newinstance(starting.adddays(thedayofweek).year(),starting.adddays(thedayofweek).month(),starting.adddays(thedayofweek).day(),9,0,0);
             thesa.earlieststarttime = datetime.newinstance(starting.adddays(thedayofweek).year(),starting.adddays(thedayofweek).month(),starting.adddays(thedayofweek).day(),startTimeHour[thedayofweek],startTimeMinute[thedayofweek],0);
             thesa.duedate = thesa.earlieststarttime.adddays(1).addminutes(-1);
             thesa.schedstarttime = thesa.earlieststarttime;
             thesa.schedendtime = thesa.schedstarttime.addhours(duration);
-            thesa.Parent_Work_Order__c = workorderid;
+            thesa.MR_Parent_Work_Order__c = workorderid;
             thesa.FSL__GanttLabel__c = thewo.subject;
             thesa.city = thewo.city;
             thesa.street = thewo.street;
             thesa.state = thewo.state;
             thesa.postalcode = thewo.postalcode;
-            thesa.FSLDemoTools_Service_Resource__c = theResourceId.trim();
+            thesa.MR_Service_Resource__c = theResourceId.trim();
             thesa.Status = status;
             thesa.subject = taskDescription;
-            //thesa.go_number__c = thewo.go_number__c;
-            //thesa.job_number__c = thewo.job_number__c;
             newSAs.add (thesa);
               
         }
@@ -106,7 +103,7 @@ public class SchedMultiVisitBatch implements Database.Batchable<sObject>{
            for(serviceappointment thesa : newSAs) {
               assignedresource ar = new assignedresource();
               ar.serviceappointmentid = thesa.id;
-              ar.serviceresourceid = thesa.FSLDemoTools_Service_Resource__c;
+              ar.serviceresourceid = thesa.MR_Service_Resource__c;
               newARs.add(ar);
            }   
            if (newARs.size()>0) insert newARs; 
