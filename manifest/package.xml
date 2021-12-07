@@ -6,19 +6,7 @@
     </types>
     <types>
         <members>*</members>
-        <name>ApexComponent</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>ApexPage</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>ApexTestSuite</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>ApexTrigger</name>
+        <name>CustomObject</name>
     </types>
     <types>
         <members>*</members>
@@ -27,10 +15,11 @@
     <types>
         <members>*</members>
         <name>LightningComponentBundle</name>
-    </types>
+    </types>    
     <types>
         <members>*</members>
-        <name>StaticResource</name>
+        <name>Flows</name>
     </types>
+
     <version>52.0</version>
 </Package>
