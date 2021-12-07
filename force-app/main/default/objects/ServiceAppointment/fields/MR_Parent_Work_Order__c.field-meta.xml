@@ -3,7 +3,7 @@
     <fullName>MR_Parent_Work_Order__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
     <externalId>false</externalId>
-    <label>Parent Work Order</label>
+    <label>MR Parent Work Order</label>
     <referenceTo>WorkOrder</referenceTo>
     <relationshipLabel>Service Appointments</relationshipLabel>
     <relationshipName>Service_AppointmentsMR</relationshipName>

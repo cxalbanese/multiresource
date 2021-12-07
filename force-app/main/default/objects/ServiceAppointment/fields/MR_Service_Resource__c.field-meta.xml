@@ -3,7 +3,7 @@
     <fullName>MR_Service_Resource__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
     <externalId>false</externalId>
-    <label>Service Resource</label>
+    <label>MR Service Resource</label>
     <referenceTo>ServiceResource</referenceTo>
     <relationshipLabel>Service Appointments</relationshipLabel>
     <relationshipName>Service_AppointmentsMR</relationshipName>
