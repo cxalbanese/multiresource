@@ -1,0 +1,105 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global" >
+<aura:attribute name="aiday" type="Boolean" default="false"/>
+<aura:attribute name="aiday0" type="Boolean" default="false"/>
+<aura:attribute name="dow" type = "string" default=""/>
+<aura:attribute name="thestring" type="string[]" default="['09:00 AM','09:00 AM','09:00 AM','09:00 AM','09:00 AM','09:00 AM','09:00 AM']"/>
+<aura:attribute name="theduration" type = "integer[]" default="[8,8,8,8,8,8,8]"/>
+
+<div class="demo-only demo-only--sizing slds-grid slds-wrap">
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><lightning:formattedText value="Day" />
+</div>
+</div>
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><lightning:formattedText value="Start Time" /></div>
+</div>
+<div class="slds-size_1-of-8">
+<div class="slds-text-align_left"><lightning:formattedText value="Duration" /></div>
+</div>
+</div>            
+<div class="demo-only demo-only--sizing slds-grid slds-wrap">
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><ui:inputCheckbox aura:id="iday0" label="Sunday" change="{!c.onCheck}"/>
+</div>
+</div>
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><lightning:input type="string" label="" name="inputstart0" aura:id="istart0" value="{!v.thestring[0]}"/></div>
+</div>
+<div class="slds-size_1-of-8">
+<div class="slds-text-align_left"><lightning:input type="number" label="" name="inputhours0" aura:id="iduration0" value="{!v.theduration[0]}"/></div>
+</div>
+</div> 
+    <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><ui:inputCheckbox aura:id="iday1" label="Monday" change="{!c.onCheck}"/>
+</div>
+</div>
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><lightning:input type="string" label="" name="inputstart1" aura:id="istart1"  value="{!v.thestring[1]}"/></div>
+</div>
+<div class="slds-size_1-of-8">
+<div class="slds-text-align_left"><lightning:input type="number" label="" name="inputhours1" aura:id="iduration1" value="{!v.theduration[1]}"/></div>
+</div>
+</div>             
+<div class="demo-only demo-only--sizing slds-grid slds-wrap">
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><ui:inputCheckbox aura:id="iday2" label="Tuesday" change="{!c.onCheck}"/>
+</div>
+</div>
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><lightning:input type="string" label="" name="inputstart2" aura:id="istart2"  value="{!v.thestring[2]}"/></div>
+</div>
+<div class="slds-size_1-of-8">
+<div class="slds-text-align_left"><lightning:input type="number" label="" name="inputhours2" aura:id="iduration2" value="{!v.theduration[2]}"/></div>
+</div>
+</div>             
+<div class="demo-only demo-only--sizing slds-grid slds-wrap">
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><ui:inputCheckbox aura:id="iday3" label="Wednesday" change="{!c.onCheck}"/>
+</div>
+</div>
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><lightning:input type="string" label="" name="inputstart3" aura:id="istart3"  value="{!v.thestring[3]}"/></div>
+</div>
+<div class="slds-size_1-of-8">
+<div class="slds-text-align_left"><lightning:input type="number" label="" name="inputhours3" aura:id="iduratio3" value="{!v.theduration[3]}"/></div>
+</div>
+</div>             
+<div class="demo-only demo-only--sizing slds-grid slds-wrap">
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><ui:inputCheckbox aura:id="iday4" label="Thursday" change="{!c.onCheck}"/>
+</div>
+</div>
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><lightning:input type="string" label="" name="inputstart4" aura:id="istart4"  value="{!v.thestring[4]}"/></div>
+</div>
+<div class="slds-size_1-of-8">
+<div class="slds-text-align_left"><lightning:input type="number" label="" name="inputhours4" aura:id="iduration4" value="{!v.theduration[4]}"/></div>
+</div>
+</div>             
+<div class="demo-only demo-only--sizing slds-grid slds-wrap">
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><ui:inputCheckbox aura:id="iday5" label="Friday" change="{!c.onCheck}"/>
+</div>
+</div>
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><lightning:input type="string" label="" name="inputstart5" aura:id="istart5"  value="{!v.thestring[5]}"/></div>
+</div>
+<div class="slds-size_1-of-8">
+<div class="slds-text-align_left"><lightning:input type="number" label="" name="inputhours5" aura:id="iduration5" value="{!v.theduration[5]}"/></div>
+</div>
+</div>             
+<div class="demo-only demo-only--sizing slds-grid slds-wrap">
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><ui:inputCheckbox aura:id="iday6" label="Saturday" change="{!c.onCheck}"/>
+</div>
+</div>
+<div class="slds-size_2-of-8">
+<div class="slds-text-align_left"><lightning:input type="string" label="" name="inputstart6" aura:id="istart6"  value="{!v.thestring[6]}"/></div>
+</div>
+<div class="slds-size_1-of-8">
+<div class="slds-text-align_left"><lightning:input type="number" label="" name="inputhours6" aura:id="iduration6" value="{!v.theduration[6]}"/></div>
+</div>
+</div>             
+            
+</aura:component>
