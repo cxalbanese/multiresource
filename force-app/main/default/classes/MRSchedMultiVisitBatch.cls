@@ -1,9 +1,9 @@
-public class SchedMultiVisitBatch implements Database.Batchable<sObject>{
+public class MRSchedMultiVisitBatch implements Database.Batchable<sObject>{
    public final String Query;
    public final WOSchedulePayload thePayload;
    public final set<id> theIds;
 
-   public SchedMultiVisitBatch(WOSchedulePayload payLoad){
+   public MRSchedMultiVisitBatch(WOSchedulePayload payLoad){
              thePayload=payLoad; 
              theIds = new set<id>();
              system.debug('thepayload inside the batch job = ' + thePayload);

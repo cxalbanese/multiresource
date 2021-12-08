@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <name>Schedule_Multiple_Visits</name>
+        <name>Schedule_Multiple_Visits1</name>
         <label>Schedule Multiple Visits</label>
         <locationX>226</locationX>
         <locationY>2222</locationY>
-        <actionName>SchedMultiVisit</actionName>
+        <actionName>MRSchedMultiVisit</actionName>
         <actionType>apex</actionType>
         <connector>
             <targetReference>info1</targetReference>
@@ -654,7 +654,7 @@
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Schedule_Multiple_Visits</targetReference>
+            <targetReference>Schedule_Multiple_Visits1</targetReference>
         </connector>
         <fields>
             <name>MultiTitle_0</name>

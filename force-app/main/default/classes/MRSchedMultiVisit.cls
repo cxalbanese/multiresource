@@ -1,4 +1,4 @@
-Public Class SchedMultiVisit {
+Public Class MRSchedMultiVisit {
 
 
 @invocablemethod
@@ -17,7 +17,7 @@ public static list<string> ScheduleThem (list<inPayload> inPayloadList) {
     myPayload.durationList = inPayloadList[0].durationList;
     system.debug(inPayloadList[0].resourceIds);
     system.debug(myPayload.resourceIds);
-    id SchedMultiBatchId = Database.executeBatch(new SchedMultiVisitBatch(myPayload));
+    id SchedMultiBatchId = Database.executeBatch(new MRSchedMultiVisitBatch(myPayload));
     
     return new list<string>{'all set'};
 }
