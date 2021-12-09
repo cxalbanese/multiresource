@@ -15,7 +15,7 @@
         <members>WorkOrder.MR_Hours_Scheduled__c</members>
         <members>WorkOrder.MR_Hours_To_Be_Assigned__c</members>
         <members>WorkOrder.MR_Hours_To_Be_Created__c</members>
-        <members>WorkOrder.MR_Numbers_of_Techs_Needed__c</members>
+        <members>WorkOrder.MR_Number_of_Techs_Needed__c</members>
         <members>WorkOrder.MR_Total_Hours_Required__c</members>
         <name>CustomField</name>
     </types> 
