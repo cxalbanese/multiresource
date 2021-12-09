@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MR_Hours_To_Be_Assigned__c</fullName>
+    <externalId>false</externalId>
+    <formula>MR_Hours_Created__c -  MR_Hours_Scheduled__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>This is the total number of hours of Service Appointments that still need to be assigned to Service Resources.</inlineHelpText>
+    <label>MR Hours To Be Assigned</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>1</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

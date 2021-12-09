@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MR_Number_of_Techs_Needed__c</fullName>
+    <externalId>false</externalId>
+    <formula>if( MR_Estimated_Calendar_Days__c &gt; 0, (MR_Total_Hours_Required__c / 8) / MR_Estimated_Calendar_Days__c, 0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Estimate of the number of techs needed in order to meet the estimated duration, assuming 8 hour working days</inlineHelpText>
+    <label>MR Number of Techs Needed</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>1</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

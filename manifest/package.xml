@@ -8,6 +8,15 @@
         <members>ServiceAppointment.MR_Service_Resource__c</members>
         <members>ServiceAppointment.MR_Parent_Work_Order__c</members>
         <members>WorkType.MV_Eligible__c</members>
+        <members>WorkOrder.MR_Estimated_Calendar_Days__c</members>
+        <members>WorkOrder.MR_Hours_Actual__c</members>
+        <members>WorkOrder.MR_Hours_Completed__c</members>
+        <members>WorkOrder.MR_Hours_Created__c</members>
+        <members>WorkOrder.MR_Hours_Scheduled__c</members>
+        <members>WorkOrder.MR_Hours_To_Be_Assigned__c</members>
+        <members>WorkOrder.MR_Hours_To_Be_Created__c</members>
+        <members>WorkOrder.MR_Numbers_of_Techs_Needed__c</members>
+        <members>WorkOrder.MR_Total_Hours_Required__c</members>
         <name>CustomField</name>
     </types> 
     <types>
@@ -23,5 +32,5 @@
         <name>Flow</name>
     </types>
 
-    <version>52.0</version>
+    <version>53.0</version>
 </Package>

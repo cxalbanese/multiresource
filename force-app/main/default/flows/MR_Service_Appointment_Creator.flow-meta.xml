@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
+        <name>Get_STMs_for_Territory_and_Skill</name>
+        <label>Get STMs for Territory and Skill</label>
+        <locationX>380</locationX>
+        <locationY>1766</locationY>
+        <actionName>MRGetSTMs</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Technicans_Found</targetReference>
+        </connector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>inSkillId</name>
+            <value>
+                <elementReference>Skill</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>inTerritoryId</name>
+            <value>
+                <elementReference>Territory</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>listTechIds</assignToReference>
+            <name>output</name>
+        </outputParameters>
+    </actionCalls>
+    <actionCalls>
         <name>Schedule_Multiple_Visits1</name>
         <label>Schedule Multiple Visits</label>
-        <locationX>226</locationX>
-        <locationY>2222</locationY>
+        <locationX>50</locationX>
+        <locationY>2246</locationY>
         <actionName>MRSchedMultiVisit</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -56,7 +84,7 @@
         <inputParameters>
             <name>territoryId</name>
             <value>
-                <elementReference>foundSTId</elementReference>
+                <elementReference>strWOSTId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -76,29 +104,21 @@
             <name>output</name>
         </outputParameters>
     </actionCalls>
-    <apiVersion>49.0</apiVersion>
-    <assignments>
-        <name>add_ids_to_list</name>
-        <label>add ids to list</label>
-        <locationX>314</locationX>
-        <locationY>1886</locationY>
-        <assignmentItems>
-            <assignToReference>listTechIds</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <elementReference>thisSTM.ServiceResourceId</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>loop_through_techs</targetReference>
-        </connector>
-    </assignments>
+    <apiVersion>53.0</apiVersion>
     <choices>
         <name>All</name>
         <choiceText>All</choiceText>
         <dataType>String</dataType>
         <value>
             <stringValue>All</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>choiceDefaultTerritoryId</name>
+        <choiceText>{!strDefaultTerritoryName}</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <elementReference>strWOSTId</elementReference>
         </value>
     </choices>
     <choices>
@@ -192,10 +212,10 @@
     <decisions>
         <name>Existing_SAs_found</name>
         <label>Existing SAs found?</label>
-        <locationX>226</locationX>
+        <locationX>611</locationX>
         <locationY>734</locationY>
         <defaultConnector>
-            <targetReference>Select_Technicians</targetReference>
+            <targetReference>get_the_default_territory_0</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -217,7 +237,7 @@
     <decisions>
         <name>Proceed_Box_Checked</name>
         <label>Proceed Box Checked?</label>
-        <locationX>50</locationX>
+        <locationX>435</locationX>
         <locationY>974</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -231,7 +251,96 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Select_Technicians</targetReference>
+                <targetReference>get_the_default_territory_0</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Screen_1_Data_Valid</name>
+        <label>Screen 1 Data Valid</label>
+        <locationX>611</locationX>
+        <locationY>1646</locationY>
+        <defaultConnector>
+            <targetReference>Screen_1_Error</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>YesScreen1Valid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>responsedow</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue></stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>startTimes</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>durations</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_STMs_for_Territory_and_Skill</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Screen_2_Data_Valid</name>
+        <label>Screen 2 Data Valid</label>
+        <locationX>182</locationX>
+        <locationY>2126</locationY>
+        <defaultConnector>
+            <targetReference>Screen_2_Error</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>YesScreen2Valid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>selectedTechId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Schedule_Multiple_Visits1</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Technicans_Found</name>
+        <label>Technicans Found?</label>
+        <locationX>380</locationX>
+        <locationY>1886</locationY>
+        <defaultConnector>
+            <targetReference>No_Technicians_Found</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>YesTechsFound</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>listTechIds</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Select_Technicians_0</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -239,7 +348,7 @@
     <decisions>
         <name>was_RecordId_provided</name>
         <label>was RecordId provided</label>
-        <locationX>226</locationX>
+        <locationX>611</locationX>
         <locationY>158</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -288,6 +397,15 @@
         </filters>
         <object>ServiceTerritory</object>
         <sortField>Name</sortField>
+        <sortOrder>Asc</sortOrder>
+        <valueField>Id</valueField>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>rcsSkills</name>
+        <dataType>String</dataType>
+        <displayField>MasterLabel</displayField>
+        <object>Skill</object>
+        <sortField>MasterLabel</sortField>
         <sortOrder>Asc</sortOrder>
         <valueField>Id</valueField>
     </dynamicChoiceSets>
@@ -351,21 +469,6 @@
     </formulas>
     <interviewLabel>MR Service Appointment Creator {!$Flow.CurrentDateTime}</interviewLabel>
     <label>MR Service Appointment Creator</label>
-    <loops>
-        <name>loop_through_techs</name>
-        <label>loop through techs</label>
-        <locationX>226</locationX>
-        <locationY>1766</locationY>
-        <assignNextValueToReference>thisSTM</assignNextValueToReference>
-        <collectionReference>foundSTMs</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>add_ids_to_list</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>Select_Technicians_0</targetReference>
-        </noMoreValuesConnector>
-    </loops>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -388,7 +491,7 @@
     <recordLookups>
         <name>find_Existing_Service_Appointments</name>
         <label>find Existing Service Appointments</label>
-        <locationX>226</locationX>
+        <locationX>611</locationX>
         <locationY>614</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -415,54 +518,36 @@
     </recordLookups>
     <recordLookups>
         <description>find San Francisco</description>
-        <name>get_the_default_territory</name>
+        <name>get_the_default_territory_0</name>
         <label>get the default territory</label>
-        <locationX>226</locationX>
-        <locationY>1526</locationY>
+        <locationX>611</locationX>
+        <locationY>1406</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>get_the_STM_s_for_the_territory</targetReference>
+            <targetReference>Select_Technicians</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>Territory</elementReference>
+                <elementReference>foundWO.ServiceTerritoryId</elementReference>
             </value>
         </filters>
         <object>ServiceTerritory</object>
         <outputAssignments>
-            <assignToReference>foundSTId</assignToReference>
+            <assignToReference>strWOSTId</assignToReference>
             <field>Id</field>
         </outputAssignments>
-    </recordLookups>
-    <recordLookups>
-        <name>get_the_STM_s_for_the_territory</name>
-        <label>get the STM&apos;s for the territory</label>
-        <locationX>226</locationX>
-        <locationY>1646</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>loop_through_techs</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>ServiceTerritoryId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>foundSTId</elementReference>
-            </value>
-        </filters>
-        <object>ServiceTerritoryMember</object>
-        <outputReference>foundSTMs</outputReference>
-        <queriedFields>Id</queriedFields>
-        <queriedFields>ServiceResourceId</queriedFields>
+        <outputAssignments>
+            <assignToReference>strDefaultTerritoryName</assignToReference>
+            <field>Name</field>
+        </outputAssignments>
     </recordLookups>
     <recordLookups>
         <name>getWorkOrder</name>
         <label>getWorkOrder</label>
-        <locationX>226</locationX>
+        <locationX>611</locationX>
         <locationY>494</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -485,8 +570,8 @@
     <screens>
         <name>info1</name>
         <label>info1</label>
-        <locationX>226</locationX>
-        <locationY>2342</locationY>
+        <locationX>50</locationX>
+        <locationY>2366</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -504,9 +589,25 @@
         <showHeader>false</showHeader>
     </screens>
     <screens>
+        <name>No_Technicians_Found</name>
+        <label>No Technicians Found</label>
+        <locationX>578</locationX>
+        <locationY>2006</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>SorryNoTechsFound</name>
+            <fieldText>&lt;p&gt;Sorry, no technicians were found in the selected Territory with the selected Skill. Please change search criteria and try again.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Please_select_Work_Order</name>
         <label>Please select Work Order</label>
-        <locationX>182</locationX>
+        <locationX>567</locationX>
         <locationY>278</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -526,15 +627,55 @@
         <showHeader>false</showHeader>
     </screens>
     <screens>
+        <name>Screen_1_Error</name>
+        <label>Screen 1 Error</label>
+        <locationX>842</locationX>
+        <locationY>1766</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Select_Technicians</targetReference>
+        </connector>
+        <fields>
+            <name>Screen1ErrorText</name>
+            <fieldText>&lt;p&gt;Please select at least 1 day of the week with a corresponding start time and duration.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Screen_2_Error</name>
+        <label>Screen 2 Error</label>
+        <locationX>314</locationX>
+        <locationY>2246</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Select_Technicians_0</targetReference>
+        </connector>
+        <fields>
+            <name>Screen2ErrorText</name>
+            <fieldText>&lt;p&gt;Please select at least 1 Technician&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Select_Technicians</name>
-        <label>Select Technicians</label>
-        <locationX>226</locationX>
-        <locationY>1406</locationY>
+        <label>Select Technicians -  Step 1</label>
+        <locationX>611</locationX>
+        <locationY>1526</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>get_the_default_territory</targetReference>
+            <targetReference>Screen_1_Data_Valid</targetReference>
         </connector>
         <fields>
             <name>MultiTitle</name>
@@ -618,7 +759,9 @@
             <choiceReferences>rcsServiceTerritory</choiceReferences>
             <choiceReferences>All</choiceReferences>
             <dataType>String</dataType>
-            <defaultSelectedChoiceReference>All</defaultSelectedChoiceReference>
+            <defaultValue>
+                <elementReference>choiceDefaultTerritoryId</elementReference>
+            </defaultValue>
             <fieldText>Territory</fieldText>
             <fieldType>DropdownBox</fieldType>
             <isRequired>true</isRequired>
@@ -626,6 +769,7 @@
         <fields>
             <name>Skill</name>
             <choiceReferences>All</choiceReferences>
+            <choiceReferences>rcsSkills</choiceReferences>
             <dataType>String</dataType>
             <defaultSelectedChoiceReference>All</defaultSelectedChoiceReference>
             <fieldText>Skill</fieldText>
@@ -648,13 +792,13 @@
     <screens>
         <name>Select_Technicians_0</name>
         <label>Select Technicians</label>
-        <locationX>226</locationX>
-        <locationY>2102</locationY>
+        <locationX>182</locationX>
+        <locationY>2006</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Schedule_Multiple_Visits1</targetReference>
+            <targetReference>Screen_2_Data_Valid</targetReference>
         </connector>
         <fields>
             <name>MultiTitle_0</name>
@@ -717,7 +861,7 @@
     <screens>
         <name>Warning_Screen</name>
         <label>Warning Screen</label>
-        <locationX>50</locationX>
+        <locationX>435</locationX>
         <locationY>854</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -741,7 +885,7 @@
         <showHeader>true</showHeader>
     </screens>
     <start>
-        <locationX>100</locationX>
+        <locationX>485</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>was_RecordId_provided</targetReference>
@@ -755,13 +899,6 @@
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <scale>2</scale>
-    </variables>
-    <variables>
-        <name>foundSTId</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
     </variables>
     <variables>
         <name>foundSTMs</name>
@@ -813,6 +950,9 @@
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
+        <value>
+            <stringValue></stringValue>
+        </value>
     </variables>
     <variables>
         <name>selectedTechId</name>
@@ -832,6 +972,20 @@
         <name>startTimes</name>
         <dataType>String</dataType>
         <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>strDefaultTerritoryName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>strWOSTId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
