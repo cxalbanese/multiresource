@@ -8,7 +8,6 @@
         <members>ServiceAppointment.MR_Service_Resource__c</members>
         <members>ServiceAppointment.MR_Parent_Work_Order__c</members>
         <members>ServiceAppointment.MR_Creation_Status__c</members>
-        <members>WorkType.MV_Eligible__c</members>
         <members>WorkOrder.MR_Estimated_Calendar_Days__c</members>
         <members>WorkOrder.MR_Hours_Actual__c</members>
         <members>WorkOrder.MR_Hours_Completed__c</members>
@@ -32,9 +31,9 @@
         <members>*</members>
         <name>LightningComponentBundle</name>
     </types>    
-    <types>
+   <types>
         <members>*</members>
         <name>Flow</name>
-    </types>
+    </types> 
     <version>53.0</version>
 </Package>

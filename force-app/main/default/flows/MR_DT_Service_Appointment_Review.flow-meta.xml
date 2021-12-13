@@ -646,7 +646,6 @@
         <locationX>842</locationX>
         <locationY>2582</locationY>
         <faultConnector>
-            <isGoTo>true</isGoTo>
             <targetReference>Error_Encountered</targetReference>
         </faultConnector>
         <inputReference>DeleteSADataTable.outputSelectedRows</inputReference>
@@ -828,6 +827,7 @@
         <locationX>50</locationX>
         <locationY>2462</locationY>
         <faultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Error_Encountered</targetReference>
         </faultConnector>
         <inputReference>UpdateSADataTable.outputEditedRows</inputReference>
@@ -1005,8 +1005,8 @@
     <screens>
         <name>Error_Encountered</name>
         <label>Error Encountered</label>
-        <locationX>314</locationX>
-        <locationY>2582</locationY>
+        <locationX>1106</locationX>
+        <locationY>2702</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
