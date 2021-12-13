@@ -128,16 +128,32 @@
     </actionOverrides>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <enableFeeds>false</enableFeeds>
-    <externalSharingModel>Private</externalSharingModel>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
     <searchLayouts>
-        <customTabListAdditionalFields>EstimatedDuration</customTabListAdditionalFields>
-        <customTabListAdditionalFields>DurationType</customTabListAdditionalFields>
-        <lookupDialogsAdditionalFields>EstimatedDuration</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>DurationType</lookupDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>EstimatedDuration</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>DurationType</lookupPhoneDialogsAdditionalFields>
-        <searchResultsAdditionalFields>EstimatedDuration</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>DurationType</searchResultsAdditionalFields>
+        <customTabListAdditionalFields>ServiceResource</customTabListAdditionalFields>
+        <customTabListAdditionalFields>ServiceTerritory</customTabListAdditionalFields>
+        <customTabListAdditionalFields>TerritoryType</customTabListAdditionalFields>
+        <customTabListAdditionalFields>EffectiveStartDate</customTabListAdditionalFields>
+        <customTabListAdditionalFields>EffectiveEndDate</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Role</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>ServiceResource</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ServiceTerritory</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>TerritoryType</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>EffectiveStartDate</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>EffectiveEndDate</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Role</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>ServiceResource</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>ServiceTerritory</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>TerritoryType</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>EffectiveStartDate</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>EffectiveEndDate</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Role</lookupPhoneDialogsAdditionalFields>
+        <searchResultsAdditionalFields>ServiceResource</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>ServiceTerritory</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>TerritoryType</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>EffectiveStartDate</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>EffectiveEndDate</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Role</searchResultsAdditionalFields>
     </searchLayouts>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>

@@ -1,6 +1,0 @@
-<design:component>
-    <design:attribute name="dow" label="dow" description="Days of week selected"/>
-    <design:attribute name="thestring" label="Start Times" description="Each days start time"/>
-    <design:attribute name="theduration" label="Durations" description="Each days duration"/>
-    
-</design:component>

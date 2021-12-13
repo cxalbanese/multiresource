@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>53.0</apiVersion>
+    <assignments>
+        <description>set new sched end time = sched start time + duration</description>
+        <name>set_new_Sched_End_Time</name>
+        <label>set new Sched End Time</label>
+        <locationX>176</locationX>
+        <locationY>311</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.SchedEndTime</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>formulaSchedEndTime</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <description>update sched end time if user has updated sched start time and/or duration</description>
+    <formulas>
+        <name>formulaSchedEndTime</name>
+        <dataType>DateTime</dataType>
+        <expression>{!$Record.SchedStartTime} + if(text({!$Record.DurationType}) = &apos;Hours&apos;,{!$Record.Duration} * 60,{!$Record.Duration}) / 1440</expression>
+    </formulas>
+    <interviewLabel>MR DT Update sched end time {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>MR DT Update sched end time</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>set_new_Sched_End_Time</targetReference>
+        </connector>
+        <filterLogic>(1 or 4) AND (2 or 3)</filterLogic>
+        <filters>
+            <field>MR_Creation_Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Draft</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>SchedStartTime</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Duration</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MR_Creation_Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Confirmed</stringValue>
+            </value>
+        </filters>
+        <object>ServiceAppointment</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

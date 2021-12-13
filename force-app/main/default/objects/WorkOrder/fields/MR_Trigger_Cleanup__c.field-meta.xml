@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MR_Trigger_Cleanup__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>this field is set whenever the multi-resource scheduling flow is started. It will delete any draft SAs</description>
+    <externalId>false</externalId>
+    <label>MR Trigger Cleanup</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

@@ -85,7 +85,7 @@
             <label>Yes</label>
         </rules>
     </decisions>
-    <description>This flow will delete Service Appointments for a Work Order</description>
+    <description>This flow will delete Service Appointments for a Work Order - it&apos;s a reset tool for the dispatcher.  It the Work Order has SAs that are in status categories other than None and Dispatched, it will exit with an information screen and not delete anything.</description>
     <dynamicChoiceSets>
         <name>drcWorkOrders</name>
         <dataType>String</dataType>
@@ -107,8 +107,8 @@
         <sortOrder>Desc</sortOrder>
         <valueField>Id</valueField>
     </dynamicChoiceSets>
-    <interviewLabel>Delete Service Appointments {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>MR Delete Service Appointments</label>
+    <interviewLabel>MR DT Delete Service Appointments {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>MR DT Delete Service Appointments</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
