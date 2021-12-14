@@ -4,7 +4,7 @@
         <name>get_filtered_STMS</name>
         <label>get filtered STMS</label>
         <locationX>2393</locationX>
-        <locationY>3158</locationY>
+        <locationY>2246</locationY>
         <actionName>MRDTGetSTMs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -48,7 +48,7 @@
         <name>Reassign_Technicians</name>
         <label>Reassign Technicians</label>
         <locationX>1766</locationX>
-        <locationY>3638</locationY>
+        <locationY>2726</locationY>
         <actionName>MRDTReassignTechs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -81,7 +81,7 @@
         <name>Assign_Start_and_End_Dates</name>
         <label>Assign Start and End Dates</label>
         <locationX>2481</locationX>
-        <locationY>2702</locationY>
+        <locationY>1790</locationY>
         <assignmentItems>
             <assignToReference>firstStartDate</assignToReference>
             <operator>Assign</operator>
@@ -104,7 +104,7 @@
         <name>update_counter</name>
         <label>update counter</label>
         <locationX>2910</locationX>
-        <locationY>1766</locationY>
+        <locationY>854</locationY>
         <assignmentItems>
             <assignToReference>numSAs</assignToReference>
             <operator>Add</operator>
@@ -180,58 +180,11 @@
         </value>
     </constants>
     <decisions>
-        <name>Existing_SAs_found</name>
-        <label>Existing SAs found?</label>
-        <locationX>2822</locationX>
-        <locationY>854</locationY>
-        <defaultConnector>
-            <targetReference>get_existing_Service_Appointments</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>YesInProgressExistingSAs</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>find_Existing_In_Progress_Service_Appointments</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Warning_Screen</targetReference>
-            </connector>
-            <label>Yes In Progress</label>
-        </rules>
-        <rules>
-            <name>YesDraftExisting</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>find_Existing_In_Progress_Service_Appointments</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>find_Existing_Draft_Service_Appointments</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Warning_Screen_0</targetReference>
-            </connector>
-            <label>Yes Draft</label>
-        </rules>
-    </decisions>
-    <decisions>
         <description>exit if there are too many SAs as defined by the constLimitSA - currently set at 500.</description>
         <name>Less_than_SA_Limit</name>
         <label>Less than SA Limit</label>
         <locationX>2822</locationX>
-        <locationY>1982</locationY>
+        <locationY>1070</locationY>
         <defaultConnector>
             <targetReference>Too_Many_Service_Appointments</targetReference>
         </defaultConnector>
@@ -260,32 +213,10 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Proceed_Box_Checked</name>
-        <label>Proceed Box Checked?</label>
-        <locationX>2514</locationX>
-        <locationY>1094</locationY>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>YesProceed</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Check_this_box_to_continue</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>get_existing_Service_Appointments</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-    </decisions>
-    <decisions>
         <name>Successful</name>
         <label>Successful?</label>
         <locationX>1766</locationX>
-        <locationY>3758</locationY>
+        <locationY>2846</locationY>
         <defaultConnector>
             <targetReference>info1_0</targetReference>
         </defaultConnector>
@@ -310,7 +241,7 @@
         <name>Tech_Selected</name>
         <label>Tech Selected?</label>
         <locationX>2096</locationX>
-        <locationY>3518</locationY>
+        <locationY>2606</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesTechSelected</name>
@@ -332,7 +263,7 @@
         <name>Technicans_Found</name>
         <label>Technicans Found?</label>
         <locationX>2393</locationX>
-        <locationY>3278</locationY>
+        <locationY>2366</locationY>
         <defaultConnector>
             <targetReference>No_Technicians_Found</targetReference>
         </defaultConnector>
@@ -357,7 +288,7 @@
         <name>Update_SAs</name>
         <label>Path to take</label>
         <locationX>1898</locationX>
-        <locationY>2222</locationY>
+        <locationY>1310</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Update_SAs_Outcome</name>
@@ -453,7 +384,7 @@
         <name>Were_Records_Deleted</name>
         <label>Were Records Deleted</label>
         <locationX>1106</locationX>
-        <locationY>2462</locationY>
+        <locationY>1550</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordsUpdated_0</name>
@@ -475,7 +406,7 @@
         <name>Were_Records_Updated</name>
         <label>Were Records Updated</label>
         <locationX>314</locationX>
-        <locationY>2342</locationY>
+        <locationY>1430</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordsUpdated</name>
@@ -497,7 +428,7 @@
         <name>Were_Technicians_Changed</name>
         <label>Were Technicians Changed</label>
         <locationX>2805</locationX>
-        <locationY>2462</locationY>
+        <locationY>1550</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordsUpdated_0_0</name>
@@ -597,7 +528,7 @@
         <name>Count_the_SAs</name>
         <label>Count the SAs</label>
         <locationX>2822</locationX>
-        <locationY>1646</locationY>
+        <locationY>734</locationY>
         <collectionReference>collectionDraftSAs</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -611,7 +542,7 @@
         <name>loop_through_selected_change_tech_records</name>
         <label>loop through selected change tech records</label>
         <locationX>2393</locationX>
-        <locationY>2582</locationY>
+        <locationY>1670</locationY>
         <collectionReference>ChangeTechSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -644,101 +575,17 @@
         <name>Delete_SAs</name>
         <label>Delete SAs</label>
         <locationX>842</locationX>
-        <locationY>2582</locationY>
+        <locationY>1670</locationY>
         <faultConnector>
             <targetReference>Error_Encountered</targetReference>
         </faultConnector>
         <inputReference>DeleteSADataTable.outputSelectedRows</inputReference>
     </recordDeletes>
     <recordLookups>
-        <name>find_Existing_Draft_Service_Appointments</name>
-        <label>find Existing Draft Service Appointments</label>
-        <locationX>2822</locationX>
-        <locationY>734</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Existing_SAs_found</targetReference>
-        </connector>
-        <filterLogic>(1 OR 2) And (3 Or 4)</filterLogic>
-        <filters>
-            <field>MR_Parent_Work_Order__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>recordId</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>ParentRecordId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>recordId</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>StatusCategory</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>None</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>StatusCategory</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Scheduled</stringValue>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>ServiceAppointment</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <name>find_Existing_In_Progress_Service_Appointments</name>
-        <label>find Existing In Progress Service Appointments</label>
-        <locationX>2822</locationX>
-        <locationY>614</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>find_Existing_Draft_Service_Appointments</targetReference>
-        </connector>
-        <filterLogic>(1 OR 2) And (3 And 4)</filterLogic>
-        <filters>
-            <field>MR_Parent_Work_Order__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>recordId</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>ParentRecordId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>recordId</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>StatusCategory</field>
-            <operator>NotEqualTo</operator>
-            <value>
-                <stringValue>None</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>StatusCategory</field>
-            <operator>NotEqualTo</operator>
-            <value>
-                <stringValue>Scheduled</stringValue>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>ServiceAppointment</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
         <name>get_existing_Service_Appointments</name>
         <label>get existing Service Appointments</label>
         <locationX>2822</locationX>
-        <locationY>1526</locationY>
+        <locationY>614</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Count_the_SAs</targetReference>
@@ -777,7 +624,7 @@
         <name>get_the_default_territory</name>
         <label>get the default territory</label>
         <locationX>2393</locationX>
-        <locationY>2918</locationY>
+        <locationY>2006</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Technician_Filtering</targetReference>
@@ -807,7 +654,7 @@
         <locationY>494</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>find_Existing_In_Progress_Service_Appointments</targetReference>
+            <targetReference>get_existing_Service_Appointments</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -825,7 +672,7 @@
         <name>Update_Edited_SAs_0</name>
         <label>Update Edited SAs</label>
         <locationX>50</locationX>
-        <locationY>2462</locationY>
+        <locationY>1550</locationY>
         <faultConnector>
             <isGoTo>true</isGoTo>
             <targetReference>Error_Encountered</targetReference>
@@ -836,7 +683,7 @@
         <name>Change_Service_Resources</name>
         <label>Change Service Resources</label>
         <locationX>2805</locationX>
-        <locationY>2342</locationY>
+        <locationY>1430</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -915,13 +762,13 @@
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Delete_SAs_Screen</name>
         <label>Delete SAs</label>
         <locationX>1106</locationX>
-        <locationY>2342</locationY>
+        <locationY>1430</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1000,13 +847,13 @@
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Error_Encountered</name>
         <label>Error Encountered</label>
         <locationX>1106</locationX>
-        <locationY>2702</locationY>
+        <locationY>1790</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1020,13 +867,13 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>info1</name>
         <label>info1</label>
         <locationX>1634</locationX>
-        <locationY>3878</locationY>
+        <locationY>2966</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1047,7 +894,7 @@
         <name>info1_0</name>
         <label>info1</label>
         <locationX>1898</locationX>
-        <locationY>3878</locationY>
+        <locationY>2966</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1068,7 +915,7 @@
         <name>No_Technicians_Found</name>
         <label>No Technicians Found</label>
         <locationX>2690</locationX>
-        <locationY>3398</locationY>
+        <locationY>2486</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1082,7 +929,7 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Please_select_Work_Order</name>
@@ -1110,7 +957,7 @@
         <name>Select_Resource</name>
         <label>Select Resource</label>
         <locationX>2096</locationX>
-        <locationY>3398</locationY>
+        <locationY>2486</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1190,13 +1037,13 @@
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Technician_Filtering</name>
         <label>Technician Filtering</label>
         <locationX>2393</locationX>
-        <locationY>3038</locationY>
+        <locationY>2126</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1231,13 +1078,13 @@
             <isRequired>true</isRequired>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Too_Many_Service_Appointments</name>
         <label>Too Many Service Appointments</label>
         <locationX>3746</locationX>
-        <locationY>2102</locationY>
+        <locationY>1190</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1247,13 +1094,13 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Update_SAs_or_Take_Other_Action_Screen</name>
         <label>Update SAs or Take Other Action</label>
         <locationX>1898</locationX>
-        <locationY>2102</locationY>
+        <locationY>1190</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1406,49 +1253,7 @@
             </visibilityRule>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>Warning_Screen</name>
-        <label>Warning Screen</label>
-        <locationX>2514</locationX>
-        <locationY>974</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <connector>
-            <targetReference>Proceed_Box_Checked</targetReference>
-        </connector>
-        <fields>
-            <name>WarningTextInfo</name>
-            <fieldText>&lt;p&gt;Warning, at least 1 Service Appointment exists for this Work Order that is in progress (Dispatched or later status).&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Service Appointment: {!find_Existing_In_Progress_Service_Appointments.AppointmentNumber}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Do you wish to continue?&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <fields>
-            <name>Check_this_box_to_continue</name>
-            <dataType>Boolean</dataType>
-            <fieldText>Check this box to continue</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>Warning_Screen_0</name>
-        <label>Warning Screen</label>
-        <locationX>2866</locationX>
-        <locationY>974</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>WarningTextInfo_0</name>
-            <fieldText>&lt;p&gt;No Existing Draft Service Appointments were found (Draft or Scheduled). Please use the Appointment Creator flow to create new appointments.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <start>
         <locationX>2696</locationX>

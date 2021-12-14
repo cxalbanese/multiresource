@@ -5,7 +5,7 @@
         <name>Create_Draft_SAs</name>
         <label>Create Draft SAs</label>
         <locationX>556</locationX>
-        <locationY>2006</locationY>
+        <locationY>1334</locationY>
         <actionName>MRDTSchedMultiVisit</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -86,7 +86,7 @@
         <name>Get_filtered_STMS</name>
         <label>Get filtered STMS</label>
         <locationX>798</locationX>
-        <locationY>1646</locationY>
+        <locationY>974</locationY>
         <actionName>MRDTGetSTMs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -127,7 +127,7 @@
         <name>Add_AR_to_collection</name>
         <label>Add AR to collection</label>
         <locationX>270</locationX>
-        <locationY>4418</locationY>
+        <locationY>3746</locationY>
         <assignmentItems>
             <assignToReference>collARs</assignToReference>
             <operator>Add</operator>
@@ -143,7 +143,7 @@
         <name>Add_to_List</name>
         <label>Add to List</label>
         <locationX>270</locationX>
-        <locationY>3386</locationY>
+        <locationY>2714</locationY>
         <assignmentItems>
             <assignToReference>collConfirmedSAs</assignToReference>
             <operator>Add</operator>
@@ -159,7 +159,7 @@
         <name>Create_Assigned_Resource</name>
         <label>Create Assigned Resource</label>
         <locationX>270</locationX>
-        <locationY>4298</locationY>
+        <locationY>3626</locationY>
         <assignmentItems>
             <assignToReference>objAR.ServiceResourceId</assignToReference>
             <operator>Assign</operator>
@@ -182,7 +182,7 @@
         <name>Set_MR_Creation_Status</name>
         <label>Set MR Creation Status</label>
         <locationX>270</locationX>
-        <locationY>3266</locationY>
+        <locationY>2594</locationY>
         <assignmentItems>
             <assignToReference>objSA.Id</assignToReference>
             <operator>Assign</operator>
@@ -244,7 +244,7 @@
         <name>Delete_Records</name>
         <label>Delete Records?</label>
         <locationX>182</locationX>
-        <locationY>3842</locationY>
+        <locationY>3170</locationY>
         <defaultConnector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </defaultConnector>
@@ -266,36 +266,11 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Existing_SAs_found</name>
-        <label>Existing SAs found?</label>
-        <locationX>798</locationX>
-        <locationY>734</locationY>
-        <defaultConnector>
-            <targetReference>get_the_default_territory_0</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>YesExistingSAs</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>find_Existing_Service_Appointments</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Warning_Screen</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-    </decisions>
-    <decisions>
         <description>exit if there are too many SAs as defined by the constLimitSA - currently set at 500.</description>
         <name>Less_than_SA_Limit</name>
         <label>Less than SA Limit</label>
         <locationX>556</locationX>
-        <locationY>2126</locationY>
+        <locationY>1454</locationY>
         <defaultConnector>
             <targetReference>Too_Many_Service_Appointments</targetReference>
         </defaultConnector>
@@ -324,33 +299,11 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Proceed_Box_Checked</name>
-        <label>Proceed Box Checked?</label>
-        <locationX>622</locationX>
-        <locationY>974</locationY>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>YesProceed</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Check_this_box_to_create_additional_SAs</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>get_the_default_territory_0</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-    </decisions>
-    <decisions>
         <description>Update Selected SAs MR Creation Status to Confirmed</description>
         <name>Records_Selected</name>
         <label>Records Selected?</label>
         <locationX>336</locationX>
-        <locationY>3026</locationY>
+        <locationY>2354</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesDeleted</name>
@@ -379,7 +332,7 @@
         <name>Records_Updates</name>
         <label>Records Updates?</label>
         <locationX>336</locationX>
-        <locationY>2486</locationY>
+        <locationY>1814</locationY>
         <defaultConnector>
             <targetReference>Records_Selected</targetReference>
         </defaultConnector>
@@ -411,7 +364,7 @@
         <name>Technicans_Found</name>
         <label>Technicans Found?</label>
         <locationX>798</locationX>
-        <locationY>1766</locationY>
+        <locationY>1094</locationY>
         <defaultConnector>
             <targetReference>No_Technicians_Found</targetReference>
         </defaultConnector>
@@ -541,7 +494,7 @@
         <name>loop_through_selected_rows</name>
         <label>loop through selected rows</label>
         <locationX>182</locationX>
-        <locationY>3146</locationY>
+        <locationY>2474</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -555,7 +508,7 @@
         <name>Loop_to_Create_Assigned_Resources</name>
         <label>Loop to Create Assigned Resources</label>
         <locationX>182</locationX>
-        <locationY>4178</locationY>
+        <locationY>3506</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -588,7 +541,7 @@
         <name>Create_ARs</name>
         <label>Create ARs</label>
         <locationX>182</locationX>
-        <locationY>4634</locationY>
+        <locationY>3962</locationY>
         <connector>
             <targetReference>info1</targetReference>
         </connector>
@@ -598,7 +551,7 @@
         <name>Delete_draft_SAs</name>
         <label>Delete draft SAs</label>
         <locationX>50</locationX>
-        <locationY>3962</locationY>
+        <locationY>3290</locationY>
         <connector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </connector>
@@ -633,7 +586,7 @@
         <locationY>614</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Existing_SAs_found</targetReference>
+            <targetReference>get_the_default_territory_0</targetReference>
         </connector>
         <filterLogic>or</filterLogic>
         <filters>
@@ -659,7 +612,7 @@
         <name>Get_Draft_Record</name>
         <label>Get Draft Record</label>
         <locationX>182</locationX>
-        <locationY>3722</locationY>
+        <locationY>3050</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Delete_Records</targetReference>
@@ -695,7 +648,7 @@
         <name>get_the_default_territory_0</name>
         <label>get the default territory</label>
         <locationX>798</locationX>
-        <locationY>1406</locationY>
+        <locationY>734</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Select_Parameters</targetReference>
@@ -744,7 +697,7 @@
         <name>Trigger_Draft_SA_Delete</name>
         <label>Trigger Draft SA Delete</label>
         <locationX>336</locationX>
-        <locationY>2246</locationY>
+        <locationY>1574</locationY>
         <connector>
             <targetReference>Review_Draft_SAs</targetReference>
         </connector>
@@ -774,7 +727,7 @@
         <name>Update_Confirmed_Records</name>
         <label>Update Confirmed Records</label>
         <locationX>182</locationX>
-        <locationY>3602</locationY>
+        <locationY>2930</locationY>
         <connector>
             <targetReference>Get_Draft_Record</targetReference>
         </connector>
@@ -784,7 +737,7 @@
         <name>Update_Edited_SAs</name>
         <label>Update Edited SAs</label>
         <locationX>72</locationX>
-        <locationY>2606</locationY>
+        <locationY>1934</locationY>
         <connector>
             <targetReference>Records_Selected</targetReference>
         </connector>
@@ -797,7 +750,7 @@
         <name>Error_Encountered</name>
         <label>Error Encountered</label>
         <locationX>336</locationX>
-        <locationY>2726</locationY>
+        <locationY>2054</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -811,13 +764,13 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>info1</name>
         <label>info1</label>
         <locationX>182</locationX>
-        <locationY>4754</locationY>
+        <locationY>4082</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -838,7 +791,7 @@
         <name>No_Technicians_Found</name>
         <label>No Technicians Found</label>
         <locationX>1040</locationX>
-        <locationY>1886</locationY>
+        <locationY>1214</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -852,7 +805,7 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Please_select_Work_Order</name>
@@ -880,7 +833,7 @@
         <name>Review_Draft_SAs</name>
         <label>Review Draft SAs</label>
         <locationX>336</locationX>
-        <locationY>2366</locationY>
+        <locationY>1694</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -977,13 +930,13 @@
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Select_Parameters</name>
         <label>Enter parameters -  Step 1</label>
         <locationX>798</locationX>
-        <locationY>1526</locationY>
+        <locationY>854</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1093,7 +1046,7 @@
         <name>Select_Resource</name>
         <label>Select Resource</label>
         <locationX>556</locationX>
-        <locationY>1886</locationY>
+        <locationY>1214</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1161,13 +1114,13 @@
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Too_Many_Service_Appointments</name>
         <label>Too Many Service Appointments</label>
         <locationX>776</locationX>
-        <locationY>2246</locationY>
+        <locationY>1574</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1177,33 +1130,7 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>Warning_Screen</name>
-        <label>Warning Screen</label>
-        <locationX>622</locationX>
-        <locationY>854</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <connector>
-            <targetReference>Proceed_Box_Checked</targetReference>
-        </connector>
-        <fields>
-            <name>WarningTextInfo</name>
-            <fieldText>&lt;p&gt;Warning, at least 1 Service Appointment exists for this Work Order.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Service Appointment: {!find_Existing_Service_Appointments.AppointmentNumber}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Do you wish to create additional Service Appointments?&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <fields>
-            <name>Check_this_box_to_create_additional_SAs</name>
-            <dataType>Boolean</dataType>
-            <fieldText>Check this box to create additional SAs</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <start>
         <locationX>672</locationX>
