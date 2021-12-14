@@ -5,6 +5,10 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
 
     WODTSchedulePayload iPL = inPayloadList[0];
     list<serviceterritorymember> listSTM = iPL.listSTM;
+    boolean includeWeekendDay1 = iPL.includeWeekendDay1;
+    boolean includeWeekendDay2 = iPL.includeWeekendDay2;
+    string weekendDay1 = 'Sat';
+    string weekendDay2 = 'Sun';
     integer limitSAs = iPL.limitSAs;
     system.debug('ipl = ' + iPL)  ;     
     string territoryid = iPL.territoryid;
@@ -49,27 +53,30 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
         string theResourceId = stm.serviceresourceid;
     
         for (date thedate : listDate ) {
-            serviceappointment thesa = new serviceappointment();            
-            thesa.parentrecordid = workorderid;
-            thesa.serviceterritoryid = territoryid;
-            thesa.durationtype = 'hours';
-            thesa.duration = duration;
-            thesa.earlieststarttime = datetime.newinstance(thedate.year(),thedate.month(),thedate.day(),startTimeHour,startTimeMinute,0);
-            thesa.duedate = thesa.earlieststarttime.adddays(1).addminutes(-1);
-            thesa.schedstarttime = thesa.earlieststarttime;
-            thesa.schedendtime = thesa.schedstarttime.addhours(duration);
-            thesa.MR_Parent_Work_Order__c = workorderid;
-            thesa.FSL__GanttLabel__c = thewo.subject;
-            thesa.city = thewo.city;
-            thesa.street = thewo.street;
-            thesa.state = thewo.state;
-            thesa.postalcode = thewo.postalcode;
-            thesa.MR_Service_Resource__c = theResourceId.trim();
-            thesa.Status = status;
-            thesa.subject = taskDescription;
-            thesa.MR_Creation_Status__c = 'Draft';
-            listNewSAs.add (thesa);
-              
+            datetime dowdatetime = datetime.newinstance(thedate.year(),thedate.month(),thedate.day());
+            string dow = datetime.newinstance(thedate.year(),thedate.month(),thedate.day()).format('EEE');
+            if((dow == weekendDay1 && includeWeekendDay1) || (dow == weekendDay2 && includeWeekendDay2) || (dow != weekendDay1 && dow != weekendDay2)) {
+                serviceappointment thesa = new serviceappointment();            
+                thesa.parentrecordid = workorderid;
+                thesa.serviceterritoryid = territoryid;
+                thesa.durationtype = 'hours';
+                thesa.duration = duration;
+                thesa.earlieststarttime = datetime.newinstance(thedate.year(),thedate.month(),thedate.day(),startTimeHour,startTimeMinute,0);
+                thesa.duedate = thesa.earlieststarttime.adddays(1).addminutes(-1);
+                thesa.schedstarttime = thesa.earlieststarttime;
+                thesa.schedendtime = thesa.schedstarttime.addhours(duration);
+                thesa.MR_Parent_Work_Order__c = workorderid;
+                thesa.FSL__GanttLabel__c = thewo.subject;
+                thesa.city = thewo.city;
+                thesa.street = thewo.street;
+                thesa.state = thewo.state;
+                thesa.postalcode = thewo.postalcode;
+                thesa.MR_Service_Resource__c = theResourceId.trim();
+                thesa.Status = status;
+                thesa.subject = taskDescription;
+                thesa.MR_Creation_Status__c = 'Draft';
+                listNewSAs.add (thesa);
+            }  
         }
    }
        if(listNewSAs.size()>0 && listNewSAs.size()<= limitSAs) {
@@ -115,6 +122,8 @@ public class WODTSchedulePayload {
 @invocableVariable public string status;
 @invocableVariable public string taskDescription;
 @invocableVariable public integer limitSAs;
+@invocableVariable public boolean includeWeekendDay1;
+@invocableVariable public boolean includeWeekendDay2;
 }
 
 public class WODTScheduleOutput {

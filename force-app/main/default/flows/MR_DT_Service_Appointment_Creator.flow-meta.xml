@@ -4,7 +4,7 @@
         <description>create the initial service appointments</description>
         <name>Create_Draft_SAs</name>
         <label>Create Draft SAs</label>
-        <locationX>556</locationX>
+        <locationX>633</locationX>
         <locationY>1334</locationY>
         <actionName>MRDTSchedMultiVisit</actionName>
         <actionType>apex</actionType>
@@ -16,6 +16,18 @@
             <name>defaultDuration</name>
             <value>
                 <elementReference>Default_Duration_hrs</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeWeekendDay1</name>
+            <value>
+                <elementReference>Include_Saturdays</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeWeekendDay2</name>
+            <value>
+                <elementReference>Include_Sundays</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -85,7 +97,7 @@
         <description>returns a list of STMS that have the skill and territory if specified</description>
         <name>Get_filtered_STMS</name>
         <label>Get filtered STMS</label>
-        <locationX>798</locationX>
+        <locationX>924</locationX>
         <locationY>974</locationY>
         <actionName>MRDTGetSTMs</actionName>
         <actionType>apex</actionType>
@@ -126,8 +138,8 @@
     <assignments>
         <name>Add_AR_to_collection</name>
         <label>Add AR to collection</label>
-        <locationX>270</locationX>
-        <locationY>3746</locationY>
+        <locationX>402</locationX>
+        <locationY>3842</locationY>
         <assignmentItems>
             <assignToReference>collARs</assignToReference>
             <operator>Add</operator>
@@ -142,7 +154,7 @@
     <assignments>
         <name>Add_to_List</name>
         <label>Add to List</label>
-        <locationX>270</locationX>
+        <locationX>160</locationX>
         <locationY>2714</locationY>
         <assignmentItems>
             <assignToReference>collConfirmedSAs</assignToReference>
@@ -158,8 +170,8 @@
     <assignments>
         <name>Create_Assigned_Resource</name>
         <label>Create Assigned Resource</label>
-        <locationX>270</locationX>
-        <locationY>3626</locationY>
+        <locationX>402</locationX>
+        <locationY>3722</locationY>
         <assignmentItems>
             <assignToReference>objAR.ServiceResourceId</assignToReference>
             <operator>Assign</operator>
@@ -181,7 +193,7 @@
     <assignments>
         <name>Set_MR_Creation_Status</name>
         <label>Set MR Creation Status</label>
-        <locationX>270</locationX>
+        <locationX>160</locationX>
         <locationY>2594</locationY>
         <assignmentItems>
             <assignToReference>objSA.Id</assignToReference>
@@ -243,8 +255,8 @@
     <decisions>
         <name>Delete_Records</name>
         <label>Delete Records?</label>
-        <locationX>182</locationX>
-        <locationY>3170</locationY>
+        <locationX>314</locationX>
+        <locationY>3266</locationY>
         <defaultConnector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </defaultConnector>
@@ -269,7 +281,7 @@
         <description>exit if there are too many SAs as defined by the constLimitSA - currently set at 500.</description>
         <name>Less_than_SA_Limit</name>
         <label>Less than SA Limit</label>
-        <locationX>556</locationX>
+        <locationX>633</locationX>
         <locationY>1454</locationY>
         <defaultConnector>
             <targetReference>Too_Many_Service_Appointments</targetReference>
@@ -302,8 +314,11 @@
         <description>Update Selected SAs MR Creation Status to Confirmed</description>
         <name>Records_Selected</name>
         <label>Records Selected?</label>
-        <locationX>336</locationX>
+        <locationX>314</locationX>
         <locationY>2354</locationY>
+        <defaultConnector>
+            <targetReference>No_Records_Selected</targetReference>
+        </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesDeleted</name>
@@ -331,7 +346,7 @@
     <decisions>
         <name>Records_Updates</name>
         <label>Records Updates?</label>
-        <locationX>336</locationX>
+        <locationX>314</locationX>
         <locationY>1814</locationY>
         <defaultConnector>
             <targetReference>Records_Selected</targetReference>
@@ -361,9 +376,50 @@
         </rules>
     </decisions>
     <decisions>
+        <name>return_to_prior_screen</name>
+        <label>return to prior screen</label>
+        <locationX>556</locationX>
+        <locationY>2594</locationY>
+        <defaultConnector>
+            <targetReference>Get_Draft_Record</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>YesReturntoPriorScreen</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Select_to_return_to_prior_screen</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <isGoTo>true</isGoTo>
+                <targetReference>Review_Draft_SAs</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+        <rules>
+            <name>NoReturn</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Select_to_return_to_prior_screen</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Draft_Record</targetReference>
+            </connector>
+            <label>No</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Technicans_Found</name>
         <label>Technicans Found?</label>
-        <locationX>798</locationX>
+        <locationX>924</locationX>
         <locationY>1094</locationY>
         <defaultConnector>
             <targetReference>No_Technicians_Found</targetReference>
@@ -388,7 +444,7 @@
     <decisions>
         <name>was_RecordId_provided</name>
         <label>was RecordId provided</label>
-        <locationX>798</locationX>
+        <locationX>924</locationX>
         <locationY>158</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -493,7 +549,7 @@
         <description>set MR Creation Status to Confirmed</description>
         <name>loop_through_selected_rows</name>
         <label>loop through selected rows</label>
-        <locationX>182</locationX>
+        <locationX>72</locationX>
         <locationY>2474</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
@@ -507,8 +563,8 @@
     <loops>
         <name>Loop_to_Create_Assigned_Resources</name>
         <label>Loop to Create Assigned Resources</label>
-        <locationX>182</locationX>
-        <locationY>3506</locationY>
+        <locationX>314</locationX>
+        <locationY>3602</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -540,8 +596,8 @@
     <recordCreates>
         <name>Create_ARs</name>
         <label>Create ARs</label>
-        <locationX>182</locationX>
-        <locationY>3962</locationY>
+        <locationX>314</locationX>
+        <locationY>4058</locationY>
         <connector>
             <targetReference>info1</targetReference>
         </connector>
@@ -550,8 +606,8 @@
     <recordDeletes>
         <name>Delete_draft_SAs</name>
         <label>Delete draft SAs</label>
-        <locationX>50</locationX>
-        <locationY>3290</locationY>
+        <locationX>182</locationX>
+        <locationY>3386</locationY>
         <connector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </connector>
@@ -582,7 +638,7 @@
     <recordLookups>
         <name>find_Existing_Service_Appointments</name>
         <label>find Existing Service Appointments</label>
-        <locationX>798</locationX>
+        <locationX>924</locationX>
         <locationY>614</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -611,8 +667,8 @@
         <description>checking to see if there is at least 1 record to be deleted</description>
         <name>Get_Draft_Record</name>
         <label>Get Draft Record</label>
-        <locationX>182</locationX>
-        <locationY>3050</locationY>
+        <locationX>314</locationX>
+        <locationY>3146</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Delete_Records</targetReference>
@@ -647,7 +703,7 @@
         <description>find San Francisco</description>
         <name>get_the_default_territory_0</name>
         <label>get the default territory</label>
-        <locationX>798</locationX>
+        <locationX>924</locationX>
         <locationY>734</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -674,7 +730,7 @@
     <recordLookups>
         <name>getWorkOrder</name>
         <label>getWorkOrder</label>
-        <locationX>798</locationX>
+        <locationX>924</locationX>
         <locationY>494</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -696,7 +752,7 @@
         <description>if the user does not complete this flow, a triggered flow will fire within N minutes to back out these new SAs</description>
         <name>Trigger_Draft_SA_Delete</name>
         <label>Trigger Draft SA Delete</label>
-        <locationX>336</locationX>
+        <locationX>314</locationX>
         <locationY>1574</locationY>
         <connector>
             <targetReference>Review_Draft_SAs</targetReference>
@@ -726,7 +782,7 @@
     <recordUpdates>
         <name>Update_Confirmed_Records</name>
         <label>Update Confirmed Records</label>
-        <locationX>182</locationX>
+        <locationX>72</locationX>
         <locationY>2930</locationY>
         <connector>
             <targetReference>Get_Draft_Record</targetReference>
@@ -736,7 +792,7 @@
     <recordUpdates>
         <name>Update_Edited_SAs</name>
         <label>Update Edited SAs</label>
-        <locationX>72</locationX>
+        <locationX>50</locationX>
         <locationY>1934</locationY>
         <connector>
             <targetReference>Records_Selected</targetReference>
@@ -749,7 +805,7 @@
     <screens>
         <name>Error_Encountered</name>
         <label>Error Encountered</label>
-        <locationX>336</locationX>
+        <locationX>314</locationX>
         <locationY>2054</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -769,8 +825,8 @@
     <screens>
         <name>info1</name>
         <label>info1</label>
-        <locationX>182</locationX>
-        <locationY>4082</locationY>
+        <locationX>314</locationX>
+        <locationY>4178</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -788,9 +844,38 @@
         <showHeader>false</showHeader>
     </screens>
     <screens>
+        <name>No_Records_Selected</name>
+        <label>No Records Selected</label>
+        <locationX>556</locationX>
+        <locationY>2474</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>return_to_prior_screen</targetReference>
+        </connector>
+        <fields>
+            <name>NoRecordsSelectedText</name>
+            <fieldText>&lt;p&gt;Warning, no records have been selected. Do you want to return to the prior screen to select Service Appointments to create or continue without creating any new Service Appointments.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Select_to_return_to_prior_screen</name>
+            <dataType>Boolean</dataType>
+            <defaultValue>
+                <booleanValue>true</booleanValue>
+            </defaultValue>
+            <fieldText>Select to return to prior screen</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
         <name>No_Technicians_Found</name>
         <label>No Technicians Found</label>
-        <locationX>1040</locationX>
+        <locationX>1216</locationX>
         <locationY>1214</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -810,7 +895,7 @@
     <screens>
         <name>Please_select_Work_Order</name>
         <label>Please select Work Order</label>
-        <locationX>754</locationX>
+        <locationX>880</locationX>
         <locationY>278</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -832,7 +917,7 @@
     <screens>
         <name>Review_Draft_SAs</name>
         <label>Review Draft SAs</label>
-        <locationX>336</locationX>
+        <locationX>314</locationX>
         <locationY>1694</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -935,7 +1020,7 @@
     <screens>
         <name>Select_Parameters</name>
         <label>Enter parameters -  Step 1</label>
-        <locationX>798</locationX>
+        <locationX>924</locationX>
         <locationY>854</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -1004,6 +1089,22 @@
             </validationRule>
         </fields>
         <fields>
+            <name>Include_Saturdays</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Include Saturdays</fieldText>
+            <fieldType>InputField</fieldType>
+            <helpText>&lt;p&gt;If selected, appointments will be created for Saturdays.&lt;/p&gt;</helpText>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Include_Sundays</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Include Sundays</fieldText>
+            <fieldType>InputField</fieldType>
+            <helpText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;If selected, appointments will be created for Sundays.&lt;/span&gt;&lt;/p&gt;</helpText>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
             <name>Status</name>
             <choiceReferences>Scheduled</choiceReferences>
             <choiceReferences>Dispatched</choiceReferences>
@@ -1045,7 +1146,7 @@
     <screens>
         <name>Select_Resource</name>
         <label>Select Resource</label>
-        <locationX>556</locationX>
+        <locationX>633</locationX>
         <locationY>1214</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -1119,7 +1220,7 @@
     <screens>
         <name>Too_Many_Service_Appointments</name>
         <label>Too Many Service Appointments</label>
-        <locationX>776</locationX>
+        <locationX>952</locationX>
         <locationY>1574</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -1133,7 +1234,7 @@
         <showHeader>false</showHeader>
     </screens>
     <start>
-        <locationX>672</locationX>
+        <locationX>798</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>was_RecordId_provided</targetReference>
