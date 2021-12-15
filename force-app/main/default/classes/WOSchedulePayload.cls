@@ -1,5 +1,6 @@
 public class WOSchedulePayload {
     
+public WOSchedulePayload() {}
 public list<string> resourceIds;
 public string territoryId;
 public integer numWeeks;
