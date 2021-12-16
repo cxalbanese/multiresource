@@ -45,6 +45,63 @@
         </outputParameters>
     </actionCalls>
     <actionCalls>
+        <description>shift the ServiceAppointments in the Range to the new Start Date</description>
+        <name>MR_DT_Date_ShiftMR_DT_Date_Shift</name>
+        <label>MR DT Date ShiftMR DT Date Shift</label>
+        <locationX>3614</locationX>
+        <locationY>1430</locationY>
+        <actionName>MRDTDateShift</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Shift_Successful</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ApexActionError</targetReference>
+        </faultConnector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>dateEnding</name>
+            <value>
+                <elementReference>Up_until_Date</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>dateNewStart</name>
+            <value>
+                <elementReference>New_Starting_Date</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>dateStarting</name>
+            <value>
+                <elementReference>Start_from_Date</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeWeekendDay1</name>
+            <value>
+                <elementReference>Include_Saturdays</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeWeekendDay2</name>
+        </inputParameters>
+        <inputParameters>
+            <name>listSA</name>
+            <value>
+                <elementReference>collectionDraftSAs</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>collectionShiftedSAs</assignToReference>
+            <name>listSA</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>numShiftedSAs</assignToReference>
+            <name>numSAs</name>
+        </outputParameters>
+    </actionCalls>
+    <actionCalls>
         <name>Reassign_Technicians</name>
         <label>Reassign Technicians</label>
         <locationX>1766</locationX>
@@ -103,7 +160,7 @@
     <assignments>
         <name>update_counter</name>
         <label>update counter</label>
-        <locationX>2910</locationX>
+        <locationX>3504</locationX>
         <locationY>854</locationY>
         <assignmentItems>
             <assignToReference>numSAs</assignToReference>
@@ -138,6 +195,14 @@
         <dataType>String</dataType>
         <value>
             <elementReference>strWOSTId</elementReference>
+        </value>
+    </choices>
+    <choices>
+        <name>DateShift</name>
+        <choiceText>Shift appointments to new date</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>DateShift</stringValue>
         </value>
     </choices>
     <choices>
@@ -183,7 +248,7 @@
         <description>exit if there are too many SAs as defined by the constLimitSA - currently set at 500.</description>
         <name>Less_than_SA_Limit</name>
         <label>Less than SA Limit</label>
-        <locationX>2822</locationX>
+        <locationX>3416</locationX>
         <locationY>1070</locationY>
         <defaultConnector>
             <targetReference>Too_Many_Service_Appointments</targetReference>
@@ -208,6 +273,31 @@
             </conditions>
             <connector>
                 <targetReference>Update_SAs_or_Take_Other_Action_Screen</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Shift_Successful</name>
+        <label>Shift Successful?</label>
+        <locationX>3614</locationX>
+        <locationY>1550</locationY>
+        <defaultConnector>
+            <targetReference>SuccessShiftSA_0</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>YesSuccessfulOutcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>numShiftedSAs</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SuccessShiftSA</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -287,7 +377,7 @@
     <decisions>
         <name>Update_SAs</name>
         <label>Path to take</label>
-        <locationX>1898</locationX>
+        <locationX>2294</locationX>
         <locationY>1310</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -305,6 +395,13 @@
                 <operator>NotEqualTo</operator>
                 <rightValue>
                     <elementReference>ChangeTech</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Select_Other_Action</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>DateShift</elementReference>
                 </rightValue>
             </conditions>
             <connector>
@@ -342,11 +439,26 @@
             </connector>
             <label>Change Techs</label>
         </rules>
+        <rules>
+            <name>DateShiftOutcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Select_Other_Action</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>DateShift</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>MR_DT_Date_ShiftMR_DT_Date_Shift</targetReference>
+            </connector>
+            <label>DateShift</label>
+        </rules>
     </decisions>
     <decisions>
         <name>was_RecordId_provided</name>
         <label>was RecordId provided</label>
-        <locationX>2822</locationX>
+        <locationX>3416</locationX>
         <locationY>158</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -527,7 +639,7 @@
     <loops>
         <name>Count_the_SAs</name>
         <label>Count the SAs</label>
-        <locationX>2822</locationX>
+        <locationX>3416</locationX>
         <locationY>734</locationY>
         <collectionReference>collectionDraftSAs</collectionReference>
         <iterationOrder>Asc</iterationOrder>
@@ -584,7 +696,7 @@
     <recordLookups>
         <name>get_existing_Service_Appointments</name>
         <label>get existing Service Appointments</label>
-        <locationX>2822</locationX>
+        <locationX>3416</locationX>
         <locationY>614</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -650,7 +762,7 @@
     <recordLookups>
         <name>getWorkOrder</name>
         <label>getWorkOrder</label>
-        <locationX>2822</locationX>
+        <locationX>3416</locationX>
         <locationY>494</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -679,6 +791,22 @@
         </faultConnector>
         <inputReference>UpdateSADataTable.outputEditedRows</inputReference>
     </recordUpdates>
+    <screens>
+        <name>ApexActionError</name>
+        <label>ApexActionError</label>
+        <locationX>4010</locationX>
+        <locationY>1550</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>ApexActionInfo</name>
+            <fieldText>&lt;p&gt;An error has occurred, please refresh the page and try again. If the problem persists, contact your administrator.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
     <screens>
         <name>Change_Service_Resources</name>
         <label>Change Service Resources</label>
@@ -934,7 +1062,7 @@
     <screens>
         <name>Please_select_Work_Order</name>
         <label>Please select Work Order</label>
-        <locationX>2778</locationX>
+        <locationX>3372</locationX>
         <locationY>278</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -1040,6 +1168,38 @@
         <showHeader>false</showHeader>
     </screens>
     <screens>
+        <name>SuccessShiftSA</name>
+        <label>Success</label>
+        <locationX>3482</locationX>
+        <locationY>1670</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>SuccessShiftText</name>
+            <fieldText>&lt;p&gt;Successfully shifted {!numShiftedSAs} Service Appointments.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>SuccessShiftSA_0</name>
+        <label>No Appointments Shifted</label>
+        <locationX>3746</locationX>
+        <locationY>1670</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>SuccessShiftText_0</name>
+            <fieldText>&lt;p&gt;No Appointments were shifted. Please change your criteria and try again.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Technician_Filtering</name>
         <label>Technician Filtering</label>
         <locationX>2393</locationX>
@@ -1083,7 +1243,7 @@
     <screens>
         <name>Too_Many_Service_Appointments</name>
         <label>Too Many Service Appointments</label>
-        <locationX>3746</locationX>
+        <locationX>4538</locationX>
         <locationY>1190</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -1099,7 +1259,7 @@
     <screens>
         <name>Update_SAs_or_Take_Other_Action_Screen</name>
         <label>Update SAs or Take Other Action</label>
-        <locationX>1898</locationX>
+        <locationX>2294</locationX>
         <locationY>1190</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -1115,11 +1275,87 @@
         <fields>
             <name>Select_Other_Action</name>
             <choiceReferences>ChangeTech</choiceReferences>
+            <choiceReferences>DateShift</choiceReferences>
             <choiceReferences>DeleteSAs</choiceReferences>
             <dataType>String</dataType>
             <fieldText>Select Other Action</fieldText>
             <fieldType>RadioButtons</fieldType>
             <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>Update_SAs_or_Take_Other_Action_Screen_Section1</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Update_SAs_or_Take_Other_Action_Screen_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>SelectExisting</name>
+                    <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Select Existing Service Appointments. Leave Up until Date blank to move all appointments starting from Start from Date&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <fields>
+                    <name>Start_from_Date</name>
+                    <dataType>Date</dataType>
+                    <fieldText>Start from Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <helpText>&lt;p&gt;Including this date&lt;/p&gt;</helpText>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Up_until_Date</name>
+                    <dataType>Date</dataType>
+                    <fieldText>Up until Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <helpText>&lt;p&gt;If entered, it will include service appointments up until this date. Leave blank to include all service appointments from the Start from Date&lt;/p&gt;</helpText>
+                    <isRequired>false</isRequired>
+                </fields>
+                <fields>
+                    <name>NewDate</name>
+                    <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Select the new starting date. All selected appointments will be moved proportionally&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <fields>
+                    <name>New_Starting_Date</name>
+                    <dataType>Date</dataType>
+                    <fieldText>New Starting Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Include_Saturdays</name>
+                    <dataType>Boolean</dataType>
+                    <fieldText>Include Saturdays</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <helpText>&lt;p&gt;Select this box to allow appointments to be shifted to a Saturday. If not selected, an appointment that would be shifted to Saturday will now be shifted to Sunday, if Sundays are included, or Monday.&lt;/p&gt;</helpText>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Include_Sundays</name>
+                    <dataType>Boolean</dataType>
+                    <fieldText>Include Sundays</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <helpText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;Select this box to allow appointments to be shifted to a Sunday. If not selected, an appointment that would be shifted to Sunday will now be shifted to Monday, if Saturdays are included, or Tuesday.&lt;/span&gt;&lt;/p&gt;</helpText>
+                    <isRequired>true</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>12</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>Select_Other_Action</leftValueReference>
+                    <operator>EqualTo</operator>
+                    <rightValue>
+                        <elementReference>DateShift</elementReference>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
         </fields>
         <fields>
             <name>UpdateSADataTable</name>
@@ -1220,6 +1456,13 @@
                         <elementReference>DeleteSAs</elementReference>
                     </rightValue>
                 </conditions>
+                <conditions>
+                    <leftValueReference>Select_Other_Action</leftValueReference>
+                    <operator>NotEqualTo</operator>
+                    <rightValue>
+                        <elementReference>DateShift</elementReference>
+                    </rightValue>
+                </conditions>
             </visibilityRule>
         </fields>
         <fields>
@@ -1256,7 +1499,7 @@
         <showHeader>false</showHeader>
     </screens>
     <start>
-        <locationX>2696</locationX>
+        <locationX>3290</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>was_RecordId_provided</targetReference>
@@ -1281,6 +1524,14 @@
     </variables>
     <variables>
         <name>collectionDraftSAs</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>ServiceAppointment</objectType>
+    </variables>
+    <variables>
+        <name>collectionShiftedSAs</name>
         <dataType>SObject</dataType>
         <isCollection>true</isCollection>
         <isInput>false</isInput>
@@ -1325,6 +1576,17 @@
     </variables>
     <variables>
         <name>numSAs</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+        <value>
+            <numberValue>0.0</numberValue>
+        </value>
+    </variables>
+    <variables>
+        <name>numShiftedSAs</name>
         <dataType>Number</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
