@@ -1167,7 +1167,6 @@
         <fields>
             <name>Select_Territory</name>
             <choiceReferences>rcsServiceTerritory</choiceReferences>
-            <choiceReferences>All</choiceReferences>
             <dataType>String</dataType>
             <defaultValue>
                 <elementReference>choiceDefaultTerritoryId</elementReference>
