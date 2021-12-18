@@ -5,12 +5,16 @@
         <name>Create_Draft_SAs</name>
         <label>Create Draft SAs</label>
         <locationX>633</locationX>
-        <locationY>1334</locationY>
+        <locationY>1454</locationY>
         <actionName>MRDTSchedMultiVisit</actionName>
         <actionType>apex</actionType>
         <connector>
             <targetReference>Less_than_SA_Limit</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Error_EncounteredApexAction</targetReference>
+        </faultConnector>
         <flowTransactionModel>Automatic</flowTransactionModel>
         <inputParameters>
             <name>defaultDuration</name>
@@ -97,13 +101,16 @@
         <description>returns a list of STMS that have the skill and territory if specified</description>
         <name>Get_filtered_STMS</name>
         <label>Get filtered STMS</label>
-        <locationX>924</locationX>
-        <locationY>974</locationY>
+        <locationX>1056</locationX>
+        <locationY>1094</locationY>
         <actionName>MRDTGetSTMs</actionName>
         <actionType>apex</actionType>
         <connector>
             <targetReference>Technicans_Found</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Error_EncounteredApexAction</targetReference>
+        </faultConnector>
         <flowTransactionModel>Automatic</flowTransactionModel>
         <inputParameters>
             <name>endDate</name>
@@ -139,7 +146,7 @@
         <name>Add_AR_to_collection</name>
         <label>Add AR to collection</label>
         <locationX>402</locationX>
-        <locationY>3842</locationY>
+        <locationY>3962</locationY>
         <assignmentItems>
             <assignToReference>collARs</assignToReference>
             <operator>Add</operator>
@@ -155,7 +162,7 @@
         <name>Add_to_List</name>
         <label>Add to List</label>
         <locationX>160</locationX>
-        <locationY>2714</locationY>
+        <locationY>2834</locationY>
         <assignmentItems>
             <assignToReference>collConfirmedSAs</assignToReference>
             <operator>Add</operator>
@@ -171,7 +178,7 @@
         <name>Create_Assigned_Resource</name>
         <label>Create Assigned Resource</label>
         <locationX>402</locationX>
-        <locationY>3722</locationY>
+        <locationY>3842</locationY>
         <assignmentItems>
             <assignToReference>objAR.ServiceResourceId</assignToReference>
             <operator>Assign</operator>
@@ -194,7 +201,7 @@
         <name>Set_MR_Creation_Status</name>
         <label>Set MR Creation Status</label>
         <locationX>160</locationX>
-        <locationY>2594</locationY>
+        <locationY>2714</locationY>
         <assignmentItems>
             <assignToReference>objSA.Id</assignToReference>
             <operator>Assign</operator>
@@ -256,7 +263,7 @@
         <name>Delete_Records</name>
         <label>Delete Records?</label>
         <locationX>314</locationX>
-        <locationY>3266</locationY>
+        <locationY>3386</locationY>
         <defaultConnector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </defaultConnector>
@@ -282,7 +289,7 @@
         <name>Less_than_SA_Limit</name>
         <label>Less than SA Limit</label>
         <locationX>633</locationX>
-        <locationY>1454</locationY>
+        <locationY>1574</locationY>
         <defaultConnector>
             <targetReference>Too_Many_Service_Appointments</targetReference>
         </defaultConnector>
@@ -315,7 +322,7 @@
         <name>Records_Selected</name>
         <label>Records Selected?</label>
         <locationX>314</locationX>
-        <locationY>2354</locationY>
+        <locationY>2474</locationY>
         <defaultConnector>
             <targetReference>No_Records_Selected</targetReference>
         </defaultConnector>
@@ -347,7 +354,7 @@
         <name>Records_Updates</name>
         <label>Records Updates?</label>
         <locationX>314</locationX>
-        <locationY>1814</locationY>
+        <locationY>1934</locationY>
         <defaultConnector>
             <targetReference>Records_Selected</targetReference>
         </defaultConnector>
@@ -379,7 +386,7 @@
         <name>return_to_prior_screen</name>
         <label>return to prior screen</label>
         <locationX>556</locationX>
-        <locationY>2594</locationY>
+        <locationY>2714</locationY>
         <defaultConnector>
             <targetReference>Get_Draft_Record</targetReference>
         </defaultConnector>
@@ -419,8 +426,8 @@
     <decisions>
         <name>Technicans_Found</name>
         <label>Technicans Found?</label>
-        <locationX>924</locationX>
-        <locationY>1094</locationY>
+        <locationX>1056</locationX>
+        <locationY>1214</locationY>
         <defaultConnector>
             <targetReference>No_Technicians_Found</targetReference>
         </defaultConnector>
@@ -444,7 +451,7 @@
     <decisions>
         <name>was_RecordId_provided</name>
         <label>was RecordId provided</label>
-        <locationX>924</locationX>
+        <locationX>1056</locationX>
         <locationY>158</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -550,7 +557,7 @@
         <name>loop_through_selected_rows</name>
         <label>loop through selected rows</label>
         <locationX>72</locationX>
-        <locationY>2474</locationY>
+        <locationY>2594</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -564,7 +571,7 @@
         <name>Loop_to_Create_Assigned_Resources</name>
         <label>Loop to Create Assigned Resources</label>
         <locationX>314</locationX>
-        <locationY>3602</locationY>
+        <locationY>3722</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -597,7 +604,7 @@
         <name>Create_ARs</name>
         <label>Create ARs</label>
         <locationX>314</locationX>
-        <locationY>4058</locationY>
+        <locationY>4178</locationY>
         <connector>
             <targetReference>info1</targetReference>
         </connector>
@@ -607,7 +614,7 @@
         <name>Delete_draft_SAs</name>
         <label>Delete draft SAs</label>
         <locationX>182</locationX>
-        <locationY>3386</locationY>
+        <locationY>3506</locationY>
         <connector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </connector>
@@ -637,9 +644,39 @@
     </recordDeletes>
     <recordLookups>
         <name>find_Existing_Service_Appointments</name>
-        <label>find Existing Service Appointments</label>
-        <locationX>924</locationX>
+        <label>find Earliest Existing Service Appointments</label>
+        <locationX>1056</locationX>
         <locationY>614</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>find_Existing_Service_Appointments_0</targetReference>
+        </connector>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>MR_Parent_Work_Order__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>ParentRecordId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ServiceAppointment</object>
+        <sortField>SchedStartTime</sortField>
+        <sortOrder>Asc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>find_Existing_Service_Appointments_0</name>
+        <label>find Latest Existing Service Appointments</label>
+        <locationX>1056</locationX>
+        <locationY>734</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>get_the_default_territory_0</targetReference>
@@ -661,6 +698,8 @@
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>ServiceAppointment</object>
+        <sortField>SchedStartTime</sortField>
+        <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
@@ -668,7 +707,7 @@
         <name>Get_Draft_Record</name>
         <label>Get Draft Record</label>
         <locationX>314</locationX>
-        <locationY>3146</locationY>
+        <locationY>3266</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Delete_Records</targetReference>
@@ -703,8 +742,8 @@
         <description>find San Francisco</description>
         <name>get_the_default_territory_0</name>
         <label>get the default territory</label>
-        <locationX>924</locationX>
-        <locationY>734</locationY>
+        <locationX>1056</locationX>
+        <locationY>854</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Select_Parameters</targetReference>
@@ -730,7 +769,7 @@
     <recordLookups>
         <name>getWorkOrder</name>
         <label>getWorkOrder</label>
-        <locationX>924</locationX>
+        <locationX>1056</locationX>
         <locationY>494</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -753,7 +792,7 @@
         <name>Trigger_Draft_SA_Delete</name>
         <label>Trigger Draft SA Delete</label>
         <locationX>314</locationX>
-        <locationY>1574</locationY>
+        <locationY>1694</locationY>
         <connector>
             <targetReference>Review_Draft_SAs</targetReference>
         </connector>
@@ -783,7 +822,7 @@
         <name>Update_Confirmed_Records</name>
         <label>Update Confirmed Records</label>
         <locationX>72</locationX>
-        <locationY>2930</locationY>
+        <locationY>3050</locationY>
         <connector>
             <targetReference>Get_Draft_Record</targetReference>
         </connector>
@@ -793,7 +832,7 @@
         <name>Update_Edited_SAs</name>
         <label>Update Edited SAs</label>
         <locationX>50</locationX>
-        <locationY>1934</locationY>
+        <locationY>2054</locationY>
         <connector>
             <targetReference>Records_Selected</targetReference>
         </connector>
@@ -806,7 +845,7 @@
         <name>Error_Encountered</name>
         <label>Error Encountered</label>
         <locationX>314</locationX>
-        <locationY>2054</locationY>
+        <locationY>2174</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -823,10 +862,26 @@
         <showHeader>false</showHeader>
     </screens>
     <screens>
+        <name>Error_EncounteredApexAction</name>
+        <label>Error Encountered</label>
+        <locationX>1744</locationX>
+        <locationY>1214</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>ErrorApexAction</name>
+            <fieldText>&lt;p&gt;An error has occurred, please refresh your screen and try again. If the problem persists, contact your adminstrator.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>info1</name>
         <label>info1</label>
         <locationX>314</locationX>
-        <locationY>4178</locationY>
+        <locationY>4298</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -847,7 +902,7 @@
         <name>No_Records_Selected</name>
         <label>No Records Selected</label>
         <locationX>556</locationX>
-        <locationY>2474</locationY>
+        <locationY>2594</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -875,8 +930,8 @@
     <screens>
         <name>No_Technicians_Found</name>
         <label>No Technicians Found</label>
-        <locationX>1216</locationX>
-        <locationY>1214</locationY>
+        <locationX>1480</locationX>
+        <locationY>1334</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -895,7 +950,7 @@
     <screens>
         <name>Please_select_Work_Order</name>
         <label>Please select Work Order</label>
-        <locationX>880</locationX>
+        <locationX>1012</locationX>
         <locationY>278</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -918,7 +973,7 @@
         <name>Review_Draft_SAs</name>
         <label>Review Draft SAs</label>
         <locationX>314</locationX>
-        <locationY>1694</locationY>
+        <locationY>1814</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1020,8 +1075,8 @@
     <screens>
         <name>Select_Parameters</name>
         <label>Enter parameters -  Step 1</label>
-        <locationX>924</locationX>
-        <locationY>854</locationY>
+        <locationX>1056</locationX>
+        <locationY>974</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1034,84 +1089,153 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
+            <name>Select_Parameters_Section1</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Select_Parameters_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>CurrentWorkOrderStatus</name>
+                    <fieldText>&lt;p&gt;Work Order Start Date: {!getWorkOrder.StartDate}&lt;/p&gt;&lt;p&gt;Work Order End Date: &lt;span style=&quot;color: rgb(62, 62, 60); background-color: rgb(255, 255, 255);&quot;&gt;{!getWorkOrder.EndDate}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Select_Parameters_Section1_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>SADisplayText</name>
+                    <fieldText>&lt;p&gt;Earliest Service Appointment Found: {!find_Existing_Service_Appointments.SchedStartTime}&lt;/p&gt;&lt;p&gt;Latest Service Appointment Found: &lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;{!find_Existing_Service_Appointments_0.SchedStartTime}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
             <name>saparminfo</name>
             <fieldText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0);&quot;&gt;Service Appointment Parameters&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
-            <name>Starting_From</name>
-            <dataType>Date</dataType>
-            <defaultValue>
-                <elementReference>formulaToday</elementReference>
-            </defaultValue>
-            <fieldText>Starting From</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Until</name>
-            <dataType>Date</dataType>
-            <defaultValue>
-                <elementReference>todayplus7</elementReference>
-            </defaultValue>
-            <fieldText>Until (maximum 2 weeks)</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-            <validationRule>
-                <errorMessage>&lt;p&gt;Until must be equal to or after Starting From&lt;/p&gt;</errorMessage>
-                <formulaExpression>{!Starting_From} &lt;= {!Until} &amp;&amp;
+            <name>Select_Parameters_Section2</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Select_Parameters_Section2_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Starting_From</name>
+                    <dataType>Date</dataType>
+                    <defaultValue>
+                        <elementReference>formulaToday</elementReference>
+                    </defaultValue>
+                    <fieldText>Starting From</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Until</name>
+                    <dataType>Date</dataType>
+                    <defaultValue>
+                        <elementReference>todayplus7</elementReference>
+                    </defaultValue>
+                    <fieldText>Until (maximum 2 weeks)</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                    <validationRule>
+                        <errorMessage>&lt;p&gt;Until must be equal to or after Starting From&lt;/p&gt;</errorMessage>
+                        <formulaExpression>{!Starting_From} &lt;= {!Until} &amp;&amp;
 ({!Until} - {!Starting_From}) &lt;=14</formulaExpression>
-            </validationRule>
-        </fields>
-        <fields>
-            <name>Start_Time</name>
-            <dataType>String</dataType>
-            <defaultValue>
-                <stringValue>08:00 AM</stringValue>
-            </defaultValue>
-            <fieldText>Start Time</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Default_Duration_hrs</name>
-            <dataType>Number</dataType>
-            <defaultValue>
-                <numberValue>8.0</numberValue>
-            </defaultValue>
-            <fieldText>Default Duration (hrs)</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-            <scale>0</scale>
-            <validationRule>
-                <errorMessage>&lt;p&gt;Default Duration must be greater 0 and less than 18&lt;/p&gt;</errorMessage>
-                <formulaExpression>{!Default_Duration_hrs} &gt;0 &amp;&amp; {!Default_Duration_hrs} &lt;= 18</formulaExpression>
-            </validationRule>
-        </fields>
-        <fields>
-            <name>Include_Saturdays</name>
-            <dataType>Boolean</dataType>
-            <fieldText>Include Saturdays</fieldText>
-            <fieldType>InputField</fieldType>
-            <helpText>&lt;p&gt;If selected, appointments will be created for Saturdays.&lt;/p&gt;</helpText>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Include_Sundays</name>
-            <dataType>Boolean</dataType>
-            <fieldText>Include Sundays</fieldText>
-            <fieldType>InputField</fieldType>
-            <helpText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;If selected, appointments will be created for Sundays.&lt;/span&gt;&lt;/p&gt;</helpText>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Status</name>
-            <choiceReferences>Scheduled</choiceReferences>
-            <choiceReferences>Dispatched</choiceReferences>
-            <dataType>String</dataType>
-            <fieldText>Status</fieldText>
-            <fieldType>DropdownBox</fieldType>
-            <isRequired>true</isRequired>
+                    </validationRule>
+                </fields>
+                <fields>
+                    <name>Include_Saturdays</name>
+                    <dataType>Boolean</dataType>
+                    <fieldText>Include Saturdays</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <helpText>&lt;p&gt;If selected, appointments will be created for Saturdays.&lt;/p&gt;</helpText>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Include_Sundays</name>
+                    <dataType>Boolean</dataType>
+                    <fieldText>Include Sundays</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <helpText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;If selected, appointments will be created for Sundays.&lt;/span&gt;&lt;/p&gt;</helpText>
+                    <isRequired>true</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Select_Parameters_Section2_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Start_Time</name>
+                    <dataType>String</dataType>
+                    <defaultValue>
+                        <stringValue>08:00 AM</stringValue>
+                    </defaultValue>
+                    <fieldText>Start Time</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                    <validationRule>
+                        <errorMessage>&lt;pre class=&quot;ql-syntax&quot; spellcheck=&quot;false&quot;&gt;Please enter Start Time using format HH:MM AM/PM
+&lt;/pre&gt;</errorMessage>
+                        <formulaExpression>regex({!Start_Time},&quot;((1[0-2]|0[1-9]):([0-5][0-9]) ?([AaPp][Mm]))&quot;)</formulaExpression>
+                    </validationRule>
+                </fields>
+                <fields>
+                    <name>Default_Duration_hrs</name>
+                    <dataType>Number</dataType>
+                    <defaultValue>
+                        <numberValue>8.0</numberValue>
+                    </defaultValue>
+                    <fieldText>Default Duration (hrs)</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                    <scale>0</scale>
+                    <validationRule>
+                        <errorMessage>&lt;p&gt;Default Duration must be greater 0 and less than 18&lt;/p&gt;</errorMessage>
+                        <formulaExpression>{!Default_Duration_hrs} &gt;0 &amp;&amp; {!Default_Duration_hrs} &lt;= 18</formulaExpression>
+                    </validationRule>
+                </fields>
+                <fields>
+                    <name>Status</name>
+                    <choiceReferences>Scheduled</choiceReferences>
+                    <choiceReferences>Dispatched</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Status</fieldText>
+                    <fieldType>DropdownBox</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
         </fields>
         <fields>
             <name>selectTechniciansText</name>
@@ -1119,26 +1243,52 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
-            <name>Territory</name>
-            <choiceReferences>rcsServiceTerritory</choiceReferences>
-            <choiceReferences>All</choiceReferences>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>choiceDefaultTerritoryId</elementReference>
-            </defaultValue>
-            <fieldText>Territory</fieldText>
-            <fieldType>DropdownBox</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Skill</name>
-            <choiceReferences>All</choiceReferences>
-            <choiceReferences>rcsSkills</choiceReferences>
-            <dataType>String</dataType>
-            <defaultSelectedChoiceReference>All</defaultSelectedChoiceReference>
-            <fieldText>Skill</fieldText>
-            <fieldType>DropdownBox</fieldType>
-            <isRequired>true</isRequired>
+            <name>Select_Parameters_Section3</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Select_Parameters_Section3_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Territory</name>
+                    <choiceReferences>rcsServiceTerritory</choiceReferences>
+                    <dataType>String</dataType>
+                    <defaultValue>
+                        <elementReference>choiceDefaultTerritoryId</elementReference>
+                    </defaultValue>
+                    <fieldText>Territory</fieldText>
+                    <fieldType>DropdownBox</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Select_Parameters_Section3_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Skill</name>
+                    <choiceReferences>All</choiceReferences>
+                    <choiceReferences>rcsSkills</choiceReferences>
+                    <dataType>String</dataType>
+                    <defaultSelectedChoiceReference>All</defaultSelectedChoiceReference>
+                    <fieldText>Skill</fieldText>
+                    <fieldType>DropdownBox</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
@@ -1147,7 +1297,7 @@
         <name>Select_Resource</name>
         <label>Select Resource</label>
         <locationX>633</locationX>
-        <locationY>1214</locationY>
+        <locationY>1334</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1221,7 +1371,7 @@
         <name>Too_Many_Service_Appointments</name>
         <label>Too Many Service Appointments</label>
         <locationX>952</locationX>
-        <locationY>1574</locationY>
+        <locationY>1694</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1234,7 +1384,7 @@
         <showHeader>false</showHeader>
     </screens>
     <start>
-        <locationX>798</locationX>
+        <locationX>930</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>was_RecordId_provided</targetReference>

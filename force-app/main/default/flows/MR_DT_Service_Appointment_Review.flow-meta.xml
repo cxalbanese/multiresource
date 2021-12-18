@@ -4,7 +4,7 @@
         <name>get_filtered_STMS</name>
         <label>get filtered STMS</label>
         <locationX>2393</locationX>
-        <locationY>2246</locationY>
+        <locationY>1910</locationY>
         <actionName>MRDTGetSTMs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -49,7 +49,7 @@
         <name>MR_DT_Date_ShiftMR_DT_Date_Shift</name>
         <label>MR DT Date ShiftMR DT Date Shift</label>
         <locationX>3614</locationX>
-        <locationY>1430</locationY>
+        <locationY>1094</locationY>
         <actionName>MRDTDateShift</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -78,15 +78,6 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>includeWeekendDay1</name>
-            <value>
-                <elementReference>Include_Saturdays</elementReference>
-            </value>
-        </inputParameters>
-        <inputParameters>
-            <name>includeWeekendDay2</name>
-        </inputParameters>
-        <inputParameters>
             <name>listSA</name>
             <value>
                 <elementReference>collectionDraftSAs</elementReference>
@@ -102,10 +93,37 @@
         </outputParameters>
     </actionCalls>
     <actionCalls>
+        <description>Update SA MR Service Resources and return list of Service Appointments</description>
+        <name>MR_DT_Validate_Update</name>
+        <label>MR DT Validate Update</label>
+        <locationX>3416</locationX>
+        <locationY>614</locationY>
+        <actionName>MRDTSAValidateUpdate</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Less_than_SA_Limit</targetReference>
+        </connector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>woID</name>
+            <value>
+                <elementReference>getWorkOrder.Id</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>collectionDraftSAs</assignToReference>
+            <name>listSA</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>numSAs</assignToReference>
+            <name>numSAs</name>
+        </outputParameters>
+    </actionCalls>
+    <actionCalls>
         <name>Reassign_Technicians</name>
         <label>Reassign Technicians</label>
         <locationX>1766</locationX>
-        <locationY>2726</locationY>
+        <locationY>2390</locationY>
         <actionName>MRDTReassignTechs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -138,7 +156,7 @@
         <name>Assign_Start_and_End_Dates</name>
         <label>Assign Start and End Dates</label>
         <locationX>2481</locationX>
-        <locationY>1790</locationY>
+        <locationY>1454</locationY>
         <assignmentItems>
             <assignToReference>firstStartDate</assignToReference>
             <operator>Assign</operator>
@@ -155,22 +173,6 @@
         </assignmentItems>
         <connector>
             <targetReference>loop_through_selected_change_tech_records</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <name>update_counter</name>
-        <label>update counter</label>
-        <locationX>3504</locationX>
-        <locationY>854</locationY>
-        <assignmentItems>
-            <assignToReference>numSAs</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <numberValue>1.0</numberValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Count_the_SAs</targetReference>
         </connector>
     </assignments>
     <choices>
@@ -249,7 +251,7 @@
         <name>Less_than_SA_Limit</name>
         <label>Less than SA Limit</label>
         <locationX>3416</locationX>
-        <locationY>1070</locationY>
+        <locationY>734</locationY>
         <defaultConnector>
             <targetReference>Too_Many_Service_Appointments</targetReference>
         </defaultConnector>
@@ -281,7 +283,7 @@
         <name>Shift_Successful</name>
         <label>Shift Successful?</label>
         <locationX>3614</locationX>
-        <locationY>1550</locationY>
+        <locationY>1214</locationY>
         <defaultConnector>
             <targetReference>SuccessShiftSA_0</targetReference>
         </defaultConnector>
@@ -306,7 +308,7 @@
         <name>Successful</name>
         <label>Successful?</label>
         <locationX>1766</locationX>
-        <locationY>2846</locationY>
+        <locationY>2510</locationY>
         <defaultConnector>
             <targetReference>info1_0</targetReference>
         </defaultConnector>
@@ -331,7 +333,7 @@
         <name>Tech_Selected</name>
         <label>Tech Selected?</label>
         <locationX>2096</locationX>
-        <locationY>2606</locationY>
+        <locationY>2270</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesTechSelected</name>
@@ -353,7 +355,7 @@
         <name>Technicans_Found</name>
         <label>Technicans Found?</label>
         <locationX>2393</locationX>
-        <locationY>2366</locationY>
+        <locationY>2030</locationY>
         <defaultConnector>
             <targetReference>No_Technicians_Found</targetReference>
         </defaultConnector>
@@ -378,7 +380,7 @@
         <name>Update_SAs</name>
         <label>Path to take</label>
         <locationX>2294</locationX>
-        <locationY>1310</locationY>
+        <locationY>974</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Update_SAs_Outcome</name>
@@ -496,7 +498,7 @@
         <name>Were_Records_Deleted</name>
         <label>Were Records Deleted</label>
         <locationX>1106</locationX>
-        <locationY>1550</locationY>
+        <locationY>1214</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordsUpdated_0</name>
@@ -518,7 +520,7 @@
         <name>Were_Records_Updated</name>
         <label>Were Records Updated</label>
         <locationX>314</locationX>
-        <locationY>1430</locationY>
+        <locationY>1094</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordsUpdated</name>
@@ -540,7 +542,7 @@
         <name>Were_Technicians_Changed</name>
         <label>Were Technicians Changed</label>
         <locationX>2805</locationX>
-        <locationY>1550</locationY>
+        <locationY>1214</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordsUpdated_0_0</name>
@@ -637,24 +639,10 @@
     <interviewLabel>MR DT Service Appointment Review {!$Flow.CurrentDateTime}</interviewLabel>
     <label>MR DT Service Appointment Review</label>
     <loops>
-        <name>Count_the_SAs</name>
-        <label>Count the SAs</label>
-        <locationX>3416</locationX>
-        <locationY>734</locationY>
-        <collectionReference>collectionDraftSAs</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>update_counter</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>Less_than_SA_Limit</targetReference>
-        </noMoreValuesConnector>
-    </loops>
-    <loops>
         <name>loop_through_selected_change_tech_records</name>
         <label>loop through selected change tech records</label>
         <locationX>2393</locationX>
-        <locationY>1670</locationY>
+        <locationY>1334</locationY>
         <collectionReference>ChangeTechSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -687,56 +675,17 @@
         <name>Delete_SAs</name>
         <label>Delete SAs</label>
         <locationX>842</locationX>
-        <locationY>1670</locationY>
+        <locationY>1334</locationY>
         <faultConnector>
             <targetReference>Error_Encountered</targetReference>
         </faultConnector>
         <inputReference>DeleteSADataTable.outputSelectedRows</inputReference>
     </recordDeletes>
     <recordLookups>
-        <name>get_existing_Service_Appointments</name>
-        <label>get existing Service Appointments</label>
-        <locationX>3416</locationX>
-        <locationY>614</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Count_the_SAs</targetReference>
-        </connector>
-        <filterLogic>or</filterLogic>
-        <filters>
-            <field>MR_Parent_Work_Order__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>getWorkOrder.Id</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>ParentRecordId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>getWorkOrder.Id</elementReference>
-            </value>
-        </filters>
-        <object>ServiceAppointment</object>
-        <outputReference>collectionDraftSAs</outputReference>
-        <queriedFields>Id</queriedFields>
-        <queriedFields>AppointmentNumber</queriedFields>
-        <queriedFields>SchedStartTime</queriedFields>
-        <queriedFields>SchedEndTime</queriedFields>
-        <queriedFields>DurationType</queriedFields>
-        <queriedFields>Duration</queriedFields>
-        <queriedFields>EarliestStartTime</queriedFields>
-        <queriedFields>DueDate</queriedFields>
-        <queriedFields>MR_Creation_Status__c</queriedFields>
-        <queriedFields>MR_Service_Resource__c</queriedFields>
-        <queriedFields>Status</queriedFields>
-        <queriedFields>StatusCategory</queriedFields>
-    </recordLookups>
-    <recordLookups>
         <name>get_the_default_territory</name>
         <label>get the default territory</label>
         <locationX>2393</locationX>
-        <locationY>2006</locationY>
+        <locationY>1670</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Technician_Filtering</targetReference>
@@ -766,7 +715,7 @@
         <locationY>494</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>get_existing_Service_Appointments</targetReference>
+            <targetReference>MR_DT_Validate_Update</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -784,7 +733,7 @@
         <name>Update_Edited_SAs_0</name>
         <label>Update Edited SAs</label>
         <locationX>50</locationX>
-        <locationY>1550</locationY>
+        <locationY>1214</locationY>
         <faultConnector>
             <isGoTo>true</isGoTo>
             <targetReference>Error_Encountered</targetReference>
@@ -795,7 +744,7 @@
         <name>ApexActionError</name>
         <label>ApexActionError</label>
         <locationX>4010</locationX>
-        <locationY>1550</locationY>
+        <locationY>1214</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -811,7 +760,7 @@
         <name>Change_Service_Resources</name>
         <label>Change Service Resources</label>
         <locationX>2805</locationX>
-        <locationY>1430</locationY>
+        <locationY>1094</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -896,7 +845,7 @@
         <name>Delete_SAs_Screen</name>
         <label>Delete SAs</label>
         <locationX>1106</locationX>
-        <locationY>1430</locationY>
+        <locationY>1094</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -981,7 +930,7 @@
         <name>Error_Encountered</name>
         <label>Error Encountered</label>
         <locationX>1106</locationX>
-        <locationY>1790</locationY>
+        <locationY>1454</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1001,7 +950,7 @@
         <name>info1</name>
         <label>info1</label>
         <locationX>1634</locationX>
-        <locationY>2966</locationY>
+        <locationY>2630</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1022,7 +971,7 @@
         <name>info1_0</name>
         <label>info1</label>
         <locationX>1898</locationX>
-        <locationY>2966</locationY>
+        <locationY>2630</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1043,7 +992,7 @@
         <name>No_Technicians_Found</name>
         <label>No Technicians Found</label>
         <locationX>2690</locationX>
-        <locationY>2486</locationY>
+        <locationY>2150</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1085,7 +1034,7 @@
         <name>Select_Resource</name>
         <label>Select Resource</label>
         <locationX>2096</locationX>
-        <locationY>2486</locationY>
+        <locationY>2150</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1171,7 +1120,7 @@
         <name>SuccessShiftSA</name>
         <label>Success</label>
         <locationX>3482</locationX>
-        <locationY>1670</locationY>
+        <locationY>1334</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1187,7 +1136,7 @@
         <name>SuccessShiftSA_0</name>
         <label>No Appointments Shifted</label>
         <locationX>3746</locationX>
-        <locationY>1670</locationY>
+        <locationY>1334</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1203,7 +1152,7 @@
         <name>Technician_Filtering</name>
         <label>Technician Filtering</label>
         <locationX>2393</locationX>
-        <locationY>2126</locationY>
+        <locationY>1790</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1244,7 +1193,7 @@
         <name>Too_Many_Service_Appointments</name>
         <label>Too Many Service Appointments</label>
         <locationX>4538</locationX>
-        <locationY>1190</locationY>
+        <locationY>854</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1260,7 +1209,7 @@
         <name>Update_SAs_or_Take_Other_Action_Screen</name>
         <label>Update SAs or Take Other Action</label>
         <locationX>2294</locationX>
-        <locationY>1190</locationY>
+        <locationY>854</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1311,7 +1260,7 @@
                 </fields>
                 <fields>
                     <name>NewDate</name>
-                    <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Select the new starting date. All selected appointments will be moved proportionally&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Select the new starting date. All selected appointments will be moved proportionally. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Please note that this may shift some of your appointments to a weekend. Please review and adjust as needed.&lt;/span&gt;&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
                 </fields>
                 <fields>
@@ -1319,22 +1268,6 @@
                     <dataType>Date</dataType>
                     <fieldText>New Starting Date</fieldText>
                     <fieldType>InputField</fieldType>
-                    <isRequired>true</isRequired>
-                </fields>
-                <fields>
-                    <name>Include_Saturdays</name>
-                    <dataType>Boolean</dataType>
-                    <fieldText>Include Saturdays</fieldText>
-                    <fieldType>InputField</fieldType>
-                    <helpText>&lt;p&gt;Select this box to allow appointments to be shifted to a Saturday. If not selected, an appointment that would be shifted to Saturday will now be shifted to Sunday, if Sundays are included, or Monday.&lt;/p&gt;</helpText>
-                    <isRequired>true</isRequired>
-                </fields>
-                <fields>
-                    <name>Include_Sundays</name>
-                    <dataType>Boolean</dataType>
-                    <fieldText>Include Sundays</fieldText>
-                    <fieldType>InputField</fieldType>
-                    <helpText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;Select this box to allow appointments to be shifted to a Sunday. If not selected, an appointment that would be shifted to Sunday will now be shifted to Monday, if Saturdays are included, or Tuesday.&lt;/span&gt;&lt;/p&gt;</helpText>
                     <isRequired>true</isRequired>
                 </fields>
                 <inputParameters>
