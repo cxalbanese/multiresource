@@ -141,12 +141,31 @@
             <name>output</name>
         </outputParameters>
     </actionCalls>
+    <actionCalls>
+        <name>MRDT_Get_Time_Zone_Info</name>
+        <label>MRDT Get Time Zone Info</label>
+        <locationX>314</locationX>
+        <locationY>1814</locationY>
+        <actionName>MRDTGetTimeZoneInfo</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Review_Draft_SAs</targetReference>
+        </connector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>inTerritoryIdList</name>
+            <value>
+                <elementReference>Territory</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
     <apiVersion>53.0</apiVersion>
     <assignments>
         <name>Add_AR_to_collection</name>
         <label>Add AR to collection</label>
         <locationX>402</locationX>
-        <locationY>3962</locationY>
+        <locationY>4082</locationY>
         <assignmentItems>
             <assignToReference>collARs</assignToReference>
             <operator>Add</operator>
@@ -162,7 +181,7 @@
         <name>Add_to_List</name>
         <label>Add to List</label>
         <locationX>160</locationX>
-        <locationY>2834</locationY>
+        <locationY>2954</locationY>
         <assignmentItems>
             <assignToReference>collConfirmedSAs</assignToReference>
             <operator>Add</operator>
@@ -178,7 +197,7 @@
         <name>Create_Assigned_Resource</name>
         <label>Create Assigned Resource</label>
         <locationX>402</locationX>
-        <locationY>3842</locationY>
+        <locationY>3962</locationY>
         <assignmentItems>
             <assignToReference>objAR.ServiceResourceId</assignToReference>
             <operator>Assign</operator>
@@ -201,7 +220,7 @@
         <name>Set_MR_Creation_Status</name>
         <label>Set MR Creation Status</label>
         <locationX>160</locationX>
-        <locationY>2714</locationY>
+        <locationY>2834</locationY>
         <assignmentItems>
             <assignToReference>objSA.Id</assignToReference>
             <operator>Assign</operator>
@@ -263,7 +282,7 @@
         <name>Delete_Records</name>
         <label>Delete Records?</label>
         <locationX>314</locationX>
-        <locationY>3386</locationY>
+        <locationY>3506</locationY>
         <defaultConnector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </defaultConnector>
@@ -322,7 +341,7 @@
         <name>Records_Selected</name>
         <label>Records Selected?</label>
         <locationX>314</locationX>
-        <locationY>2474</locationY>
+        <locationY>2594</locationY>
         <defaultConnector>
             <targetReference>No_Records_Selected</targetReference>
         </defaultConnector>
@@ -354,7 +373,7 @@
         <name>Records_Updates</name>
         <label>Records Updates?</label>
         <locationX>314</locationX>
-        <locationY>1934</locationY>
+        <locationY>2054</locationY>
         <defaultConnector>
             <targetReference>Records_Selected</targetReference>
         </defaultConnector>
@@ -386,7 +405,7 @@
         <name>return_to_prior_screen</name>
         <label>return to prior screen</label>
         <locationX>556</locationX>
-        <locationY>2714</locationY>
+        <locationY>2834</locationY>
         <defaultConnector>
             <targetReference>Get_Draft_Record</targetReference>
         </defaultConnector>
@@ -557,7 +576,7 @@
         <name>loop_through_selected_rows</name>
         <label>loop through selected rows</label>
         <locationX>72</locationX>
-        <locationY>2594</locationY>
+        <locationY>2714</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -571,7 +590,7 @@
         <name>Loop_to_Create_Assigned_Resources</name>
         <label>Loop to Create Assigned Resources</label>
         <locationX>314</locationX>
-        <locationY>3722</locationY>
+        <locationY>3842</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -604,7 +623,7 @@
         <name>Create_ARs</name>
         <label>Create ARs</label>
         <locationX>314</locationX>
-        <locationY>4178</locationY>
+        <locationY>4298</locationY>
         <connector>
             <targetReference>info1</targetReference>
         </connector>
@@ -614,7 +633,7 @@
         <name>Delete_draft_SAs</name>
         <label>Delete draft SAs</label>
         <locationX>182</locationX>
-        <locationY>3506</locationY>
+        <locationY>3626</locationY>
         <connector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </connector>
@@ -707,7 +726,7 @@
         <name>Get_Draft_Record</name>
         <label>Get Draft Record</label>
         <locationX>314</locationX>
-        <locationY>3266</locationY>
+        <locationY>3386</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Delete_Records</targetReference>
@@ -794,7 +813,7 @@
         <locationX>314</locationX>
         <locationY>1694</locationY>
         <connector>
-            <targetReference>Review_Draft_SAs</targetReference>
+            <targetReference>MRDT_Get_Time_Zone_Info</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -822,7 +841,7 @@
         <name>Update_Confirmed_Records</name>
         <label>Update Confirmed Records</label>
         <locationX>72</locationX>
-        <locationY>3050</locationY>
+        <locationY>3170</locationY>
         <connector>
             <targetReference>Get_Draft_Record</targetReference>
         </connector>
@@ -832,7 +851,7 @@
         <name>Update_Edited_SAs</name>
         <label>Update Edited SAs</label>
         <locationX>50</locationX>
-        <locationY>2054</locationY>
+        <locationY>2174</locationY>
         <connector>
             <targetReference>Records_Selected</targetReference>
         </connector>
@@ -845,7 +864,7 @@
         <name>Error_Encountered</name>
         <label>Error Encountered</label>
         <locationX>314</locationX>
-        <locationY>2174</locationY>
+        <locationY>2294</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -881,7 +900,7 @@
         <name>info1</name>
         <label>info1</label>
         <locationX>314</locationX>
-        <locationY>4298</locationY>
+        <locationY>4418</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -902,7 +921,7 @@
         <name>No_Records_Selected</name>
         <label>No Records Selected</label>
         <locationX>556</locationX>
-        <locationY>2594</locationY>
+        <locationY>2714</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -973,7 +992,7 @@
         <name>Review_Draft_SAs</name>
         <label>Review Draft SAs</label>
         <locationX>314</locationX>
-        <locationY>1814</locationY>
+        <locationY>1934</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -984,6 +1003,21 @@
             <name>SAGuidanceText</name>
             <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Please select the appointments you would like to &lt;/span&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;KEEP&lt;/b&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;. Use the select all checkbox at the top of the column to select every appointment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Edit the values for columns as well and use the Save button to save this changes.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>TZWarning</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 16px; color: rgb(255, 0, 0);&quot;&gt;Time Zone Difference&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please note: your timezone is different than the service territory&apos;s time zone.  The times displayed below are in your timezone. There is a {!MRDT_Get_Time_Zone_Info.hours} hour difference. You may wish to return to the first screen to set a new start time.&lt;/p&gt;&lt;p&gt;Your Time Zone: {!MRDT_Get_Time_Zone_Info.yourTimeZone}&lt;/p&gt;&lt;p&gt;Territory Time Zone: {!MRDT_Get_Time_Zone_Info.territoryTimeZone}&lt;/p&gt;&lt;p&gt;Difference: &lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;{!MRDT_Get_Time_Zone_Info.hours} hour(s)&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>MRDT_Get_Time_Zone_Info.hours</leftValueReference>
+                    <operator>NotEqualTo</operator>
+                    <rightValue>
+                        <numberValue>0.0</numberValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
         </fields>
         <fields>
             <name>DraftSADataTable</name>
@@ -1196,6 +1230,7 @@
                     </defaultValue>
                     <fieldText>Start Time</fieldText>
                     <fieldType>InputField</fieldType>
+                    <helpText>&lt;p&gt;This is in your time zone. Please adjust if the selected Territory is in a different time zone.  Your time zone is {!$User.TimeZoneSidKey}.&lt;/p&gt;</helpText>
                     <isRequired>true</isRequired>
                     <validationRule>
                         <errorMessage>&lt;pre class=&quot;ql-syntax&quot; spellcheck=&quot;false&quot;&gt;Please enter Start Time using format HH:MM AM/PM
@@ -1304,6 +1339,11 @@
         <connector>
             <targetReference>Create_Draft_SAs</targetReference>
         </connector>
+        <fields>
+            <name>selectTechnician</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Please select at least 1 Technician.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
         <fields>
             <name>STMDataTable</name>
             <dataTypeMappings>
