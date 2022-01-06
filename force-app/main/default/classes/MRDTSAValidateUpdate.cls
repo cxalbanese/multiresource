@@ -1,5 +1,6 @@
 //MRDTSAUpdateValidate Author: Chris Albanese, Version 1, Created Dec 16, 2021
 //Purpose: Update any SAs which have mismatch between MR Resource and AR.ServiceResource and return list of SAs return count of SAs
+//If an SA is reassigned by a scheduling action, drag and drop or manual update, this class will update the MR_Service_Resource__c lookup to match
 //Called by: Flow: MR_DT_Service_Appointment_Review
 //Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
 //Disclaimer: This code does not use the scheduling features of SFS and will produce scheduling violations on your Gantt

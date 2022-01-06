@@ -1,3 +1,9 @@
+//MRDTGetSTMs Author: Chris Albanese, Version 1, Created Dec 16, 2021
+//Purpose: get a list of active service territory member records for the selected territory and skill
+//Called by: Flow: MR_DT_Service_Appointment_Review and MR_DT_Service_Appointment_Creator
+//Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
+//Disclaimer: This code does not use the scheduling features of SFS and will produce scheduling violations on your Gantt
+
 public class MRDTGetSTMs {
 // this returns a list of Service Resource Id given a Service Territory or All Territories and a Skill or All Skills
 @invocableMethod(label='MR DT Get STM records')

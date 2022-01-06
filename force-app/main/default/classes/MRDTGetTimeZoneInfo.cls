@@ -1,5 +1,6 @@
 //MRDTGetTimeZoneInfo Author: Chris Albanese, Version 1, Created Jan 1, 2022
 //Purpose: Determine time zone difference between user's time zone and selected territory's timezone
+//Returning a non zero value means that the running users time zone is different from the selected territory
 //Called by: Flow: MR_DT_Service_Appointment_Creator
 //Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
 //Disclaimer: This code does not use the scheduling features of SFS and will produce scheduling violations on your Gantt
