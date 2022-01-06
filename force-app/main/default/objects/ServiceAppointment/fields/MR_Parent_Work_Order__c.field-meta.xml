@@ -2,13 +2,13 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Parent_Work_Order__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
+    <description>This field stores the work order id that ultimately owns this work order. If this solution ultimately allows WOLIs to own SAs, this relationship provides a view of all SAs for the WO regardless of whether they are directly or indirectly owned by the WO.</description>
     <externalId>false</externalId>
     <label>MR Parent Work Order</label>
     <referenceTo>WorkOrder</referenceTo>
     <relationshipLabel>Service Appointments</relationshipLabel>
     <relationshipName>Service_AppointmentsMR</relationshipName>
     <required>false</required>
-    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Lookup</type>
 </CustomField>

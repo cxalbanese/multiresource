@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Hours_Scheduled__c</fullName>
+    <description>This is the total duration hours of Service Appointments that have been scheduled. SAs in a status of none will not be included in this total.</description>
     <externalId>false</externalId>
     <inlineHelpText>This is the total hours of Service Appointments that have been scheduled</inlineHelpText>
     <label>MR Hours Scheduled</label>

@@ -12,7 +12,6 @@ Updated = change dates
 ChangeTech = change technician</inlineHelpText>
     <label>MR Create/Update Status</label>
     <required>false</required>
-    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>

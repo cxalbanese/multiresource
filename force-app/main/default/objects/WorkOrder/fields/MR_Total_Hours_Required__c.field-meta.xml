@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Total_Hours_Required__c</fullName>
+    <description>This is the Work Order Duration in Hours and is used to represent the total hours of Service Appointments that will be required</description>
     <externalId>false</externalId>
     <formula>if(text( DurationType) = &apos;minutes&apos;,  Duration / 60 , Duration )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>

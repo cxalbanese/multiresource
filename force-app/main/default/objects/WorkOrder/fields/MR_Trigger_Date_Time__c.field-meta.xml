@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Trigger_Date_Time__c</fullName>
+    <description>This field stores the date/time when the trigger process is initiated, not executed. When a user starts the SA creation flow, this field gets set. This field usefulness is still to be determined.</description>
     <externalId>false</externalId>
     <label>MR Trigger Date Time</label>
     <required>false</required>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Hours_Actual__c</fullName>
+    <description>This is the total actual hours reported by Service Resources</description>
     <externalId>false</externalId>
     <inlineHelpText>This is the total actual hours reported by Service Resources</inlineHelpText>
     <label>MR Hours Actual</label>

@@ -2,13 +2,13 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Service_Resource__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
+    <description>This field is used to store the selected resource for the service appointment. It is used to ultimately create the assigned resource record.</description>
     <externalId>false</externalId>
     <label>MR Service Resource</label>
     <referenceTo>ServiceResource</referenceTo>
     <relationshipLabel>Service Appointments</relationshipLabel>
     <relationshipName>Service_AppointmentsMR</relationshipName>
     <required>false</required>
-    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Lookup</type>
 </CustomField>

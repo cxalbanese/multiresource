@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Service_Territory__c</fullName>
+    <description>This formula field is used to display the territory name when creating new service appointments.</description>
     <externalId>false</externalId>
     <formula>ServiceTerritory.Name</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>

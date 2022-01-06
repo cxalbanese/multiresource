@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Hours_Completed__c</fullName>
+    <description>This is the total hours of Service Appointments which have been completed. It contains the sum of the hours for all SAs whose status = completed/closed</description>
     <externalId>false</externalId>
     <inlineHelpText>This is the total hours of Service Appointments which have been completed</inlineHelpText>
     <label>MR Hours Completed</label>

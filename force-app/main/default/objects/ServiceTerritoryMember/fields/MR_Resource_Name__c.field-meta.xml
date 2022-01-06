@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Resource_Name__c</fullName>
+    <description>This formula field is used to display the technician name when running the SA creation process</description>
     <externalId>false</externalId>
     <formula>ServiceResource.Name</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>MR_Hours_Created__c</fullName>
+    <description>This is the total of all Service Appointment Durations for all SAs for this WO</description>
     <externalId>false</externalId>
     <inlineHelpText>This is the total of all Service Appointment Durations</inlineHelpText>
     <label>MR Hours Created</label>
