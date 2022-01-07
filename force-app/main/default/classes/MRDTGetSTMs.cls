@@ -19,6 +19,7 @@ public static list<list<ServiceTerritoryMember>> GetSTMS (list<inPayLoad> listPa
     list<string> listSRId = new list<string>();
     set<string> setSRId = new set<string>();
     //if its all territories just find all Active STs
+    try{
     if(territoryId == 'All') 
        listST = [select id from serviceterritory where isactive = true];
        //else just get the specified territory
@@ -34,10 +35,12 @@ public static list<list<ServiceTerritoryMember>> GetSTMS (list<inPayLoad> listPa
         for(ServiceResourceSkill srs : listSRSkill) listSRId.add(srs.ServiceResourceId);
         for(ServiceTerritoryMember stm : listSTM) if (listSRID.contains(stm.ServiceResourceId)) listSTMFiltered.add(stm);
     }
-    else listSTMFiltered = new list<serviceterritorymember>(listSTM); 
-    
-   
-return new list<list<ServiceTerritoryMember>>{listSTMFiltered};
+    else listSTMFiltered = new list<serviceterritorymember>(listSTM);    
+    return new list<list<ServiceTerritoryMember>>{listSTMFiltered};
+    }
+    catch(exception e) {
+        return new list<list<ServiceTerritoryMember>>();
+    }
 
 }
 

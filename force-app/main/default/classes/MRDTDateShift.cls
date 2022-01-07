@@ -38,7 +38,7 @@ public static list<WODTScheduleOutput> DateShift (list<WODTSchedulePayload> inPa
                 sa.schedstarttime = sa.schedstarttime.adddays(dateDaysOffset);
                 sa.schedendtime = sa.schedstarttime.addhours(dateDaysOffset);
      }
-   
+   try{
        if(listShiftedSA.size()>0 ) {
            update listShiftedSA;  
            WODTScheduleOutput saOutput = new WODTScheduleOutput();
@@ -51,6 +51,13 @@ public static list<WODTScheduleOutput> DateShift (list<WODTSchedulePayload> inPa
        saOutput.listSA = new list<serviceappointment>();
        saOutput.numSAs = 0;
        return new list<WODTScheduleOutput>{saOutput};
+       }
+    catch(exception e) {
+       WODTScheduleOutput saOutput = new WODTScheduleOutput();
+       saOutput.listSA = new list<serviceappointment>();
+       saOutput.numSAs = 0;
+       return new list<WODTScheduleOutput>{saOutput};
+    }
                           
   }
 

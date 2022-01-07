@@ -53,6 +53,7 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
     list<serviceappointment> listNewSAs = new list<serviceappointment>();
     list<serviceappointment> listSavedSAs = new list<serviceappointment>();
     list<assignedresource> newARs = new list<assignedresource>();
+    try{
     workorder thewo = [select id, subject, city, state, street, postalcode from workorder where id =: workorderid limit 1];
     if(taskDescription == null ) taskDescription = thewo.subject;
     for(serviceterritorymember stm : listSTM) {
@@ -104,7 +105,13 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
        saOutput.listSA = new list<serviceappointment>();
        saOutput.numSAs = 0;
        return new list<WODTScheduleOutput>{saOutput};
-                          
+      }
+      catch(exception e) {
+       WODTScheduleOutput saOutput = new WODTScheduleOutput();
+       saOutput.listSA = new list<serviceappointment>();
+       saOutput.numSAs = 0;
+       return new list<WODTScheduleOutput>{saOutput};
+      }                    
   }
 
 
