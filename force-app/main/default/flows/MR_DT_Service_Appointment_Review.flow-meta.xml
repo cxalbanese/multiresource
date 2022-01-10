@@ -4,7 +4,7 @@
         <name>get_filtered_STMS</name>
         <label>get filtered STMS</label>
         <locationX>2393</locationX>
-        <locationY>1910</locationY>
+        <locationY>2150</locationY>
         <actionName>MRDTGetSTMs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -49,7 +49,7 @@
         <name>MR_DT_Date_ShiftMR_DT_Date_Shift</name>
         <label>MR DT Date ShiftMR DT Date Shift</label>
         <locationX>3614</locationX>
-        <locationY>1094</locationY>
+        <locationY>1334</locationY>
         <actionName>MRDTDateShift</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -123,7 +123,7 @@
         <name>Reassign_Technicians</name>
         <label>Reassign Technicians</label>
         <locationX>1766</locationX>
-        <locationY>2390</locationY>
+        <locationY>2630</locationY>
         <actionName>MRDTReassignTechs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -156,7 +156,7 @@
         <name>Assign_Start_and_End_Dates</name>
         <label>Assign Start and End Dates</label>
         <locationX>2481</locationX>
-        <locationY>1454</locationY>
+        <locationY>1694</locationY>
         <assignmentItems>
             <assignToReference>firstStartDate</assignToReference>
             <operator>Assign</operator>
@@ -274,7 +274,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Update_SAs_or_Take_Other_Action_Screen</targetReference>
+                <targetReference>find_Earliest_Existing_Service_Appointments</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -283,7 +283,7 @@
         <name>Shift_Successful</name>
         <label>Shift Successful?</label>
         <locationX>3614</locationX>
-        <locationY>1214</locationY>
+        <locationY>1454</locationY>
         <defaultConnector>
             <targetReference>SuccessShiftSA_0</targetReference>
         </defaultConnector>
@@ -308,7 +308,7 @@
         <name>Successful</name>
         <label>Successful?</label>
         <locationX>1766</locationX>
-        <locationY>2510</locationY>
+        <locationY>2750</locationY>
         <defaultConnector>
             <targetReference>info1_0</targetReference>
         </defaultConnector>
@@ -333,7 +333,7 @@
         <name>Tech_Selected</name>
         <label>Tech Selected?</label>
         <locationX>2096</locationX>
-        <locationY>2270</locationY>
+        <locationY>2510</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesTechSelected</name>
@@ -355,7 +355,7 @@
         <name>Technicans_Found</name>
         <label>Technicans Found?</label>
         <locationX>2393</locationX>
-        <locationY>2030</locationY>
+        <locationY>2270</locationY>
         <defaultConnector>
             <targetReference>No_Technicians_Found</targetReference>
         </defaultConnector>
@@ -380,7 +380,7 @@
         <name>Update_SAs</name>
         <label>Path to take</label>
         <locationX>2294</locationX>
-        <locationY>974</locationY>
+        <locationY>1214</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Update_SAs_Outcome</name>
@@ -498,7 +498,7 @@
         <name>Were_Records_Deleted</name>
         <label>Were Records Deleted</label>
         <locationX>1106</locationX>
-        <locationY>1214</locationY>
+        <locationY>1454</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordsUpdated_0</name>
@@ -520,7 +520,7 @@
         <name>Were_Records_Updated</name>
         <label>Were Records Updated</label>
         <locationX>314</locationX>
-        <locationY>1094</locationY>
+        <locationY>1334</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordsUpdated</name>
@@ -542,7 +542,7 @@
         <name>Were_Technicians_Changed</name>
         <label>Were Technicians Changed</label>
         <locationX>2805</locationX>
-        <locationY>1214</locationY>
+        <locationY>1454</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesRecordsUpdated_0_0</name>
@@ -642,7 +642,7 @@
         <name>loop_through_selected_change_tech_records</name>
         <label>loop through selected change tech records</label>
         <locationX>2393</locationX>
-        <locationY>1334</locationY>
+        <locationY>1574</locationY>
         <collectionReference>ChangeTechSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -675,17 +675,77 @@
         <name>Delete_SAs</name>
         <label>Delete SAs</label>
         <locationX>842</locationX>
-        <locationY>1334</locationY>
+        <locationY>1574</locationY>
         <faultConnector>
             <targetReference>Error_Encountered</targetReference>
         </faultConnector>
         <inputReference>DeleteSADataTable.outputSelectedRows</inputReference>
     </recordDeletes>
     <recordLookups>
+        <name>find_Earliest_Existing_Service_Appointments</name>
+        <label>find Earliest Existing Service Appointments</label>
+        <locationX>2294</locationX>
+        <locationY>854</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>find_Latest_Existing_Service_Appointments</targetReference>
+        </connector>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>MR_Parent_Work_Order__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>ParentRecordId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ServiceAppointment</object>
+        <sortField>SchedStartTime</sortField>
+        <sortOrder>Asc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>find_Latest_Existing_Service_Appointments</name>
+        <label>find Latest Existing Service Appointments</label>
+        <locationX>2294</locationX>
+        <locationY>974</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Update_SAs_or_Take_Other_Action_Screen</targetReference>
+        </connector>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>MR_Parent_Work_Order__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>ParentRecordId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ServiceAppointment</object>
+        <sortField>SchedStartTime</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>get_the_default_territory</name>
         <label>get the default territory</label>
         <locationX>2393</locationX>
-        <locationY>1670</locationY>
+        <locationY>1910</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Technician_Filtering</targetReference>
@@ -733,7 +793,7 @@
         <name>Update_Edited_SAs_0</name>
         <label>Update Edited SAs</label>
         <locationX>50</locationX>
-        <locationY>1214</locationY>
+        <locationY>1454</locationY>
         <faultConnector>
             <isGoTo>true</isGoTo>
             <targetReference>Error_Encountered</targetReference>
@@ -744,7 +804,7 @@
         <name>ApexActionError</name>
         <label>ApexActionError</label>
         <locationX>4010</locationX>
-        <locationY>1214</locationY>
+        <locationY>1454</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -760,7 +820,7 @@
         <name>Change_Service_Resources</name>
         <label>Change Service Resources</label>
         <locationX>2805</locationX>
-        <locationY>1094</locationY>
+        <locationY>1334</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -845,7 +905,7 @@
         <name>Delete_SAs_Screen</name>
         <label>Delete SAs</label>
         <locationX>1106</locationX>
-        <locationY>1094</locationY>
+        <locationY>1334</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -930,7 +990,7 @@
         <name>Error_Encountered</name>
         <label>Error Encountered</label>
         <locationX>1106</locationX>
-        <locationY>1454</locationY>
+        <locationY>1694</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -950,7 +1010,7 @@
         <name>info1</name>
         <label>info1</label>
         <locationX>1634</locationX>
-        <locationY>2630</locationY>
+        <locationY>2870</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -971,7 +1031,7 @@
         <name>info1_0</name>
         <label>info1</label>
         <locationX>1898</locationX>
-        <locationY>2630</locationY>
+        <locationY>2870</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -992,7 +1052,7 @@
         <name>No_Technicians_Found</name>
         <label>No Technicians Found</label>
         <locationX>2690</locationX>
-        <locationY>2150</locationY>
+        <locationY>2390</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1034,7 +1094,7 @@
         <name>Select_Resource</name>
         <label>Select Resource</label>
         <locationX>2096</locationX>
-        <locationY>2150</locationY>
+        <locationY>2390</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1120,7 +1180,7 @@
         <name>SuccessShiftSA</name>
         <label>Success</label>
         <locationX>3482</locationX>
-        <locationY>1334</locationY>
+        <locationY>1574</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1136,7 +1196,7 @@
         <name>SuccessShiftSA_0</name>
         <label>No Appointments Shifted</label>
         <locationX>3746</locationX>
-        <locationY>1334</locationY>
+        <locationY>1574</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1152,7 +1212,7 @@
         <name>Technician_Filtering</name>
         <label>Technician Filtering</label>
         <locationX>2393</locationX>
-        <locationY>1790</locationY>
+        <locationY>2030</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1208,7 +1268,7 @@
         <name>Update_SAs_or_Take_Other_Action_Screen</name>
         <label>Update SAs or Take Other Action</label>
         <locationX>2294</locationX>
-        <locationY>854</locationY>
+        <locationY>1094</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1235,6 +1295,53 @@
             <fieldType>RegionContainer</fieldType>
             <fields>
                 <name>Update_SAs_or_Take_Other_Action_Screen_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>CurrentWorkOrderStatus</name>
+                    <fieldText>&lt;p&gt;Work Order Start Date: {!getWorkOrder.StartDate}&lt;/p&gt;&lt;p&gt;Work Order End Date: {!getWorkOrder.EndDate}&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Update_SAs_or_Take_Other_Action_Screen_Section1_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>CurrentSAStatus</name>
+                    <fieldText>&lt;p&gt;Earliest Service Appointment Found:  {!find_Earliest_Existing_Service_Appointments.SchedStartTime}&lt;/p&gt;&lt;p&gt;Latest Service Appointment Found:  {!find_Latest_Existing_Service_Appointments.SchedStartTime}&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>Select_Other_Action</leftValueReference>
+                    <operator>EqualTo</operator>
+                    <rightValue>
+                        <elementReference>DateShift</elementReference>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
+            <name>Update_SAs_or_Take_Other_Action_Screen_Section2</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Update_SAs_or_Take_Other_Action_Screen_Section2_Column1</name>
                 <fieldType>Region</fieldType>
                 <fields>
                     <name>SelectExisting</name>

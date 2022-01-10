@@ -560,6 +560,11 @@
         <valueField>Id</valueField>
     </dynamicChoiceSets>
     <formulas>
+        <name>formulaTimeZonesAreDifferent</name>
+        <dataType>Boolean</dataType>
+        <expression>{!MRDT_Get_Time_Zone_Info.territoryTimeZone} &lt;&gt; {!MRDT_Get_Time_Zone_Info.yourTimeZone}</expression>
+    </formulas>
+    <formulas>
         <name>formulaToday</name>
         <dataType>Date</dataType>
         <expression>{!$Flow.CurrentDate}</expression>
@@ -1011,10 +1016,10 @@
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
-                    <leftValueReference>MRDT_Get_Time_Zone_Info.hours</leftValueReference>
-                    <operator>NotEqualTo</operator>
+                    <leftValueReference>formulaTimeZonesAreDifferent</leftValueReference>
+                    <operator>EqualTo</operator>
                     <rightValue>
-                        <numberValue>0.0</numberValue>
+                        <booleanValue>true</booleanValue>
                     </rightValue>
                 </conditions>
             </visibilityRule>
@@ -1258,6 +1263,7 @@
                     <choiceReferences>Scheduled</choiceReferences>
                     <choiceReferences>Dispatched</choiceReferences>
                     <dataType>String</dataType>
+                    <defaultSelectedChoiceReference>Scheduled</defaultSelectedChoiceReference>
                     <fieldText>Status</fieldText>
                     <fieldType>DropdownBox</fieldType>
                     <isRequired>true</isRequired>
