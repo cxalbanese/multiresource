@@ -21,6 +21,7 @@
         <members>WorkOrder.MR_Trigger_Date_Time__c</members>
         <members>ServiceTerritoryMember.MR_Resource_Name__c</members>
         <members>ServiceTerritoryMember.MR_Service_Territory__c</members>
+        <members>ServiceTerritoryMember.MR_DT_Overlap__c</members>
         <name>CustomField</name>
     </types> 
     <types>

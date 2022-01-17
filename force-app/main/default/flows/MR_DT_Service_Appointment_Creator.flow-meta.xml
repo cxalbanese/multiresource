@@ -137,8 +137,12 @@
             </value>
         </inputParameters>
         <outputParameters>
+            <assignToReference>overlapWarning</assignToReference>
+            <name>overlapWarning</name>
+        </outputParameters>
+        <outputParameters>
             <assignToReference>collectionSTMs</assignToReference>
-            <name>output</name>
+            <name>stmList</name>
         </outputParameters>
     </actionCalls>
     <actionCalls>
@@ -1011,7 +1015,7 @@
         </fields>
         <fields>
             <name>TZWarning</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 16px; color: rgb(255, 0, 0);&quot;&gt;Time Zone Difference&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please note: your timezone is different than the service territory&apos;s time zone.  The times displayed below are in your timezone. There is a {!MRDT_Get_Time_Zone_Info.hours} hour difference. You may wish to return to the first screen to set a new start time.&lt;/p&gt;&lt;p&gt;Your Time Zone: {!MRDT_Get_Time_Zone_Info.yourTimeZone}&lt;/p&gt;&lt;p&gt;Territory Time Zone: {!MRDT_Get_Time_Zone_Info.territoryTimeZone}&lt;/p&gt;&lt;p&gt;Difference: &lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;{!MRDT_Get_Time_Zone_Info.hours} hour(s)&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(255, 0, 0); font-size: 16px;&quot;&gt;Time Zone Difference&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please note: your timezone is different than the service territory&apos;s time zone.  The times displayed below are in your timezone. There is a {!MRDT_Get_Time_Zone_Info.hours} hour difference. You may wish to return to the first screen to set a new start time.&lt;/p&gt;&lt;p&gt;Your Time Zone: {!MRDT_Get_Time_Zone_Info.yourTimeZone}&lt;/p&gt;&lt;p&gt;Territory Time Zone: {!MRDT_Get_Time_Zone_Info.territoryTimeZone}&lt;/p&gt;&lt;p&gt;Difference: &lt;span style=&quot;color: rgb(62, 62, 60); background-color: rgb(255, 255, 255);&quot;&gt;{!MRDT_Get_Time_Zone_Info.hours} hour(s)&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
@@ -1351,6 +1355,21 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
+            <name>overlapWarningDisplay</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 16px; color: rgb(255, 0, 0);&quot;&gt;Warning&lt;/b&gt;&lt;/p&gt;&lt;p&gt;at least 1 technician has a Resource Absence or Service Appointment that overlaps with the data range you have selected.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>overlapWarning</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
             <name>STMDataTable</name>
             <dataTypeMappings>
                 <typeName>T</typeName>
@@ -1373,7 +1392,7 @@
             <inputParameters>
                 <name>columnFields</name>
                 <value>
-                    <stringValue>MemberNumber,MR_Resource_Name__c,TerritoryType,MR_Service_Territory__c,EffectiveStartDate,EffectiveEndDate</stringValue>
+                    <stringValue>MemberNumber,MR_Resource_Name__c,TerritoryType,MR_Service_Territory__c,EffectiveStartDate,EffectiveEndDate,MR_DT_Overlap__c</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1385,7 +1404,7 @@
             <inputParameters>
                 <name>columnWidths</name>
                 <value>
-                    <stringValue>MemberNumber:191, MR_Resource_Name__c:97, TerritoryType:191, MR_Service_Territory__c:97, EffectiveStartDate:191, EffectiveEndDate:191</stringValue>
+                    <stringValue>MemberNumber:191, MR_Resource_Name__c:97, TerritoryType:191, MR_Service_Territory__c:97, EffectiveStartDate:191, EffectiveEndDate:191, MR_DT_Overlap__c:50</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1511,6 +1530,13 @@
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <objectType>ServiceAppointment</objectType>
+    </variables>
+    <variables>
+        <name>overlapWarning</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
     </variables>
     <variables>
         <name>recordId</name>

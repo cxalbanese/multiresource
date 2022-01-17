@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MR_DT_Overlap__c</fullName>
+    <description>RA means at least 1 RA exists for this Resource in the selected date range
+SA means at least 1 SA exists for this Resource in the selected date range
+Both means at least 1 RA and 1 SA exists for this Resource in the selected date range
+Blank means no overlap exists</description>
+    <externalId>false</externalId>
+    <inlineHelpText>RA means at least 1 RA exists for this Resource in the selected date range
+SA means at least 1 SA exists for this Resource in the selected date range
+Both means at least 1 RA and 1 SA exists for this Resource in the selected date range
+Blank means no overlap exists</inlineHelpText>
+    <label>MR DT Overlap</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>RA</fullName>
+                <default>false</default>
+                <label>RA</label>
+            </value>
+            <value>
+                <fullName>SA</fullName>
+                <default>false</default>
+                <label>SA</label>
+            </value>
+            <value>
+                <fullName>Both</fullName>
+                <default>false</default>
+                <label>Both</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

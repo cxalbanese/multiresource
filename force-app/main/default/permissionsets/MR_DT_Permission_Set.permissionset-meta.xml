@@ -38,6 +38,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>ServiceTerritoryMember.MR_DT_Overlap__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>ServiceTerritoryMember.MR_Resource_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>

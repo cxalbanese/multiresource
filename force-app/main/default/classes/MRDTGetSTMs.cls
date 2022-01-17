@@ -7,7 +7,7 @@
 public class MRDTGetSTMs {
 // this returns a list of Service Resource Id given a Service Territory or All Territories and a Skill or All Skills
 @invocableMethod(label='MR DT Get STM records')
-public static list<list<ServiceTerritoryMember>> GetSTMS (list<inPayLoad> listPayload) {
+public static list<outPayLoad> GetSTMS (list<inPayLoad> listPayload) {
     String territoryId = listPayload[0].inTerritoryId;
     String skillId = listPayload[0].inSkillId;
     datetime startDateTime =  datetime.newinstance (listPayload[0].startDate.year(),listPayload[0].startDate.month(),listPayload[0].startDate.day());
@@ -26,7 +26,7 @@ public static list<list<ServiceTerritoryMember>> GetSTMS (list<inPayLoad> listPa
        else
            listST = [select id from serviceterritory where id = :territoryId];
     //Get all effective STMs from ListST and add them to the set
-    listSTM = [SELECT EffectiveEndDate,EffectiveStartDate,Id,MemberNumber,ServiceResourceId,ServiceTerritoryId,MR_Resource_Name__c,MR_Service_Territory__c,TerritoryType FROM ServiceTerritoryMember where serviceterritoryid in :listST and
+    listSTM = [SELECT EffectiveEndDate,EffectiveStartDate,Id,MemberNumber,ServiceResourceId,ServiceTerritoryId,MR_Resource_Name__c,MR_Service_Territory__c, MR_DT_Overlap__c ,TerritoryType FROM ServiceTerritoryMember where serviceterritoryid in :listST and
     ((EffectiveStartDate <= :startDateTime and EffectiveEndDate = null) or (EffectiveStartDate <= :startDateTime and EffectiveEndDate >= :endDateTime))];
     for(ServiceTerritoryMember stm :listSTM) setSRId.add(stm.ServiceResourceId);
     //if all skills then just use the list of STM.ServiceResourceIds else filter out only the resources who have the effective skill
@@ -35,11 +35,23 @@ public static list<list<ServiceTerritoryMember>> GetSTMS (list<inPayLoad> listPa
         for(ServiceResourceSkill srs : listSRSkill) listSRId.add(srs.ServiceResourceId);
         for(ServiceTerritoryMember stm : listSTM) if (listSRID.contains(stm.ServiceResourceId)) listSTMFiltered.add(stm);
     }
-    else listSTMFiltered = new list<serviceterritorymember>(listSTM);    
-    return new list<list<ServiceTerritoryMember>>{listSTMFiltered};
+    else listSTMFiltered = new list<serviceterritorymember>(listSTM); 
+    //let's see if there are any resource absences for the resources during the selected period of time  
+    list<resourceabsence> raList = new list<resourceabsence>([select id,resourceId from resourceabsence where ResourceId in :setSRId and start < :endDateTime and end > :startDateTime ]);
+    //let's see if there are any service appointments for the resources during the selected period of time      
+    Map<id,string> mapResourceOverlap = new map<id,string>();
+    for(resourceabsence ra : raList) mapResourceOverlap.put(ra.resourceid,'RA');
+    list<assignedresource> arList = new list<assignedresource>([select id,serviceresourceid from assignedresource where serviceresourceid in :setSRId and serviceappointmentid in (select id from serviceappointment where serviceterritoryid in :listST and statuscategory not in  ('Canceled','None') and schedstarttime < :endDateTime and schedendtime > :startDateTime) ]);    
+    for(assignedresource ar : arList) if(mapResourceOverlap.containsKey(ar.serviceresourceid)) mapResourceOverlap.put(ar.serviceresourceid,'Both'); else mapResourceOverlap.put(ar.serviceresourceid,'SA');
+    if(mapResourceOverlap.size()>0)
+        for(serviceterritorymember stm : listSTMFiltered) if (mapResourceOverlap.containsKey(stm.serviceresourceid)) stm.MR_DT_Overlap__c = mapResourceOverlap.get(stm.serviceresourceid);
+    outPayLoad oPL = new outPayLoad();
+    oPL.stmList = new list<serviceterritorymember>(listSTMFiltered);
+    oPL.overlapWarning = mapResourceOverlap.size()>0 ? 'warning' : '';
+    return new list<outPayLoad>{oPL};
     }
     catch(exception e) {
-        return new list<list<ServiceTerritoryMember>>();
+        return new list<outPayLoad>();
     }
 
 }
@@ -53,6 +65,12 @@ public string inSkillId;
 public date startDate;
 @invocableVariable
 public date endDate;
+}
+public class outPayLoad{
+@invocableVariable
+public list<serviceterritorymember> stmList;
+@invocableVariable
+public string overlapWarning;
 }
 
 }
