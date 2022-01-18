@@ -37,12 +37,18 @@ public static list<outPayLoad> GetSTMS (list<inPayLoad> listPayload) {
     }
     else listSTMFiltered = new list<serviceterritorymember>(listSTM); 
     //let's see if there are any resource absences for the resources during the selected period of time  
-    list<resourceabsence> raList = new list<resourceabsence>([select id,resourceId from resourceabsence where ResourceId in :setSRId and start < :endDateTime and end > :startDateTime ]);
+    Id nonAvailRecordTypeId = Schema.SObjectType.ResourceAbsence.getRecordTypeInfosByName().get('Non Availability').getRecordTypeId();
+    list<resourceabsence> raList = new list<resourceabsence>([select id,resourceId from resourceabsence where ResourceId in :setSRId and recordtypeid = :nonAvailRecordTypeId and start < :endDateTime and end > :startDateTime ]);
     //let's see if there are any service appointments for the resources during the selected period of time      
     Map<id,string> mapResourceOverlap = new map<id,string>();
     for(resourceabsence ra : raList) mapResourceOverlap.put(ra.resourceid,'RA');
     list<assignedresource> arList = new list<assignedresource>([select id,serviceresourceid from assignedresource where serviceresourceid in :setSRId and serviceappointmentid in (select id from serviceappointment where serviceterritoryid in :listST and statuscategory not in  ('Canceled','None') and schedstarttime < :endDateTime and schedendtime > :startDateTime) ]);    
-    for(assignedresource ar : arList) if(mapResourceOverlap.containsKey(ar.serviceresourceid)) mapResourceOverlap.put(ar.serviceresourceid,'Both'); else mapResourceOverlap.put(ar.serviceresourceid,'SA');
+    for(assignedresource ar : arList) 
+        if(mapResourceOverlap.containsKey(ar.serviceresourceid)) 
+            if (mapResourceOverlap.get(ar.serviceresourceid) == 'RA' || mapResourceOverlap.get(ar.serviceresourceid) == 'Both') 
+                mapResourceOverlap.put(ar.serviceresourceid,'Both'); 
+            else mapResourceOverlap.put(ar.serviceresourceid,'SA');
+        else mapResourceOverlap.put(ar.serviceresourceid,'SA');
     if(mapResourceOverlap.size()>0)
         for(serviceterritorymember stm : listSTMFiltered) if (mapResourceOverlap.containsKey(stm.serviceresourceid)) stm.MR_DT_Overlap__c = mapResourceOverlap.get(stm.serviceresourceid);
     outPayLoad oPL = new outPayLoad();
