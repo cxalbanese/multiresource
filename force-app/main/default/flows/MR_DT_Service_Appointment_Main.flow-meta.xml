@@ -36,7 +36,7 @@
     <decisions>
         <name>Existing_SAs_Found</name>
         <label>Existing SAs Found</label>
-        <locationX>468</locationX>
+        <locationX>512</locationX>
         <locationY>854</locationY>
         <defaultConnector>
             <targetReference>MR_DT_Service_Appointment_Creator</targetReference>
@@ -66,7 +66,7 @@
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Create_SAsOutcome</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>1 AND (2 or 3)</conditionLogic>
             <conditions>
                 <leftValueReference>What_would_you_like_to_do</leftValueReference>
                 <operator>EqualTo</operator>
@@ -81,6 +81,13 @@
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>Delete_all_Service_Appointments</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <isGoTo>true</isGoTo>
                 <targetReference>MR_DT_Service_Appointment_Creator</targetReference>
@@ -89,7 +96,7 @@
         </rules>
         <rules>
             <name>Editing_Existing_SAsOutcome</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>1 AND (2 or 3)</conditionLogic>
             <conditions>
                 <leftValueReference>What_would_you_like_to_do</leftValueReference>
                 <operator>EqualTo</operator>
@@ -102,6 +109,13 @@
                 <operator>EqualTo</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Delete_all_Service_Appointments</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -128,7 +142,7 @@
     <decisions>
         <name>Was_RecordId_Provided</name>
         <label>Was RecordId Provided?</label>
-        <locationX>468</locationX>
+        <locationX>512</locationX>
         <locationY>158</locationY>
         <defaultConnector>
             <targetReference>Select_Work_Order_Screen</targetReference>
@@ -190,7 +204,7 @@
         <description>check for SAs that are Status Category none or Scheduled</description>
         <name>Check_for_existing_Draft_SAs</name>
         <label>Check for existing Draft SAs</label>
-        <locationX>468</locationX>
+        <locationX>512</locationX>
         <locationY>734</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -233,7 +247,7 @@
         <description>check for SAs that are Status Category none or Scheduled</description>
         <name>Check_for_existing_In_Progress_SAs</name>
         <label>Check for existing In Progress SAs</label>
-        <locationX>468</locationX>
+        <locationX>512</locationX>
         <locationY>614</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -275,7 +289,7 @@
     <recordLookups>
         <name>Get_Work_Order</name>
         <label>Get Work Order</label>
-        <locationX>468</locationX>
+        <locationX>512</locationX>
         <locationY>494</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -296,7 +310,7 @@
     <screens>
         <name>Select_Work_Order_Screen</name>
         <label>Select Work Order Screen</label>
-        <locationX>556</locationX>
+        <locationX>600</locationX>
         <locationY>278</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -372,16 +386,6 @@
             <fieldText>What would you like to do?</fieldText>
             <fieldType>RadioButtons</fieldType>
             <isRequired>true</isRequired>
-            <visibilityRule>
-                <conditionLogic>and</conditionLogic>
-                <conditions>
-                    <leftValueReference>Delete_all_Service_Appointments</leftValueReference>
-                    <operator>EqualTo</operator>
-                    <rightValue>
-                        <booleanValue>false</booleanValue>
-                    </rightValue>
-                </conditions>
-            </visibilityRule>
         </fields>
         <fields>
             <name>SAReset</name>
@@ -408,6 +412,9 @@
         <fields>
             <name>Delete_all_Service_Appointments</name>
             <dataType>Boolean</dataType>
+            <defaultValue>
+                <booleanValue>false</booleanValue>
+            </defaultValue>
             <fieldText>Delete all Service Appointments</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>true</isRequired>
@@ -433,7 +440,7 @@
         <showHeader>false</showHeader>
     </screens>
     <start>
-        <locationX>342</locationX>
+        <locationX>386</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Was_RecordId_Provided</targetReference>
@@ -456,7 +463,7 @@
     <subflows>
         <name>MR_DT_Service_Appointment_Creator</name>
         <label>MR DT Service_Appointment Creator</label>
-        <locationX>754</locationX>
+        <locationX>842</locationX>
         <locationY>974</locationY>
         <flowName>MR_DT_Service_Appointment_Creator</flowName>
         <inputAssignments>
@@ -479,6 +486,16 @@
             </value>
         </inputAssignments>
     </subflows>
+    <variables>
+        <name>booleanDeleteSAs</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
     <variables>
         <name>recordId</name>
         <dataType>String</dataType>

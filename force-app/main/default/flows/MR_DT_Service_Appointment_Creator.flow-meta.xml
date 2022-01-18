@@ -1199,9 +1199,9 @@
                     <fieldType>InputField</fieldType>
                     <isRequired>true</isRequired>
                     <validationRule>
-                        <errorMessage>&lt;p&gt;Until must be equal to or after Starting From&lt;/p&gt;</errorMessage>
+                        <errorMessage>&lt;p&gt;Until must be equal to or after Starting From and you cannot create more than 100 days of appointments&lt;/p&gt;</errorMessage>
                         <formulaExpression>{!Starting_From} &lt;= {!Until} &amp;&amp;
-({!Until} - {!Starting_From}) &lt;=14</formulaExpression>
+({!Until} - {!Starting_From}) &lt;=100</formulaExpression>
                     </validationRule>
                 </fields>
                 <fields>
