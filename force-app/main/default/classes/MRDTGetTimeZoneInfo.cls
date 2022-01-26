@@ -5,7 +5,7 @@
 //Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
 //Disclaimer: This code does not use the scheduling features of SFS and will produce scheduling violations on your Gantt
 
-public class MRDTGetTimeZoneInfo {
+public With Sharing class MRDTGetTimeZoneInfo {
 
 @invocableMethod(label='MRDT Get Time Zone Info')
 public static list<payLoadOut> MRDTGetTimeZoneInfo(list<string> inTerritoryIdList) { 

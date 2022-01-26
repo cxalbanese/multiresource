@@ -4,7 +4,7 @@
 //Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
 //Disclaimer: This code does not use the scheduling features of SFS and will produce scheduling violations on your Gantt
 
-public class MRDTReassignTechs {
+public With Sharing class MRDTReassignTechs {
 // this reassigns Techs on selected SAs
 @invocableMethod(label='MR DT Reassign Techs')
 public static list<string> ReassignTechs (list<inPayLoad> listPayload) {

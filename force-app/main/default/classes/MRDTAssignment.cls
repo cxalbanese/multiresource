@@ -5,7 +5,7 @@
 //Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
 //Disclaimer: This code does not use the scheduling features of SFS and will produce scheduling violations on your Gantt
 
-Public Class MRDTAssignment {
+Public With Sharing Class MRDTAssignment {
 
 @invocableMethod (label='MR DT Assign the Service Resources to the SAs')
 Public Static list<string> MRDTAssignment (list<list<serviceappointment>> listListSAs) {

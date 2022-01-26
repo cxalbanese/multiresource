@@ -37,16 +37,30 @@
         <name>Existing_SAs_Found</name>
         <label>Existing SAs Found</label>
         <locationX>512</locationX>
-        <locationY>854</locationY>
+        <locationY>974</locationY>
         <defaultConnector>
             <targetReference>MR_DT_Service_Appointment_Creator</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesExistingSAsFound</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>or</conditionLogic>
             <conditions>
                 <leftValueReference>Check_for_existing_Draft_SAs</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Check_for_existing_In_Progress_SAs</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Check_for_existing_non_Draft_SAs</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
@@ -62,7 +76,7 @@
         <name>Navigate_to</name>
         <label>Navigate to</label>
         <locationX>182</locationX>
-        <locationY>1094</locationY>
+        <locationY>1214</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Create_SAsOutcome</name>
@@ -201,16 +215,16 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <recordLookups>
-        <description>check for SAs that are Status Category none or Scheduled</description>
+        <description>check for SAs that are MR Status Category of Draft. This indicates that the dispatcher created draft SAs in a previous step but never completed the process.</description>
         <name>Check_for_existing_Draft_SAs</name>
         <label>Check for existing Draft SAs</label>
         <locationX>512</locationX>
-        <locationY>734</locationY>
+        <locationY>854</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Existing_SAs_Found</targetReference>
         </connector>
-        <filterLogic>(1 OR 2) AND (3 OR 4)</filterLogic>
+        <filterLogic>(1 OR 2) AND 3</filterLogic>
         <filters>
             <field>MR_Parent_Work_Order__c</field>
             <operator>EqualTo</operator>
@@ -226,17 +240,10 @@
             </value>
         </filters>
         <filters>
-            <field>StatusCategory</field>
+            <field>MR_Creation_Status__c</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>None</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>StatusCategory</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Scheduled</stringValue>
+                <stringValue>Draft</stringValue>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -244,14 +251,14 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>check for SAs that are Status Category none or Scheduled</description>
+        <description>check for SAs that are beyond Status Category none or Scheduled, for example dispatched. we use this to let the dispatcher know they might be updating service appointments that might already be in progress.</description>
         <name>Check_for_existing_In_Progress_SAs</name>
         <label>Check for existing In Progress SAs</label>
         <locationX>512</locationX>
         <locationY>614</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Check_for_existing_Draft_SAs</targetReference>
+            <targetReference>Check_for_existing_non_Draft_SAs</targetReference>
         </connector>
         <filterLogic>(1 OR 2) AND (3 AND 4)</filterLogic>
         <filters>
@@ -278,6 +285,63 @@
         <filters>
             <field>StatusCategory</field>
             <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Scheduled</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ServiceAppointment</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>check for SAs that are MR Status Category of confirmed</description>
+        <name>Check_for_existing_non_Draft_SAs</name>
+        <label>Check for existing non Draft SAs</label>
+        <locationX>512</locationX>
+        <locationY>734</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_for_existing_Draft_SAs</targetReference>
+        </connector>
+        <filterLogic>(1 OR 2) AND (3 or 4) and (5 or 6)</filterLogic>
+        <filters>
+            <field>MR_Parent_Work_Order__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Work_Order.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>ParentRecordId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Work_Order.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>MR_Creation_Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Confirmed</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MR_Creation_Status__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>StatusCategory</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>None</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>StatusCategory</field>
+            <operator>EqualTo</operator>
             <value>
                 <stringValue>Scheduled</stringValue>
             </value>
@@ -333,7 +397,7 @@
         <name>What_would_you_like_to_do_screen</name>
         <label>What would you like to do?</label>
         <locationX>182</locationX>
-        <locationY>974</locationY>
+        <locationY>1094</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -342,7 +406,7 @@
         </connector>
         <fields>
             <name>InProgressWarning</name>
-            <fieldText>&lt;p&gt;Warning, at least 1 Service Appointment exists for this Work Order that is in progress (Dispatched or later status).&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Service Appointment: &lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;{!Check_for_existing_In_Progress_SAs.AppointmentNumber}&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(255, 0, 0);&quot;&gt;**&lt;/b&gt;&lt;b&gt;Warning&lt;/b&gt;, at least 1 Service Appointment exists for this Work Order that is in progress (Dispatched or later status).&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Service Appointment: &lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;{!Check_for_existing_In_Progress_SAs.AppointmentNumber}&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
@@ -357,7 +421,7 @@
         </fields>
         <fields>
             <name>ExistingSAsInformation</name>
-            <fieldText>&lt;p&gt;Draft Service Appointment(s) already exist for this Work Order.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;Service Appointment: {!Check_for_existing_Draft_SAs.AppointmentNumber}&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(255, 0, 0); background-color: rgb(255, 255, 255);&quot;&gt;**&lt;/b&gt;&lt;b style=&quot;color: rgb(62, 62, 60); background-color: rgb(255, 255, 255);&quot;&gt;Warning&lt;/b&gt;&lt;span style=&quot;color: rgb(62, 62, 60); background-color: rgb(255, 255, 255);&quot;&gt;, &lt;/span&gt;Draft Service Appointment(s) already exist for this Work Order. These are appointments you created in this wizard but never confirmed. These are appointments with a blank value for MR Service Resource. These will be deleted automatically or you can delete them using the Edit Existing Service Appointments / Delete Service Appointments option. Do not edit these appointments as any changes you make will be ignored.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(62, 62, 60); background-color: rgb(255, 255, 255);&quot;&gt;Service Appointment: {!Check_for_existing_Draft_SAs.AppointmentNumber}&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
@@ -366,13 +430,6 @@
                     <operator>IsNull</operator>
                     <rightValue>
                         <booleanValue>false</booleanValue>
-                    </rightValue>
-                </conditions>
-                <conditions>
-                    <leftValueReference>Check_for_existing_In_Progress_SAs.Id</leftValueReference>
-                    <operator>IsNull</operator>
-                    <rightValue>
-                        <booleanValue>true</booleanValue>
                     </rightValue>
                 </conditions>
             </visibilityRule>
@@ -404,6 +461,13 @@
                     <leftValueReference>Check_for_existing_Draft_SAs.Id</leftValueReference>
                     <operator>IsNull</operator>
                     <rightValue>
+                        <booleanValue>true</booleanValue>
+                    </rightValue>
+                </conditions>
+                <conditions>
+                    <leftValueReference>Check_for_existing_non_Draft_SAs.Id</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
                         <booleanValue>false</booleanValue>
                     </rightValue>
                 </conditions>
@@ -431,6 +495,13 @@
                     <leftValueReference>Check_for_existing_Draft_SAs.Id</leftValueReference>
                     <operator>IsNull</operator>
                     <rightValue>
+                        <booleanValue>true</booleanValue>
+                    </rightValue>
+                </conditions>
+                <conditions>
+                    <leftValueReference>Check_for_existing_non_Draft_SAs.Id</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
                         <booleanValue>false</booleanValue>
                     </rightValue>
                 </conditions>
@@ -451,7 +522,7 @@
         <name>MR_DT_Delete_Service_Appointments</name>
         <label>MR DT Delete Service Appointments</label>
         <locationX>314</locationX>
-        <locationY>1214</locationY>
+        <locationY>1334</locationY>
         <flowName>MR_DT_Delete_Service_Appointments</flowName>
         <inputAssignments>
             <name>recordId</name>
@@ -464,7 +535,7 @@
         <name>MR_DT_Service_Appointment_Creator</name>
         <label>MR DT Service_Appointment Creator</label>
         <locationX>842</locationX>
-        <locationY>974</locationY>
+        <locationY>1094</locationY>
         <flowName>MR_DT_Service_Appointment_Creator</flowName>
         <inputAssignments>
             <name>recordId</name>
@@ -477,7 +548,7 @@
         <name>MR_DT_Service_Appointment_Review</name>
         <label>MR DT Service Appointment Review</label>
         <locationX>50</locationX>
-        <locationY>1214</locationY>
+        <locationY>1334</locationY>
         <flowName>MR_DT_Service_Appointment_Review</flowName>
         <inputAssignments>
             <name>recordId</name>
