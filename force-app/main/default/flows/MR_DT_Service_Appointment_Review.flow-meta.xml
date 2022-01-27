@@ -40,8 +40,12 @@
             </value>
         </inputParameters>
         <outputParameters>
+            <assignToReference>overlapWarning</assignToReference>
+            <name>overlapWarning</name>
+        </outputParameters>
+        <outputParameters>
             <assignToReference>collectionSTMs</assignToReference>
-            <name>output</name>
+            <name>stmList</name>
         </outputParameters>
     </actionCalls>
     <actionCalls>
@@ -1102,6 +1106,26 @@
             <targetReference>Tech_Selected</targetReference>
         </connector>
         <fields>
+            <name>Select1Tech</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 16px; color: rgb(62, 62, 60);&quot;&gt;Please select 1 Technician.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>overlapWarningDisplayText</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 16px; color: rgb(255, 0, 0);&quot;&gt;Warning&lt;/b&gt;&lt;/p&gt;&lt;p&gt;at least 1 technician has a Resource Absence or Service Appointment that overlaps with the data range you have selected.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>overlapWarning</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
             <name>STMDataTable</name>
             <dataTypeMappings>
                 <typeName>T</typeName>
@@ -1124,7 +1148,7 @@
             <inputParameters>
                 <name>columnFields</name>
                 <value>
-                    <stringValue>MemberNumber,MR_Resource_Name__c,TerritoryType,MR_Service_Territory__c,EffectiveStartDate,EffectiveEndDate</stringValue>
+                    <stringValue>MemberNumber,MR_Resource_Name__c,TerritoryType,MR_Service_Territory__c,EffectiveStartDate,EffectiveEndDate,MR_DT_Overlap__c</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1136,7 +1160,7 @@
             <inputParameters>
                 <name>columnWidths</name>
                 <value>
-                    <stringValue>MemberNumber:159, MR_Resource_Name__c:159, TerritoryType:159, MR_Service_Territory__c:159, EffectiveStartDate:159, EffectiveEndDate:159</stringValue>
+                    <stringValue>MemberNumber:159, MR_Resource_Name__c:159, TerritoryType:159, MR_Service_Territory__c:159, EffectiveStartDate:159, EffectiveEndDate:159, MR_DT_Overlap__c:50</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1650,6 +1674,13 @@
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <objectType>ServiceAppointment</objectType>
+    </variables>
+    <variables>
+        <name>overlapWarning</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
     </variables>
     <variables>
         <name>recordId</name>
