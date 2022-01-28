@@ -1,5 +1,6 @@
 @isTest
 public class MRDTAssignmentTestClass{
+    //this is a test - CB
 
 static testMethod void validateMRDTAssignment() {
 
