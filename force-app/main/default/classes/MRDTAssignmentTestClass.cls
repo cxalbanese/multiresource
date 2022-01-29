@@ -1,34 +1,24 @@
 @isTest
 public class MRDTAssignmentTestClass{
-    //this is a test - CB
 
-static testMethod void validateMRDTAssignment() {
+    @IsTest
+    static void validateMRDTAssignment() {
 
-id usrid = UserInfo.getUserId();
-worktype wt = new worktype(name='test',estimatedduration=1,durationtype='hours');
-operatinghours oh = new operatinghours(name='test');
-insert oh;
-serviceterritory st = new serviceterritory(name='test',isactive=true,operatinghoursid=oh.id);
-serviceresource sr = new serviceresource(name='test',isactive=true,relatedrecordid=usrid,resourcetype='T');
-insert wt;
-insert st;
-insert sr;
-serviceterritorymember stm = new serviceterritorymember (serviceresourceid=sr.id,serviceterritoryid = st.id,effectivestartdate = datetime.now());
-insert stm;
+    Map<String, SObject> testResourceMap = TestUtility.createSingleTestResource();
+    WorkOrder wo = TestUtility.createWorkOrder('test', testResourceMap.get('WorkType').Id, testResourceMap.get('ServiceTerritory').Id);
+    ServiceAppointment sa = TestUtility.createServiceAppointment(testResourceMap.get('ServiceResource').Id, wo.Id, Datetime.now(), Datetime.now().addDays(7), Datetime.now(), Datetime.now().addHours(1));
 
-workorder wo = new workorder();
-wo.worktypeid = wt.id;
-wo.serviceterritoryid = st.id;
-insert wo;
-serviceappointment sa = new serviceappointment(
-mr_service_resource__c = sr.id,parentrecordid=wo.id,earlieststarttime=datetime.now(),duedate=datetime.now().adddays(7),schedstarttime=datetime.now(),schedendtime=datetime.now().addhours(1));
-list<serviceappointment> listsa = new list<serviceappointment> {sa};
-list<list<serviceappointment>> listlistsa = new list<list<serviceappointment>>{listsa};
+    List<ServiceAppointment> serviceAppointmentList = new List<ServiceAppointment>{sa};
+    List<List<ServiceAppointment>> nestedServiceAppointmentList = new List<List<ServiceAppointment>>{serviceAppointmentList};
 
-list<string> results = MRDTAssignment.MRDTAssignment(listlistsa);
+    Test.startTest();
+    List<String> resultList = MRDTAssignment.MRDTAssignment(nestedServiceAppointmentList);
+    Test.stopTest();
+    
+    System.assertEquals('Success', resultList[0]);
 
 
-}
+    }
 
 
 
