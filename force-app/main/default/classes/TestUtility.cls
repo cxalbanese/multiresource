@@ -128,4 +128,20 @@ public with sharing class TestUtility {
     }
 
 
+    public static ServiceAppointment createServiceAppointment(String mrServiceResourceID, String parentRecordId, Datetime earlyStart, Datetime dueDate, Datetime schedStart, Datetime schedEnd, String status){
+
+        ServiceAppointment testServiceAppointment = new ServiceAppointment(MR_Service_Resource__c = mrServiceResourceID,
+                                                                           ParentRecordId = parentRecordId,
+                                                                           EarliestStartTime = earlyStart,
+                                                                           DueDate = dueDate,
+                                                                           SchedStartTime = schedStart,
+                                                                           SchedEndTime = schedEnd,
+                                                                           Status = status);
+        
+        insert testServiceAppointment;
+        return testServiceAppointment;
+
+    }
+
+
 }
