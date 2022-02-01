@@ -25,6 +25,16 @@ public with sharing class TestUtility {
 
     }
 
+    public static OperatingHours createOperatingHours(String ohName, String tz){
+
+        OperatingHours testOperatingHours = new OperatingHours(Name = ohName, 
+                                                               TimeZone = tz);
+        
+        insert testOperatingHours;
+        return testOperatingHours;
+
+    }
+
 
     public static ServiceTerritory createServiceTerritory(String territoryName,Boolean active, String opHoursId){
 
@@ -140,6 +150,18 @@ public with sharing class TestUtility {
         
         insert testServiceAppointment;
         return testServiceAppointment;
+
+    }
+
+
+    public static ResourceAbsence createResourceAbsence(String resourceId, Datetime startDate, Datetime endDate){
+
+        ResourceAbsence testAbsence = new resourceabsence (ResourceId = resourceId,
+                                                           Start = startDate,
+                                                           End = endDate);
+
+        insert testAbsence;
+        return testAbsence;
 
     }
 

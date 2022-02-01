@@ -1,19 +1,23 @@
-@isTest
+@IsTest
 public class MRDTGetTimeZoneInfoTestClass{
 
-static testMethod void validateMRDTGetTimeZoneInfo() {
+    @IsTest
+    static  void validateMRDTGetTimeZoneInfo() {
 
-operatinghours oh = new operatinghours(name='test',timezone='Antarctica/McMurdo');
-insert oh;
-serviceterritory st = new serviceterritory(name='test',isactive=true,operatinghoursid=oh.id);
-insert st;
+        OperatingHours oh = TestUtility.createOperatingHours('test', 'Antarctica/McMurdo');
+        ServiceTerritory st = TestUtility.createServiceTerritory('test', true, oh.Id);
 
-MRDTGetSTMs.inPayLoad payload1 = new MRDTGetSTMs.inPayLoad();
+        //MRDTGetSTMs.inPayLoad payload1 = new MRDTGetSTMs.inPayLoad();
 
-list<string> inputList = new list<string>{st.id};
+        List<String> inputList = new List<String>{st.Id};
 
-list<MRDTGetTimeZoneInfo.payLoadOut> payLoadOutList = MRDTGetTimeZoneInfo.MRDTGetTimeZoneInfo(inputList);
+        Test.startTest();
+        List<MRDTGetTimeZoneInfo.payLoadOut> payLoadOutList = MRDTGetTimeZoneInfo.MRDTGetTimeZoneInfo(inputList);
+        Test.stopTest();
 
-}
+        System.assert(payLoadOutList.size() > 0);
+        System.assertEquals(payLoadOutList[0].territoryTimeZone, oh.TimeZone);
+        System.assertEquals(payLoadOutList[0].yourTimeZone, UserInfo.getTimeZone().getID());
+    }
 
 }
