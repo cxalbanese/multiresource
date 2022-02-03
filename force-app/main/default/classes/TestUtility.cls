@@ -77,20 +77,51 @@ public with sharing class TestUtility {
         String objectName = '';
         Map<String, SObject> testResourceObjectMap = new Map<String, SObject>();
         String userId = UserInfo.getUserId();
+        String testName = 'test' + String.valueOf(Crypto.getRandomInteger());
 
-        WorkType testWorkType = createWorkType('test', 1, 'hours');
+        WorkType testWorkType = createWorkType(testName, 1, 'hours');
         objectName = 'WorkType';
         testResourceObjectMap.put(objectName, testWorkType);
 
-        OperatingHours testOh = createOperatingHours('test');
+        OperatingHours testOh = createOperatingHours(testName);
         objectName = 'OperatingHours';
         testResourceObjectMap.put(objectName, testOh);
 
-        ServiceTerritory testTerritory = createServiceTerritory('test', true, testOh.Id);
+        ServiceTerritory testTerritory = createServiceTerritory(testName, true, testOh.Id);
         objectName = 'ServiceTerritory';
         testResourceObjectMap.put(objectName, testTerritory);
 
-        ServiceResource testResource = createServiceResource('test', true, userId, 'T');
+        ServiceResource testResource = createServiceResource(testName, true, userId, 'T');
+        objectName = 'ServiceResource';
+        testResourceObjectMap.put(objectName, testResource);
+
+        ServiceTerritoryMember stm = createServiceTerritoryMember(testResource.Id, testTerritory.Id, datetime.now());
+        objectName = 'ServiceTerritoryMember';
+
+        return testResourceObjectMap;
+
+    }
+
+
+    public static Map<String,SObject> createSingleTestResource(String userId){
+
+        String objectName = '';
+        Map<String, SObject> testResourceObjectMap = new Map<String, SObject>();
+        String testName = 'test' + String.valueOf(Crypto.getRandomInteger());
+
+        WorkType testWorkType = createWorkType(testName, 1, 'hours');
+        objectName = 'WorkType';
+        testResourceObjectMap.put(objectName, testWorkType);
+
+        OperatingHours testOh = createOperatingHours(testName);
+        objectName = 'OperatingHours';
+        testResourceObjectMap.put(objectName, testOh);
+
+        ServiceTerritory testTerritory = createServiceTerritory(testName, true, testOh.Id);
+        objectName = 'ServiceTerritory';
+        testResourceObjectMap.put(objectName, testTerritory);
+
+        ServiceResource testResource = createServiceResource(testName, true, userId, 'T');
         objectName = 'ServiceResource';
         testResourceObjectMap.put(objectName, testResource);
 
@@ -156,12 +187,53 @@ public with sharing class TestUtility {
 
     public static ResourceAbsence createResourceAbsence(String resourceId, Datetime startDate, Datetime endDate){
 
-        ResourceAbsence testAbsence = new resourceabsence (ResourceId = resourceId,
+        ResourceAbsence testAbsence = new ResourceAbsence(ResourceId = resourceId,
                                                            Start = startDate,
                                                            End = endDate);
 
         insert testAbsence;
         return testAbsence;
+
+    }
+
+
+    public static AssignedResource createAssignedResource(String serviceAppointmentId, String serviceResourceId){
+
+        AssignedResource testAssignedResource = new AssignedResource(ServiceResourceId = serviceResourceId, 
+                                                                     ServiceAppointmentId = serviceAppointmentId);
+
+        insert testAssignedResource;
+        return testAssignedResource;
+
+    }
+
+
+    public static List<User> createUser(Integer numberOfUsersToCreate){
+
+        List<User> testUserList = new List<User>();
+        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User']; 
+        Integer i = 0;
+
+        while(i < numberOfUsersToCreate){
+
+            User u = new User(Alias = 'standt' + i, 
+                          Email='standarduser' + i + '@example.com', 
+                          EmailEncodingKey='UTF-8', 
+                          LastName='Testing', 
+                          LanguageLocaleKey='en_US', 
+                          LocaleSidKey='en_US', 
+                          ProfileId = p.Id, 
+                          TimeZoneSidKey='America/Los_Angeles', 
+                          UserName='standarduser' + i + '@MRDTReassignTechs.com');
+
+            testUserList.add(u);
+
+            i++;
+
+        }
+
+        insert testUserList;
+        return testUserList;
 
     }
 
