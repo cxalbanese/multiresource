@@ -13,6 +13,8 @@ public static list<WODTScheduleOutput> SAValidateUpdate (list<WODTSchedulePayloa
     WODTSchedulePayload iPL = inPayloadList[0];
     string woID = iPL.woID;
     WODTScheduleOutput wOutput = new WODTScheduleOutput();
+    wOutput.listSA = new list<serviceappointment>();
+    wOutput.numSAs = 0;
     try{
         list<serviceappointment> listSA = [select id, appointmentnumber,schedstarttime,schedendtime,durationtype,duration,earlieststarttime,duedate,mr_creation_status__c,mr_service_resource__c,status,statuscategory from serviceappointment where parentrecordid = :woID or mr_parent_work_order__c = :woID];
         list<assignedresource> listAR = [select id,serviceappointmentid,serviceresourceid from assignedresource where serviceappointmentid in :listSA];
@@ -29,8 +31,6 @@ public static list<WODTScheduleOutput> SAValidateUpdate (list<WODTSchedulePayloa
         return new list<WODTScheduleOutput>{wOutput};
         }
     catch(exception e) {
-        wOutput.listSA = new list<serviceappointment>();
-        wOutput.numSAs = 0;
         return new list<WODTScheduleOutput>{wOutput};    
     }
 }

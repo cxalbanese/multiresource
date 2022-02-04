@@ -53,6 +53,9 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
     list<serviceappointment> listNewSAs = new list<serviceappointment>();
     list<serviceappointment> listSavedSAs = new list<serviceappointment>();
     list<assignedresource> newARs = new list<assignedresource>();
+    WODTScheduleOutput saOutput = new WODTScheduleOutput();
+    saOutput.listSA = new list<serviceappointment>();
+    saOutput.numSAs = 0;
     try{
     workorder thewo = [select id, subject, city, state, street, postalcode from workorder where id =: workorderid limit 1];
     if(taskDescription == null ) taskDescription = thewo.subject;
@@ -85,31 +88,22 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
                 listNewSAs.add (thesa);
             }  
         }
-   }
+   }       
+
        if(listNewSAs.size()>0 && listNewSAs.size()<= limitSAs) {
            insert listNewSAs;  
            for(serviceappointment sa: [select appointmentnumber, parentrecordid,serviceterritoryid,durationtype,duration,earlieststarttime,duedate,schedstarttime,schedendtime,mr_parent_work_order__c,fsl__ganttlabel__c,city,street,postalcode,mr_service_resource__c,status,mr_creation_status__c from serviceappointment where id in :listNewSAs])
                 listSavedSAs.add(sa);
-           WODTScheduleOutput saOutput = new WODTScheduleOutput();
            saOutput.listSA = new list<serviceappointment>(listSavedSAs);
            saOutput.numSAs = listNewSAs.size();
            return new list<WODTScheduleOutput>{saOutput};
            }
        if(listNewSAs.size()>limitSAs) {
-           WODTScheduleOutput saOutput = new WODTScheduleOutput();
-           saOutput.listSA = new list<serviceappointment>();
-           saOutput.numSAs = listNewSAs.size();
            return new list<WODTScheduleOutput>{saOutput};
-           }           
-       WODTScheduleOutput saOutput = new WODTScheduleOutput();
-       saOutput.listSA = new list<serviceappointment>();
-       saOutput.numSAs = 0;
+           }
        return new list<WODTScheduleOutput>{saOutput};
       }
       catch(exception e) {
-       WODTScheduleOutput saOutput = new WODTScheduleOutput();
-       saOutput.listSA = new list<serviceappointment>();
-       saOutput.numSAs = 0;
        return new list<WODTScheduleOutput>{saOutput};
       }                    
   }
