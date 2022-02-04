@@ -98,6 +98,7 @@ public with sharing class TestUtility {
         ServiceTerritoryMember testSTM = createServiceTerritoryMember(testResource.Id, testTerritory.Id, datetime.now());
         objectName = 'ServiceTerritoryMember';     
         testResourceObjectMap.put(objectName, testSTM);
+        
         return testResourceObjectMap;
 
     }
