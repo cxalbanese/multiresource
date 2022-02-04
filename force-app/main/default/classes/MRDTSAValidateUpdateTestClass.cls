@@ -18,6 +18,4 @@ test.stopTest();
 system.assert(!outputList.isEmpty(), 'list should not be empty');
 system.assert(outputList[0].numSAs>0, 'numSAs should be greater than 0 ');
 }
-
-
 }
