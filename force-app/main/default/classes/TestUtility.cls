@@ -95,9 +95,9 @@ public with sharing class TestUtility {
         objectName = 'ServiceResource';
         testResourceObjectMap.put(objectName, testResource);
 
-        ServiceTerritoryMember stm = createServiceTerritoryMember(testResource.Id, testTerritory.Id, datetime.now());
-        objectName = 'ServiceTerritoryMember';
-
+        ServiceTerritoryMember testSTM = createServiceTerritoryMember(testResource.Id, testTerritory.Id, datetime.now());
+        objectName = 'ServiceTerritoryMember';     
+        testResourceObjectMap.put(objectName, testSTM);
         return testResourceObjectMap;
 
     }
@@ -125,8 +125,9 @@ public with sharing class TestUtility {
         objectName = 'ServiceResource';
         testResourceObjectMap.put(objectName, testResource);
 
-        ServiceTerritoryMember stm = createServiceTerritoryMember(testResource.Id, testTerritory.Id, datetime.now());
-        objectName = 'ServiceTerritoryMember';
+        ServiceTerritoryMember testSTM = createServiceTerritoryMember(testResource.Id, testTerritory.Id, datetime.now());
+        objectName = 'ServiceTerritoryMember';        
+        testResourceObjectMap.put(objectName, testSTM);
 
         return testResourceObjectMap;
 
@@ -185,11 +186,30 @@ public with sharing class TestUtility {
     }
 
 
+    public static ServiceAppointment createServiceAppointment(String mrServiceResourceID, String parentRecordId, Datetime earlyStart, Datetime dueDate, Datetime schedStart, Datetime schedEnd, String status, String territoryId){
+
+        ServiceAppointment testServiceAppointment = new ServiceAppointment(MR_Service_Resource__c = mrServiceResourceID,
+                                                                           ParentRecordId = parentRecordId,
+                                                                           EarliestStartTime = earlyStart,
+                                                                           DueDate = dueDate,
+                                                                           SchedStartTime = schedStart,
+                                                                           SchedEndTime = schedEnd,
+                                                                           Status = status,
+                                                                           ServiceTerritoryId = territoryId);
+        
+        insert testServiceAppointment;
+        return testServiceAppointment;
+
+    }
+
+
     public static ResourceAbsence createResourceAbsence(String resourceId, Datetime startDate, Datetime endDate){
 
+        final Id NONAVAILABILITY_RECORDTYPE = Schema.SObjectType.ResourceAbsence.getRecordTypeInfosByName().get('Non Availability').getRecordTypeId();
         ResourceAbsence testAbsence = new ResourceAbsence(ResourceId = resourceId,
                                                            Start = startDate,
-                                                           End = endDate);
+                                                           End = endDate,
+                                                           RecordTypeId = NONAVAILABILITY_RECORDTYPE);
 
         insert testAbsence;
         return testAbsence;
@@ -234,6 +254,17 @@ public with sharing class TestUtility {
 
         insert testUserList;
         return testUserList;
+
+    }
+
+
+    public static ServiceResourceSkill createServiceResourceSkill(String serviceResourceId){
+
+        Skill testSkill = [SELECT Id FROM Skill LIMIT 1];
+
+        ServiceResourceSkill resourceSkill = new ServiceResourceSkill(ServiceResourceId = serviceResourceId, SkillId = testSkill.Id, EffectiveStartDate = Datetime.now().addDays(-10));
+        insert resourceSkill;
+        return resourceSkill;
 
     }
 
