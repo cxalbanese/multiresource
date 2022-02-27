@@ -35,6 +35,8 @@ public static list<WODTScheduleOutput> SAValidateUpdate (list<WODTSchedulePayloa
         return new list<WODTScheduleOutput>{wOutput};
         }
     catch(exception e) {
+        wOutput.listSA = new list<serviceappointment>();
+        wOutput.numSAs = 0;
         return new list<WODTScheduleOutput>{wOutput};    
     }
 }

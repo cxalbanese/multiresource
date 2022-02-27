@@ -101,11 +101,20 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
            return new list<WODTScheduleOutput>{saOutput};
            }
        if(listNewSAs.size()>limitSAs) {
+           WODTScheduleOutput saOutput = new WODTScheduleOutput();
+           saOutput.listSA = new list<serviceappointment>();
+           saOutput.numSAs = listNewSAs.size();
            return new list<WODTScheduleOutput>{saOutput};
-           }
+           }           
+       WODTScheduleOutput saOutput = new WODTScheduleOutput();
+       saOutput.listSA = new list<serviceappointment>();
+       saOutput.numSAs = 0;
        return new list<WODTScheduleOutput>{saOutput};
       }
       catch(exception e) {
+       WODTScheduleOutput saOutput = new WODTScheduleOutput();
+       saOutput.listSA = new list<serviceappointment>();
+       saOutput.numSAs = 0;
        return new list<WODTScheduleOutput>{saOutput};
       }                    
   }

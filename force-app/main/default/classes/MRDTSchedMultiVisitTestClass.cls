@@ -1,12 +1,24 @@
 @isTest
 public class MRDTSchedMultiVisitTestClass{
-@isTest
-static  void validateMRDTSchedMultiVisit() {
 
-Map<String,SObject> testResourceMap = TestUtility.createSingleTestResource();
-WorkOrder wo = TestUtility.createWorkOrder('test', testResourceMap.get('WorkType').Id, testResourceMap.get('ServiceTerritory').Id);
-ServiceTerritory st = (ServiceTerritory)testResourceMap.get('ServiceTerritory');
-ServiceTerritoryMember stm = (ServiceTerritoryMember)testResourceMap.get('ServiceTerritoryMember');
+static testMethod void validateMRDTSchedMultiVisit() {
+
+id usrid = UserInfo.getUserId();
+worktype wt = new worktype(name='test',estimatedduration=1,durationtype='hours');
+operatinghours oh = new operatinghours(name='test');
+insert oh;
+serviceterritory st = new serviceterritory(name='test',isactive=true,operatinghoursid=oh.id);
+serviceresource sr = new serviceresource(name='test',isactive=true,relatedrecordid=usrid,resourcetype='T');
+insert wt;
+insert st;
+insert sr;
+serviceterritorymember stm = new serviceterritorymember (serviceresourceid=sr.id,serviceterritoryid = st.id,effectivestartdate = datetime.now());
+insert stm;
+
+workorder wo = new workorder();
+wo.worktypeid = wt.id;
+wo.serviceterritoryid = st.id;
+insert wo;
 MRDTSchedMultiVisit.WODTSchedulePayload payload = new MRDTSchedMultiVisit.WODTSchedulePayload();
 payload.listSTM = new list<serviceterritorymember>{stm};
 payload.territoryId = st.id;
@@ -21,11 +33,9 @@ payload.limitSAs = 100;
 payload.includeWeekendDay1 = true;
 payload.includeWeekendDay2 = true;
 list<MRDTSchedMultiVisit.WODTSchedulePayload> inputList = new list<MRDTSchedMultiVisit.WODTSchedulePayload>{payload};
-test.startTest();
-list<MRDTSchedMultiVisit.WODTScheduleOutput> outputList = MRDTSchedMultiVisit.MRDTMV(inputList);
-test.stopTest();
 
-system.assert(!outputList.isEmpty(), 'list should not be empty');
+list<MRDTSchedMultiVisit.WODTScheduleOutput> outputList = MRDTSchedMultiVisit.MRDTMV(inputList);
+
 
 }
 
