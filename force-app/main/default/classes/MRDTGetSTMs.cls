@@ -23,17 +23,19 @@ public With Sharing class MRDTGetSTMs {
 
         
         try{
-            if(territoryId == 'All') {
-                //if its all territories just find all Active STs
-                listST = [select id from serviceterritory where isactive = true];
-            }            
-            else{ 
-                //else just get the specified territory
-                listST = [select id from serviceterritory where id = :territoryId];
-            }
+            if(Schema.sObjectType.serviceterritory.isQueryable())
+                if(territoryId == 'All') {
+                    //if its all territories just find all Active STs
+                    listST = [select id from serviceterritory where isactive = true];
+                }            
+                else{ 
+                    //else just get the specified territory
+                    listST = [select id from serviceterritory where id = :territoryId];
+                }
                 
             //Get all effective STMs from ListST and add them to the set
-            listSTM = [SELECT 
+            if(Schema.sObjectType.serviceterritorymember.isQueryable()) 
+                listSTM = [SELECT 
                         EffectiveEndDate,
                         EffectiveStartDate,
                         Id,
@@ -55,7 +57,7 @@ public With Sharing class MRDTGetSTMs {
             }
 
             //if all skills then just use the list of STM.ServiceResourceIds else filter out only the resources who have the effective skill
-            if(skillId != 'All') {
+            if(Schema.sObjectType.ServiceResourceSkill.isQueryable() && skillId != 'All') {
 
                 listSRSkill = [select id,ServiceResourceId from ServiceResourceSkill where ServiceResourceId in :setSRId and SkillId = :skillId and ((EffectiveStartDate <= :startDateTime and EffectiveEndDate = null) or (EffectiveStartDate <= :startDateTime and EffectiveEndDate >= :endDateTime))];
                 
@@ -81,7 +83,9 @@ public With Sharing class MRDTGetSTMs {
 
             //let's see if there are any resource absences for the resources during the selected period of time  
             Id nonAvailRecordTypeId = Schema.SObjectType.ResourceAbsence.getRecordTypeInfosByName().get('Non Availability').getRecordTypeId();
-            list<resourceabsence> raList = new list<resourceabsence>([select id,resourceId from resourceabsence where ResourceId in :setSRId and recordtypeid = :nonAvailRecordTypeId and start < :endDateTime and end > :startDateTime ]);
+            list<resourceabsence> raList = new list<resourceabsence>();
+            if(Schema.sObjectType.resourceabsence.isQueryable()) 
+                raList = [select id,resourceId from resourceabsence where ResourceId in :setSRId and recordtypeid = :nonAvailRecordTypeId and start < :endDateTime and end > :startDateTime ];
 
             //let's see if there are any service appointments for the resources during the selected period of time      
             Map<id,string> mapResourceOverlap = new map<id,string>();
@@ -89,8 +93,9 @@ public With Sharing class MRDTGetSTMs {
             for(resourceabsence ra : raList) {
                 mapResourceOverlap.put(ra.resourceid,'RA');
             }
-            
-            list<assignedresource> arList = new list<assignedresource>([select id,serviceresourceid from assignedresource where serviceresourceid in :setSRId and serviceappointmentid in (select id from serviceappointment where serviceterritoryid in :listST and statuscategory not in  ('Canceled','None') and schedstarttime < :endDateTime and schedendtime > :startDateTime) ]);    
+            list<assignedresource> arList = new list<assignedresource>();
+            if(Schema.sObjectType.assignedresource.isQueryable())
+                arList = [select id,serviceresourceid from assignedresource where serviceresourceid in :setSRId and serviceappointmentid in (select id from serviceappointment where serviceterritoryid in :listST and statuscategory not in  ('Canceled','None') and schedstarttime < :endDateTime and schedendtime > :startDateTime) ];    
             
             for(assignedresource ar : arList) {
 

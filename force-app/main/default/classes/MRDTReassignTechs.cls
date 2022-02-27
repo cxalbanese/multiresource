@@ -13,12 +13,13 @@ public static list<string> ReassignTechs (list<inPayLoad> listPayload) {
     list<assignedresource> listAR = new list<assignedresource>();
     
     try{
-    listAR = [select id,serviceappointmentid from assignedresource where serviceappointmentid in : listSA];
+    if(Schema.sObjectType.assignedresource.isQueryable())
+        listAR = [select id,serviceappointmentid from assignedresource where serviceappointmentid in : listSA];
     list<assignedresource> listNewAR = new list<assignedresource>();
     list<serviceappointment> listUpdSA = new list<serviceappointment>();
     for(assignedresource ar : listAR) 
         listNewAR.add(new assignedresource(serviceresourceid=serviceResourceId,serviceappointmentid=ar.serviceappointmentid));
-    if(listNewAR.size()>0) {
+    if(Schema.sObjectType.assignedresource.isUpdateable() && Schema.sObjectType.assignedresource.isCreateable() && Schema.sObjectType.assignedresource.isDeletable() && listNewAR.size()>0) {
         insert listNewAR;
         delete listAR;
         for(serviceappointment sa : listSA) {

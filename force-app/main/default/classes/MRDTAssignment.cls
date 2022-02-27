@@ -19,10 +19,10 @@ Public With Sharing Class MRDTAssignment {
                 
         }
             
-        if(listNewAR.size()>0) {
+        if(Schema.sObjectType.assignedresource.isCreateable() && listNewAR.size()>0) {
 
             try{
-                insert listNewAR;
+                    insert listNewAR;
             }
             catch(DmlException e) {
                 return new list<string>{e.getMessage()};

@@ -56,7 +56,7 @@ public With Sharing class MRDTDateShift {
 
         try{
 
-            if(listShiftedSA.size() > 0) {
+            if(Schema.sObjectType.serviceappointment.isUpdateable() && listShiftedSA.size() > 0) {
 
                 saOutput.listSA = listShiftedSA;
                 saOutput.numSAs = listShiftedSA.size();

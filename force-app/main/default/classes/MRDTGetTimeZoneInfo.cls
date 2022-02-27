@@ -19,7 +19,9 @@ public With Sharing class MRDTGetTimeZoneInfo {
         try{
             string territoryId = inTerritoryIdList[0];
             TimeZone userTZ = UserInfo.getTimeZone();
-            OperatingHours oh = [select id,timezone from operatinghours where id in (select operatinghoursid from serviceterritory where id = : territoryId) limit 1];
+            OperatingHours oh = new OperatingHours();
+            if(Schema.sObjectType.operatinghours.isQueryable() && Schema.sObjectType.serviceterritory.isQueryable())
+                oh = [select id,timezone from operatinghours where id in (select operatinghoursid from serviceterritory where id = : territoryId) limit 1];
             TimeZone territoryTZ = Timezone.getTimeZone(oh.timezone);
             Datetime compareDateTime = 
             Datetime.newInstanceGmt(2021,7,18,12,0,0);

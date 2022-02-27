@@ -56,44 +56,46 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
     WODTScheduleOutput saOutput = new WODTScheduleOutput();
     saOutput.listSA = new list<serviceappointment>();
     saOutput.numSAs = 0;
+    WorkOrder thewo = new WorkOrder();
     try{
-    workorder thewo = [select id, subject, city, state, street, postalcode from workorder where id =: workorderid limit 1];
-    if(taskDescription == null ) taskDescription = thewo.subject;
-    for(serviceterritorymember stm : listSTM) {
-        string theResourceId = stm.serviceresourceid;
-    
-        for (date thedate : listDate ) {
-            datetime dowdatetime = datetime.newinstance(thedate.year(),thedate.month(),thedate.day());
-            string dow = datetime.newinstance(thedate.year(),thedate.month(),thedate.day()).format('EEE');
-            if((dow == weekendDay1 && includeWeekendDay1) || (dow == weekendDay2 && includeWeekendDay2) || (dow != weekendDay1 && dow != weekendDay2)) {
-                serviceappointment thesa = new serviceappointment();            
-                thesa.parentrecordid = workorderid;
-                thesa.serviceterritoryid = territoryid;
-                thesa.durationtype = 'hours';
-                thesa.duration = duration;
-                thesa.earlieststarttime = datetime.newinstance(thedate.year(),thedate.month(),thedate.day(),startTimeHour,startTimeMinute,0);
-                thesa.duedate = thesa.earlieststarttime.adddays(1).addminutes(-1);
-                thesa.schedstarttime = thesa.earlieststarttime;
-                thesa.schedendtime = thesa.schedstarttime.addhours(duration);
-                thesa.MR_Parent_Work_Order__c = workorderid;
-                thesa.FSL__GanttLabel__c = thewo.subject;
-                thesa.city = thewo.city;
-                thesa.street = thewo.street;
-                thesa.state = thewo.state;
-                thesa.postalcode = thewo.postalcode;
-                thesa.MR_Service_Resource__c = theResourceId.trim();
-                thesa.Status = status;
-                thesa.subject = taskDescription;
-                thesa.MR_Creation_Status__c = 'Draft';
-                listNewSAs.add (thesa);
-            }  
-        }
-   }       
+        if(Schema.SObjectType.WorkOrder.isQueryable())
+            thewo = [select id, subject, city, state, street, postalcode from workorder where id =: workorderid limit 1];
+        if(taskDescription == null ) taskDescription = thewo.subject;
+        for(serviceterritorymember stm : listSTM) {
+            string theResourceId = stm.serviceresourceid;    
+            for (date thedate : listDate ) {
+                datetime dowdatetime = datetime.newinstance(thedate.year(),thedate.month(),thedate.day());
+                string dow = datetime.newinstance(thedate.year(),thedate.month(),thedate.day()).format('EEE');
+                if((dow == weekendDay1 && includeWeekendDay1) || (dow == weekendDay2 && includeWeekendDay2) || (dow != weekendDay1 && dow != weekendDay2)) {
+                    serviceappointment thesa = new serviceappointment();            
+                    thesa.parentrecordid = workorderid;
+                    thesa.serviceterritoryid = territoryid;
+                    thesa.durationtype = 'hours';
+                    thesa.duration = duration;
+                    thesa.earlieststarttime = datetime.newinstance(thedate.year(),thedate.month(),thedate.day(),startTimeHour,startTimeMinute,0);
+                    thesa.duedate = thesa.earlieststarttime.adddays(1).addminutes(-1);
+                    thesa.schedstarttime = thesa.earlieststarttime;
+                    thesa.schedendtime = thesa.schedstarttime.addhours(duration);
+                    thesa.MR_Parent_Work_Order__c = workorderid;
+                    thesa.FSL__GanttLabel__c = thewo.subject;
+                    thesa.city = thewo.city;
+                    thesa.street = thewo.street;
+                    thesa.state = thewo.state;
+                    thesa.postalcode = thewo.postalcode;
+                    thesa.MR_Service_Resource__c = theResourceId.trim();
+                    thesa.Status = status;
+                    thesa.subject = taskDescription;
+                    thesa.MR_Creation_Status__c = 'Draft';
+                    listNewSAs.add (thesa);
+                }  
+            }
+        }       
 
-       if(listNewSAs.size()>0 && listNewSAs.size()<= limitSAs) {
+       if(Schema.sObjectType.serviceappointment.isCreateable() && listNewSAs.size()>0 && listNewSAs.size()<= limitSAs) {
            insert listNewSAs;  
-           for(serviceappointment sa: [select appointmentnumber, parentrecordid,serviceterritoryid,durationtype,duration,earlieststarttime,duedate,schedstarttime,schedendtime,mr_parent_work_order__c,fsl__ganttlabel__c,city,street,postalcode,mr_service_resource__c,status,mr_creation_status__c from serviceappointment where id in :listNewSAs])
-                listSavedSAs.add(sa);
+           if(Schema.sObjectType.serviceappointment.isQueryable())
+                for(serviceappointment sa: [select appointmentnumber, parentrecordid,serviceterritoryid,durationtype,duration,earlieststarttime,duedate,schedstarttime,schedendtime,mr_parent_work_order__c,fsl__ganttlabel__c,city,street,postalcode,mr_service_resource__c,status,mr_creation_status__c from serviceappointment where id in :listNewSAs])
+                    listSavedSAs.add(sa);
            saOutput.listSA = new list<serviceappointment>(listSavedSAs);
            saOutput.numSAs = listNewSAs.size();
            return new list<WODTScheduleOutput>{saOutput};

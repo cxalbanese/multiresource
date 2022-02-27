@@ -15,9 +15,12 @@ public static list<WODTScheduleOutput> SAValidateUpdate (list<WODTSchedulePayloa
     WODTScheduleOutput wOutput = new WODTScheduleOutput();
     wOutput.listSA = new list<serviceappointment>();
     wOutput.numSAs = 0;
+    list<ServiceAppointment> listSA = new List<ServiceAppointment>();
+    list<AssignedResource> listAR = new List<AssignedResource>();
     try{
-        list<serviceappointment> listSA = [select id, appointmentnumber,schedstarttime,schedendtime,durationtype,duration,earlieststarttime,duedate,mr_creation_status__c,mr_service_resource__c,status,statuscategory from serviceappointment where parentrecordid = :woID or mr_parent_work_order__c = :woID];
-        list<assignedresource> listAR = [select id,serviceappointmentid,serviceresourceid from assignedresource where serviceappointmentid in :listSA];
+        if(Schema.sObjectType.serviceappointment.isQueryable() && Schema.sObjectType.assignedresource.isQueryable()) {    
+            listSA = [select id, appointmentnumber,schedstarttime,schedendtime,durationtype,duration,earlieststarttime,duedate,mr_creation_status__c,mr_service_resource__c,status,statuscategory from serviceappointment where parentrecordid = :woID or mr_parent_work_order__c = :woID];
+            listAR = [select id,serviceappointmentid,serviceresourceid from assignedresource where serviceappointmentid in :listSA];}
         map<id,id> mapSAAR = new map<id,id>();
         for(assignedresource ar : listAR) mapSAAR.put(ar.serviceappointmentid,ar.serviceresourceid);
         list<serviceappointment> listUpdatedSA = new list<serviceappointment>();
@@ -25,8 +28,9 @@ public static list<WODTScheduleOutput> SAValidateUpdate (list<WODTSchedulePayloa
             if(sa.mr_service_resource__c != mapSAAR.get(sa.id)) {
                 sa.mr_service_resource__c = mapSAAR.get(sa.id);
                 listUpdatedSA.add(sa);}
-        if (listUpdatedSA.size()>0) update listUpdatedSA;
-        wOutput.listSA = [select id, appointmentnumber,schedstarttime,schedendtime,durationtype,duration,earlieststarttime,duedate,mr_creation_status__c,mr_service_resource__c,status,statuscategory from serviceappointment where parentrecordid = :woID or mr_parent_work_order__c = :woID];
+        if (Schema.sObjectType.serviceappointment.isUpdateable() && listUpdatedSA.size()>0) update listUpdatedSA;
+        if(Schema.sObjectType.serviceappointment.isQueryable())
+            wOutput.listSA = [select id, appointmentnumber,schedstarttime,schedendtime,durationtype,duration,earlieststarttime,duedate,mr_creation_status__c,mr_service_resource__c,status,statuscategory from serviceappointment where parentrecordid = :woID or mr_parent_work_order__c = :woID];
         wOutput.numSAs = wOutput.listSA.size();
         return new list<WODTScheduleOutput>{wOutput};
         }
