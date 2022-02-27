@@ -82,13 +82,10 @@ public With Sharing class MRDTGetSTMs {
             }
 
             //let's see if there are any resource absences for the resources during the selected period of time  
-            Id nonAvailRecordTypeId = Schema.SObjectType.ResourceAbsence.getRecordTypeInfosByName().get('Non Availability').getRecordTypeId();
+            Final Id nonAvailRecordTypeId = Schema.SObjectType.ResourceAbsence.getRecordTypeInfosByName().get('Non Availability').getRecordTypeId();
             list<resourceabsence> raList = new list<resourceabsence>();
             if(Schema.sObjectType.resourceabsence.isQueryable()) 
                 raList = [select id,resourceId from resourceabsence where ResourceId in :setSRId and recordtypeid = :nonAvailRecordTypeId and start < :endDateTime and end > :startDateTime ];
-            final Id NONAVAILABILITY_RECORDTYPE = Schema.SObjectType.ResourceAbsence.getRecordTypeInfosByName().get('Non Availability').getRecordTypeId();
-            list<resourceabsence> raList = new list<resourceabsence>([select id,resourceId from resourceabsence where ResourceId in :setSRId and recordtypeid = :NONAVAILABILITY_RECORDTYPE and start < :endDateTime and end > :startDateTime ]);
-            System.debug('***** raList: ' + raList);
 
             //let's see if there are any service appointments for the resources during the selected period of time      
             Map<id,string> mapResourceOverlap = new map<id,string>();
@@ -100,22 +97,13 @@ public With Sharing class MRDTGetSTMs {
             if(Schema.sObjectType.assignedresource.isQueryable())
                 arList = [select id,serviceresourceid from assignedresource where serviceresourceid in :setSRId and serviceappointmentid in (select id from serviceappointment where serviceterritoryid in :listST and statuscategory not in  ('Canceled','None') and schedstarttime < :endDateTime and schedendtime > :startDateTime) ];    
             
-            list<assignedresource> arList = new list<assignedresource>([select id,serviceresourceid from assignedresource where serviceresourceid in :setSRId and serviceappointmentid in (select id from serviceappointment where serviceterritoryid in :listST and statuscategory not in  ('Canceled','None') and schedstarttime < :endDateTime and schedendtime > :startDateTime) ]);    
-            System.debug('***** arList: ' + arList);
-            
             for(assignedresource ar : arList) {
 
-                if(mapResourceOverlap.containsKey(ar.serviceresourceid)) {
-                    if (mapResourceOverlap.get(ar.serviceresourceid) == 'RA' || mapResourceOverlap.get(ar.serviceresourceid) == 'Both') {
+                if(mapResourceOverlap.containsKey(ar.serviceresourceid)) 
+                    if (mapResourceOverlap.get(ar.serviceresourceid) == 'RA' || mapResourceOverlap.get(ar.serviceresourceid) == 'Both') 
                         mapResourceOverlap.put(ar.serviceresourceid,'Both'); 
-                    }
-                    else {
-                        mapResourceOverlap.put(ar.serviceresourceid,'SA');
-                    }
-                } 
-                else {
-                    mapResourceOverlap.put(ar.serviceresourceid,'SA');
-                }
+                    else mapResourceOverlap.put(ar.serviceresourceid,'SA');
+                else mapResourceOverlap.put(ar.serviceresourceid,'SA');
 
             }
 
