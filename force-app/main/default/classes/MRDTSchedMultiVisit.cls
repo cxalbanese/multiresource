@@ -69,7 +69,7 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
                 if((dow == weekendDay1 && includeWeekendDay1) || (dow == weekendDay2 && includeWeekendDay2) || (dow != weekendDay1 && dow != weekendDay2)) {
                     serviceappointment thesa = new serviceappointment();            
                     thesa.parentrecordid = workorderid;
-                    thesa.serviceterritoryid = territoryid;
+                    //thesa.serviceterritoryid = territoryid;
                     thesa.durationtype = 'hours';
                     thesa.duration = duration;
                     thesa.earlieststarttime = datetime.newinstance(thedate.year(),thedate.month(),thedate.day(),startTimeHour,startTimeMinute,0);

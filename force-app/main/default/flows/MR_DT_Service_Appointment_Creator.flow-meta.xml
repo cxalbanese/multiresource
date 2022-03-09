@@ -12,7 +12,6 @@
             <targetReference>Less_than_SA_Limit</targetReference>
         </connector>
         <faultConnector>
-            <isGoTo>true</isGoTo>
             <targetReference>Error_EncounteredApexAction</targetReference>
         </faultConnector>
         <flowTransactionModel>Automatic</flowTransactionModel>
@@ -425,7 +424,6 @@
                 </rightValue>
             </conditions>
             <connector>
-                <isGoTo>true</isGoTo>
                 <targetReference>Review_Draft_SAs</targetReference>
             </connector>
             <label>Yes</label>
@@ -878,7 +876,6 @@
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <isGoTo>true</isGoTo>
             <targetReference>Review_Draft_SAs</targetReference>
         </connector>
         <fields>
@@ -920,7 +917,7 @@
         </fields>
         <fields>
             <name>Confirmation</name>
-            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 18px; color: rgb(0, 0, 0);&quot;&gt;Success!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The assignments are being created. This process may take a minute or 2. Please refresh your screen to review the new service appointments.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!DraftSADataTable.outputSelectedRowsString}&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-size: 18px;&quot;&gt;Success!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The assignments are being created. This process may take a minute or 2. Please refresh your screen to review the new service appointments.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
@@ -964,7 +961,6 @@
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <isGoTo>true</isGoTo>
             <targetReference>Select_Parameters</targetReference>
         </connector>
         <fields>
