@@ -3,7 +3,8 @@
 //Called by: Flow: MR_DT_Service_Appointment_Creator
 //Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
 //Disclaimer: This code does not use the scheduling features of SFS and will produce scheduling violations on your Gantt
-
+//Change Log:
+//May 16, 2022 - added country to line 62 soql query and added line 86 to update sa.country with this value
 public With Sharing class MRDTSchedMultiVisit {
 
 @invocableMethod (label='MR DT Create Multiple Visits')
@@ -59,7 +60,7 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
     WorkOrder thewo = new WorkOrder();
     try{
         if(Schema.SObjectType.WorkOrder.isQueryable())
-            thewo = [select id, subject, city, state, street, postalcode from workorder where id =: workorderid limit 1];
+            thewo = [select id, subject, city, state, street, postalcode,country from workorder where id =: workorderid limit 1];
         if(taskDescription == null ) taskDescription = thewo.subject;
         for(serviceterritorymember stm : listSTM) {
             string theResourceId = stm.serviceresourceid;    
@@ -82,6 +83,7 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
                     thesa.street = thewo.street;
                     thesa.state = thewo.state;
                     thesa.postalcode = thewo.postalcode;
+                    thesa.country = thewo.country;
                     thesa.MR_Service_Resource__c = theResourceId.trim();
                     thesa.Status = status;
                     thesa.subject = taskDescription;
