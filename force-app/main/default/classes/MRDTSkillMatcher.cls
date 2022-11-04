@@ -15,68 +15,74 @@ public with sharing class MRDTSkillMatcher {
         system.debug('******************** parameter info: mapSkillsNeeded size = ' + mapSkillsNeeded.size());
         system.debug('******************** parameter info: setResourceId size = ' + setResourceId.size());
         system.debug('******************** parameter info: start date = ' + startDateTime);
-        system.debug('******************** parameter info: end date = ' + endDateTime);
-        for(id thisResourceId : setResourceId) {
-            resourceProfile rP = new resourceProfile();
-            rP.skillsMatched='';
-            rP.skillLevelsMatched='';
-            rP.skillNamesMatched='';
-            rP.skillCounter=0;
-            system.debug('********** rp = '+rP);
-            system.debug('********** thisResourceId = '+thisResourceId);
-            mapSRSkillProfile.put(thisResourceId,rP);
-        }
-        system.debug('******* mapSRSkillProfile size = ' + mapSRSkillProfile.size());
-        //if we don't need any skills then no need to process anything
-        if(mapSkillsNeeded!=null) {
-            //build the list of skill ids and names and put them in a map
-            list<Skill> listSkill = new list<skill>(
-                [select 
-                Id, 
-                MasterLabel 
-                from Skill 
-                where 
-                id in :mapSkillsNeeded.keySet()]);
-            for(Skill thisSkill: listSkill) mapSkillNames.put(thisSkill.Id,thisSkill.MasterLabel);
-            system.debug('****** skill name size ' + mapSkillNames.size());
-            //find the list of skills that each resource has regardless of skill level
-            list<ServiceResourceSkill> listSRSkills = new List<ServiceResourceSkill>();
-            listSRSkills = [select 
-                Id,
-                SkillId,
-                ServiceResourceId,
-                SkillLevel 
-                from ServiceResourceSkill 
-                where 
-                ServiceResourceId in :setResourceId and 
-                SkillId in :mapSkillsNeeded.keySet() and 
-                ((EffectiveStartDate <= :startDateTime and EffectiveEndDate = null) or (EffectiveStartDate <= :startDateTime and EffectiveEndDate >= :endDateTime))];
-            //loop through each skill each resource has and build resource skill profile
-            for(ServiceResourceSkill thisSRS : listSRSkills){
-                string skillDisplay='';
-                if(thisSRS.SkillLevel!=null)
-                    skillDisplay=thisSRS.SkillLevel.format();
-                resourceProfile rP = mapSRSkillProfile.get(thisSRS.ServiceResourceId);
-                //if the skill and the level match then add this skill to skillsMatched and increment skill counter
-                if(mapSkillsNeeded.get(thisSRS.SkillId)==null && thisSRS.skillLevel==null){
-                    rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
-                    rp.skillCounter++;
+        system.debug('******************** parameter info: end date = ' + endDateTime);       
+        if(Schema.sObjectType.skill.isQueryable()&& Schema.sObjectType.ServiceResourceSkill.isQueryable()) 
+            try{
+                for(id thisResourceId : setResourceId) {
+                    resourceProfile rP = new resourceProfile();
+                    rP.skillsMatched='';
+                    rP.skillLevelsMatched='';
+                    rP.skillNamesMatched='';
+                    rP.skillCounter=0;
+                    system.debug('********** rp = '+rP);
+                    system.debug('********** thisResourceId = '+thisResourceId);
+                    mapSRSkillProfile.put(thisResourceId,rP);
                 }
-                if( mapSkillsNeeded.get(thisSRS.SkillId)==null || (thisSRS.SkillLevel != null && thisSRS.SkillLevel>= mapSkillsNeeded.get(thisSRS.SkillId)) ){
-                    rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
-                    rp.skillCounter++;
+                system.debug('******* mapSRSkillProfile size = ' + mapSRSkillProfile.size());
+                //if we don't need any skills then no need to process anything
+                if(mapSkillsNeeded!=null) {
+                    //build the list of skill ids and names and put them in a map
+                    list<Skill> listSkill = new list<skill>(
+                        [select 
+                        Id, 
+                        MasterLabel 
+                        from Skill 
+                        where 
+                        id in :mapSkillsNeeded.keySet()]);
+                    for(Skill thisSkill: listSkill) mapSkillNames.put(thisSkill.Id,thisSkill.MasterLabel);
+                    system.debug('****** skill name size ' + mapSkillNames.size());
+                    //find the list of skills that each resource has regardless of skill level
+                    list<ServiceResourceSkill> listSRSkills = new List<ServiceResourceSkill>();
+                    listSRSkills = [select 
+                        Id,
+                        SkillId,
+                        ServiceResourceId,
+                        SkillLevel 
+                        from ServiceResourceSkill 
+                        where 
+                        ServiceResourceId in :setResourceId and 
+                        SkillId in :mapSkillsNeeded.keySet() and 
+                        ((EffectiveStartDate <= :startDateTime and EffectiveEndDate = null) or (EffectiveStartDate <= :startDateTime and EffectiveEndDate >= :endDateTime))];
+                    //loop through each skill each resource has and build resource skill profile
+                    for(ServiceResourceSkill thisSRS : listSRSkills){
+                        string skillDisplay='';
+                        if(thisSRS.SkillLevel!=null)
+                            skillDisplay=thisSRS.SkillLevel.format();
+                        resourceProfile rP = mapSRSkillProfile.get(thisSRS.ServiceResourceId);
+                        //if the skill and the level match then add this skill to skillsMatched and increment skill counter
+                        if(mapSkillsNeeded.get(thisSRS.SkillId)==null && thisSRS.skillLevel==null){
+                            rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
+                            rp.skillCounter++;
+                        }
+                        if( mapSkillsNeeded.get(thisSRS.SkillId)==null || (thisSRS.SkillLevel != null && thisSRS.SkillLevel>= mapSkillsNeeded.get(thisSRS.SkillId)) ){
+                            rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
+                            rp.skillCounter++;
+                        }
+                        //add this skill to skillNamesMatched - remember we don't care about skill levels for this field
+                            rP.skillNamesMatched=rP.skillNamesMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;               
+                        mapSRSkillProfile.put(thisSRS.ServiceResourceId,rP);
+                    }
+                    //loop through the finished map to write the skillLevelsMatched
+                    for(id thisId : mapSRSkillProfile.keySet()) {
+                        resourceProfile rP = mapSRSkillProfile.get(thisId); 
+                        rP.skillLevelsMatched = rP.skillCounter.format()+'/'+mapSkillsNeeded.size();
+                        mapSRSkillProfile.put(thisId,rP);
+                    }
                 }
-                //add this skill to skillNamesMatched - remember we don't care about skill levels for this field
-                    rP.skillNamesMatched=rP.skillNamesMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;               
-                mapSRSkillProfile.put(thisSRS.ServiceResourceId,rP);
             }
-            //loop through the finished map to write the skillLevelsMatched
-            for(id thisId : mapSRSkillProfile.keySet()) {
-                resourceProfile rP = mapSRSkillProfile.get(thisId); 
-                rP.skillLevelsMatched = rP.skillCounter.format()+'/'+mapSkillsNeeded.size();
-                mapSRSkillProfile.put(thisId,rP);
+            catch(Exception e) {
+                //the empty map will be returned
             }
-        }
     }
 
     Public Class resourceProfile {
