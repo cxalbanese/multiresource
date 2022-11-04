@@ -11,6 +11,7 @@ public With Sharing class MRDTGetSTMs {
     public static list<outPayLoad> GetSTMS (list<inPayLoad> listPayload) {
 
         String territoryId = listPayload[0].inTerritoryId;
+        String woId = listPayload[0].inWoId;
         String skillId = listPayload[0].inSkillId;
         Datetime startDateTime =  datetime.newinstance(listPayload[0].startDate.year(),listPayload[0].startDate.month(),listPayload[0].startDate.day());
         Datetime endDateTime = datetime.newinstance(listPayload[0].endDate.year(),listPayload[0].endDate.month(),listPayload[0].endDate.day()).adddays(1);
@@ -20,9 +21,17 @@ public With Sharing class MRDTGetSTMs {
         List<ServiceResourceSkill> listSRSkill = new List<ServiceResourceSkill>();
         List<String> listSRId = new List<String>();
         Set<String> setSRId = new Set<String>();
+        map<id,decimal> mapSkillsRequired = new map<id,decimal>();
+        list<SkillRequirement> skillList = new List<SkillRequirement>();
+        map<id,MRDTSkillMatcher.resourceProfile> mapResourceProfile = new map<id,MRDTSkillMatcher.resourceProfile>();
 
-        
+       
         try{
+            if(Schema.SObjectType.WorkOrder.isQueryable() && 
+                Schema.SObjectType.SkillRequirement.isQueryable()) {
+                skillList = [select id,skillid,skilllevel from SkillRequirement where RelatedRecordId=:woId];
+                for(SkillRequirement sR : skillList) mapSkillsRequired.put(sR.skillid,sR.skilllevel);
+            }
             if(Schema.sObjectType.serviceterritory.isQueryable())
                 if(territoryId == 'All') {
                     //if its all territories just find all Active STs
@@ -45,6 +54,9 @@ public With Sharing class MRDTGetSTMs {
                         MR_Resource_Name__c,
                         MR_Service_Territory__c, 
                         MR_DT_Overlap__c,
+                        MR_DT_Skill_Levels_Matched__c,
+                        MR_DT_Skill_Names_Matched__c,
+                        MR_DT_Skills_Matched__c,
                         TerritoryType 
                         FROM ServiceTerritoryMember 
                         WHERE ServiceTerritoryId in :listST 
@@ -95,7 +107,17 @@ public With Sharing class MRDTGetSTMs {
             }
             list<assignedresource> arList = new list<assignedresource>();
             if(Schema.sObjectType.assignedresource.isQueryable())
-                arList = [select id,serviceresourceid from assignedresource where serviceresourceid in :setSRId and serviceappointmentid in (select id from serviceappointment where serviceterritoryid in :listST and statuscategory not in  ('Canceled','None') and schedstarttime < :endDateTime and schedendtime > :startDateTime) ];    
+                arList = [select id,
+                serviceresourceid 
+                from assignedresource 
+                where 
+                serviceresourceid in :setSRId and 
+                serviceappointmentid in (
+                    select id from serviceappointment 
+                    where 
+                        /* serviceterritoryid in :listST and ******* removed in case there are secondary territories */
+                        statuscategory not in  ('Canceled','None') and 
+                        schedstarttime < :endDateTime and schedendtime > :startDateTime) ];    
             
             for(assignedresource ar : arList) {
 
@@ -118,6 +140,29 @@ public With Sharing class MRDTGetSTMs {
                 }
 
             }
+            //if skills are required on the WO, let's build out the skill matching profile for the techs
+            If(mapSkillsRequired.size()> 0 && setSRId.size()>0) {
+                //this class determines the skill matching profile for the tech
+                MRDTSkillMatcher skillMatcher = new MRDTSkillMatcher(mapSkillsRequired,setSRId,startDateTime,endDateTime);
+                mapResourceProfile = skillMatcher.mapSRSkillProfile;
+            } 
+            if(mapResourceProfile.size()>0){
+                //if we have a skill profile let's store in the STM. we don't perform DML on STM but we use
+                //the fields on STM to temporarily hold the values so the datatable component in the flow can use it
+                for(serviceterritorymember stm : listSTMFiltered) {
+
+                    if(mapResourceProfile.containsKey(stm.serviceresourceid)) {
+                        //MR_DT_Skill_Levels_Matched__c = # of skills/levels match = 3/5 for example
+                        stm.MR_DT_Skill_Levels_Matched__c = mapResourceProfile.get(stm.serviceresourceid).skillLevelsMatched;
+                        //MR_DT_Skill_Names_Matched__c = just list of skill names matched, regardless of level
+                        stm.MR_DT_Skill_Names_Matched__c = mapResourceProfile.get(stm.serviceresourceid).skillNamesMatched;
+                        //MR_DT_Skill_Matched__c = list of skill names/levels matched. i.e. if level doesn't match skill is not included here
+                        stm.MR_DT_Skills_Matched__c = mapResourceProfile.get(stm.serviceresourceid).skillsMatched;
+                    }
+
+                }
+
+            }       
 
             outPayLoad oPL = new outPayLoad();
             oPL.stmList = new list<serviceterritorymember>(listSTMFiltered);
@@ -141,6 +186,8 @@ public With Sharing class MRDTGetSTMs {
         public date startDate;
         @invocableVariable
         public date endDate;
+        @invocableVariable
+        public string inWoId;
     }
 
 
