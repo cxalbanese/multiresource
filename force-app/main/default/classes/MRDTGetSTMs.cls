@@ -116,7 +116,7 @@ public With Sharing class MRDTGetSTMs {
                     select id from serviceappointment 
                     where 
                         /* serviceterritoryid in :listST and ******* removed in case there are secondary territories */
-                        statuscategory not in  ('Canceled','None') and 
+                        /* statuscategory not in  ('Canceled','None') and ******** add this back if there categories you want to filter */
                         schedstarttime < :endDateTime and schedendtime > :startDateTime) ];    
             
             for(assignedresource ar : arList) {
