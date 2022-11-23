@@ -6,76 +6,56 @@
 public with sharing class MRDTGetOverlapInfo {
     //this is the list of resource ids along with a overlap information
     public map<id,MRDTresourceOverlaps> mapSROverlapProfile = new map<id,MRDTresourceOverlaps>();
-    public MRDTGetOverlapInfo(set<string> setResourceId,datetime startDateTime,datetime endDateTime) {
+    public MRDTGetOverlapInfo(set<string> setResourceId,
+                                datetime startDateTime,
+                                datetime endDateTime,
+                                boolean includeWeekendDay1,
+                                boolean includeWeekendDay2,
+                                boolean includeOnlyWeekends,
+                                string weekendDay1,
+                                string weekendDay2) {
         integer numDays = startDateTime.date().daysBetween(endDateTime.date());
+        //get the list of resource names 
+        map<string,string> mapResourceName = new Map<string,string>();
+        if(Schema.sObjectType.serviceresource.isQueryable()) {     
+            for(serviceresource thisSR : [select id,name from serviceresource where id in :setResourceId]){
+                mapResourceName.put(thisSR.id,thisSR.Name);
+            }
+        } 
         //initialize the map
-        //intialize all of the days between the start and end for this resource
-        map<date,MRDTresourceOverlaps.saConflictDetails> SAConflictDetails= new Map<Date,MRDTresourceOverlaps.saConflictDetails>();
-        for(integer thisDayNumber=0;thisDayNumber < numDays;thisDayNumber++ ){
-            MRDTresourceOverlaps.saConflictDetails sCD = new MRDTresourceOverlaps.saConflictDetails();
-            sCD.blockedHours=0;
-            sCD.conflictDetails='';
-            SAConflictDetails.put(startDateTime.date().addDays(thisDayNumber),sCD);
-        }
+        //intialize all of the days between the start and end for this resourc
         for(string thisResourceId :setResourceId){
             MRDTresourceOverlaps thisOverlap = new MRDTresourceOverlaps();
             thisOverlap.resourceId = thisResourceId;
+            thisOverlap.resourceName = mapResourceName.get(thisResourceId);
             thisOverlap.numberConflicts=0;
             thisOverlap.totalBlockedHours=0;
-            thisOverlap.percentAvailability=0;
-            thisOverlap.stringnumberConflicts='';
-            thisOverlap.stringpercentAvailability='';
-            //intialize all of the days between the start and end for this resource
-            thisOverlap.mapSAConflictDetails = SAConflictDetails;
+            thisOverlap.percentAvailability=100;
+            thisOverlap.stringnumberConflicts='0';
+            thisOverlap.stringpercentAvailability='100';
+            //initialize the map of daily conflicts for each resource
+            map<date,MRDTresourceOverlaps.saConflictDetails> mapSAConflictDetails=  new map<date,MRDTresourceOverlaps.saConflictDetails> ();
+            for(integer thisDayNumber=0;thisDayNumber < numDays;thisDayNumber++ ){
+                MRDTresourceOverlaps.saConflictDetails sCD = new MRDTresourceOverlaps.saConflictDetails();
+                sCD.blockedHours=0;
+                sCD.conflictDetails='';
+                mapSAConflictDetails.put(startDateTime.date().addDays(thisDayNumber),sCD);
+            }
+            thisOverlap.mapSAConflictDetails = mapSAConflictDetails;
             mapSROverlapProfile.put(thisResourceId,thisOverlap);
         }
-        //let's see if there are any resource absences for the resources during the selected period of time  
-        Final Id nonAvailRecordTypeId = Schema.SObjectType.ResourceAbsence.getRecordTypeInfosByName().get('Non Availability').getRecordTypeId();
-        list<resourceabsence> raList = new list<resourceabsence>();
-        if(Schema.sObjectType.resourceabsence.isQueryable()) 
-            raList = [select 
-                    id,
-                    resourceId,
-                    AbsenceNumber,
-                    FSL__Duration_In_Minutes__c,
-                    Start,
-                    End
-                    from 
-                    resourceabsence 
-                    where 
-                    ResourceId in :setResourceId and 
-                    recordtypeid = :nonAvailRecordTypeId and 
-                    start < :endDateTime and end > :startDateTime ];
-
-        //if we found RAs, lets add them to the overlapProfile     
-        for(resourceabsence ra : raList) {
-            date raDate = ra.Start.date();
-            MRDTresourceOverlaps thisOverlap = mapSROverlapProfile.get(ra.ResourceId);
-            thisOverlap.numberConflicts++;
-            thisOverlap.totalBlockedHours+=ra.FSL__Duration_In_Minutes__c/60;
-            if(numdays!=0)
-                thisOverlap.percentAvailability=thisOverlap.numberConflicts/numDays;     
-            else 
-               thisOverlap.percentAvailability=0;
-            MRDTresourceOverlaps.saConflictDetails sCD = thisOverlap.mapSAConflictDetails.get(raDate);
-            sCD.blockedHours+=ra.FSL__Duration_In_Minutes__c/60;
-            if(sCD.conflictDetails!='')
-                sCD.conflictDetails+=','+ra.AbsenceNumber;
-            else 
-                sCD.conflictDetails=ra.AbsenceNumber;
-            thisOverlap.mapSAConflictDetails.put(raDate,sCD);
-            mapSROverlapProfile.put(ra.resourceid,thisOverlap);
-        }
-        //now let's check overlaps with Service Appointments
+        system.debug('(((((((((( initial map for resource ' + mapSROverlapProfile);
+        //let's check overlaps with Service Appointments
         list<assignedresource> arList = new list<assignedresource>();
-        if(Schema.sObjectType.assignedresource.isQueryable()){
+        if(Schema.sObjectType.assignedresource.isQueryable() && Schema.sObjectType.serviceappointment.isQueryable()){
             arList = [select 
                 id,
                 serviceresourceid,
                 ServiceAppointment.AppointmentNumber,
                 ServiceAppointment.SchedStartTime,
                 ServiceAppointment.DurationInMinutes,               
-                ServiceAppointment.SchedEndtime
+                ServiceAppointment.SchedEndtime,
+                ServiceAppointment.Subject
                 from assignedresource 
                 where 
                 serviceresourceid in :setResourceId and 
@@ -87,24 +67,68 @@ public with sharing class MRDTGetOverlapInfo {
                         schedstarttime < :endDateTime and schedendtime > :startDateTime) ]; 
             //if we found SAs, lets add them to the overlapProfile     
             for(assignedResource ar : arList) {
-                date arDate = ar.ServiceAppointment.SchedStartTime.date();
-                MRDTresourceOverlaps thisOverlap = mapSROverlapProfile.get(ar.ServiceResourceId);
-                thisOverlap.numberConflicts++;
-                thisOverlap.totalBlockedHours+=ar.ServiceAppointment.DurationInMinutes/60;
-                if(numdays!=0)
-                    thisOverlap.percentAvailability=thisOverlap.numberConflicts/numDays;     
-                else 
-                    thisOverlap.percentAvailability=0;
-                MRDTresourceOverlaps.saConflictDetails sCD = thisOverlap.mapSAConflictDetails.get(arDate);
-                sCD.blockedHours+=ar.ServiceAppointment.DurationInMinutes/60;
-                if(sCD.conflictDetails!='')
-                    sCD.conflictDetails+=','+ar.ServiceAppointment.AppointmentNumber;
-                else 
-                    sCD.conflictDetails=ar.ServiceAppointment.AppointmentNumber;
-                thisOverlap.mapSAConflictDetails.put(arDate,sCD);
-                mapSROverlapProfile.put(ar.ServiceResourceId,thisOverlap);
+                string dow = ar.ServiceAppointment.SchedStartTime.format('EEE');
+                if((dow == weekendDay1 && includeWeekendDay1) || 
+                    (dow == weekendDay2 && includeWeekendDay2) || 
+                    (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
+                mapSROverlapProfile.put(ar.ServiceResourceId,
+                    calcOverlap(ar.ServiceResourceId, ar.ServiceAppointment.SchedStartTime, ar.ServiceAppointment.DurationInMinutes, numDays, ar.ServiceAppointment.AppointmentNumber,ar.ServiceAppointment.Subject));
             }
         }
+    
+        //let's see if there are any resource absences for the resources during the selected period of time  
+        Final Id nonAvailRecordTypeId = Schema.SObjectType.ResourceAbsence.getRecordTypeInfosByName().get('Non Availability').getRecordTypeId();
+        list<resourceabsence> raList = new list<resourceabsence>();
+        if(Schema.sObjectType.resourceabsence.isQueryable()) {
+            raList = [select 
+                    id,
+                    resourceId,
+                    AbsenceNumber,
+                    FSL__Duration_In_Minutes__c,
+                    Start,
+                    End,
+                    Type
+                    from 
+                    resourceabsence 
+                    where 
+                    ResourceId in :setResourceId and 
+                    recordtypeid = :nonAvailRecordTypeId and 
+                    start < :endDateTime and end > :startDateTime ];
+            //if we found RAs, lets add them to the overlapProfile     
+            for(resourceabsence ra : raList) {
+                string dow = ra.start.format('EEE');
+                if((dow == weekendDay1 && includeWeekendDay1) || 
+                    (dow == weekendDay2 && includeWeekendDay2) || 
+                    (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
+                        mapSROverlapProfile.put(ra.resourceid,
+                            calcOverlap(ra.ResourceId, ra.Start, ra.FSL__Duration_In_Minutes__c, numDays, ra.AbsenceNumber,ra.Type));
+                }
+    }
+}
+    public MRDTresourceOverlaps calcOverlap(string resourceId,datetime startTime,decimal duration,integer numDays,string recordName,string recordDesc) {
+        date arDate = startTime.date();
+        MRDTresourceOverlaps thisOverlap = new MRDTresourceOverlaps();
+        thisOverlap = mapSROverlapProfile.get(resourceId);
+        system.debug('^^^^^^^^^ this overlap retrieval ' + thisOverlap);
+        thisOverlap.numberConflicts++;
+        thisOverlap.totalBlockedHours+=duration/60;
+        if(numdays!=0)
+            thisOverlap.percentAvailability=(1-thisOverlap.numberConflicts/numDays)*100;     
+        else 
+            thisOverlap.percentAvailability=0;
+        MRDTresourceOverlaps.saConflictDetails sCD = new MRDTresourceOverlaps.saConflictDetails();
+        sCD = thisOverlap.mapSAConflictDetails.get(arDate);
+        system.debug('@@@@@@@@@@@@ this overlap map SA conflict details ' + sCD);
+        sCD.blockedHours+=duration/60;
+        if(sCD.conflictDetails!='')
+            sCD.conflictDetails+=','+recordName+'-'+recordDesc;
+        else 
+            sCD.conflictDetails=recordName+'-'+recordDesc;
+        thisOverlap.mapSAConflictDetails.put(arDate,sCD);
+        System.debug('********** res date conflict details' + resourceId + ' '+arDate + ' ' + sCD.conflictDetails ); 
+        System.debug('########## thisOverlap' + thisOverlap);
+        System.debug('!!!!!!!!!! thisOverlap.mapSAConflictDetails' + thisOverlap.mapSAConflictDetails);
+        return(thisOverlap);      
     }
     
 }

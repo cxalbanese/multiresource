@@ -61,15 +61,21 @@ public with sharing class MRDTSkillMatcher {
                         resourceProfile rP = mapSRSkillProfile.get(thisSRS.ServiceResourceId);
                         //if the skill and the level match then add this skill to skillsMatched and increment skill counter
                         if(mapSkillsNeeded.get(thisSRS.SkillId)==null && thisSRS.skillLevel==null){
+                            if(rP.skillsMatched!='')
+                                rP.skillsMatched+=',';
                             rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
                             rp.skillCounter++;
                         }
                         if( mapSkillsNeeded.get(thisSRS.SkillId)==null || (thisSRS.SkillLevel != null && thisSRS.SkillLevel>= mapSkillsNeeded.get(thisSRS.SkillId)) ){
+                            if(rP.skillsMatched!='')
+                                rP.skillsMatched+=',';
                             rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
                             rp.skillCounter++;
                         }
                         //add this skill to skillNamesMatched - remember we don't care about skill levels for this field
-                            rP.skillNamesMatched=rP.skillNamesMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;               
+                        if(rP.skillNamesMatched!='')
+                            rP.skillNamesMatched+=',';
+                        rP.skillNamesMatched=rP.skillNamesMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;               
                         mapSRSkillProfile.put(thisSRS.ServiceResourceId,rP);
                     }
                     //loop through the finished map to write the skillLevelsMatched

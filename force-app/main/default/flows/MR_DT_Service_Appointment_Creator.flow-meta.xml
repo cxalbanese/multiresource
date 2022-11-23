@@ -5,13 +5,14 @@
         <name>Create_Draft_SAs</name>
         <label>Create Draft SAs</label>
         <locationX>633</locationX>
-        <locationY>1454</locationY>
+        <locationY>1910</locationY>
         <actionName>MRDTSchedMultiVisit</actionName>
         <actionType>apex</actionType>
         <connector>
             <targetReference>Less_than_SA_Limit</targetReference>
         </connector>
         <faultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Error_EncounteredApexAction</targetReference>
         </faultConnector>
         <flowTransactionModel>Automatic</flowTransactionModel>
@@ -19,6 +20,12 @@
             <name>defaultDuration</name>
             <value>
                 <elementReference>Default_Duration_hrs</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeOnlyWeekends</name>
+            <value>
+                <elementReference>Include_Only_Weekends</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -43,6 +50,12 @@
             <name>listSTM</name>
             <value>
                 <elementReference>STMDataTable.outputSelectedRows</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>overlapResultsJSON</name>
+            <value>
+                <elementReference>overlapResultsJSON</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -101,7 +114,7 @@
         <name>Get_filtered_STMS</name>
         <label>Get filtered STMS</label>
         <locationX>1056</locationX>
-        <locationY>1094</locationY>
+        <locationY>1550</locationY>
         <actionName>MRDTGetSTMs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -118,6 +131,24 @@
             </value>
         </inputParameters>
         <inputParameters>
+            <name>includeOnlyWeekends</name>
+            <value>
+                <elementReference>Include_Only_Weekends</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeWeekendDay1</name>
+            <value>
+                <elementReference>Include_Saturdays</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeWeekendDay2</name>
+            <value>
+                <elementReference>Include_Sundays</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
             <name>inSkillId</name>
             <value>
                 <elementReference>Skill</elementReference>
@@ -130,11 +161,25 @@
             </value>
         </inputParameters>
         <inputParameters>
+            <name>inWoId</name>
+            <value>
+                <elementReference>getWorkOrder.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
             <name>startDate</name>
             <value>
                 <elementReference>Starting_From</elementReference>
             </value>
         </inputParameters>
+        <outputParameters>
+            <assignToReference>outputOverlapDebug</assignToReference>
+            <name>overlapDebugMessage</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>overlapResultsJSON</assignToReference>
+            <name>overlapResultsJSON</name>
+        </outputParameters>
         <outputParameters>
             <assignToReference>overlapWarning</assignToReference>
             <name>overlapWarning</name>
@@ -148,7 +193,7 @@
         <name>MRDT_Get_Time_Zone_Info</name>
         <label>MRDT Get Time Zone Info</label>
         <locationX>314</locationX>
-        <locationY>1814</locationY>
+        <locationY>2270</locationY>
         <actionName>MRDTGetTimeZoneInfo</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -163,12 +208,12 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
-    <apiVersion>53.0</apiVersion>
+    <apiVersion>55.0</apiVersion>
     <assignments>
         <name>Add_AR_to_collection</name>
         <label>Add AR to collection</label>
         <locationX>402</locationX>
-        <locationY>4082</locationY>
+        <locationY>4538</locationY>
         <assignmentItems>
             <assignToReference>collARs</assignToReference>
             <operator>Add</operator>
@@ -184,7 +229,7 @@
         <name>Add_to_List</name>
         <label>Add to List</label>
         <locationX>160</locationX>
-        <locationY>2954</locationY>
+        <locationY>3410</locationY>
         <assignmentItems>
             <assignToReference>collConfirmedSAs</assignToReference>
             <operator>Add</operator>
@@ -197,10 +242,33 @@
         </connector>
     </assignments>
     <assignments>
+        <name>build_the_string</name>
+        <label>build the string</label>
+        <locationX>1144</locationX>
+        <locationY>854</locationY>
+        <assignmentItems>
+            <assignToReference>varSkillsRequired</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Build_display_field_for_skills_required.MR_DT_Skill_Name_and_Level__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varSkillsRequired</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>,</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Build_display_field_for_skills_required</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Create_Assigned_Resource</name>
         <label>Create Assigned Resource</label>
         <locationX>402</locationX>
-        <locationY>3962</locationY>
+        <locationY>4418</locationY>
         <assignmentItems>
             <assignToReference>objAR.ServiceResourceId</assignToReference>
             <operator>Assign</operator>
@@ -223,7 +291,7 @@
         <name>Set_MR_Creation_Status</name>
         <label>Set MR Creation Status</label>
         <locationX>160</locationX>
-        <locationY>2834</locationY>
+        <locationY>3290</locationY>
         <assignmentItems>
             <assignToReference>objSA.Id</assignToReference>
             <operator>Assign</operator>
@@ -285,7 +353,7 @@
         <name>Delete_Records</name>
         <label>Delete Records?</label>
         <locationX>314</locationX>
-        <locationY>3506</locationY>
+        <locationY>3962</locationY>
         <defaultConnector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </defaultConnector>
@@ -311,7 +379,7 @@
         <name>Less_than_SA_Limit</name>
         <label>Less than SA Limit</label>
         <locationX>633</locationX>
-        <locationY>1574</locationY>
+        <locationY>2030</locationY>
         <defaultConnector>
             <targetReference>Too_Many_Service_Appointments</targetReference>
         </defaultConnector>
@@ -344,7 +412,7 @@
         <name>Records_Selected</name>
         <label>Records Selected?</label>
         <locationX>314</locationX>
-        <locationY>2594</locationY>
+        <locationY>3050</locationY>
         <defaultConnector>
             <targetReference>No_Records_Selected</targetReference>
         </defaultConnector>
@@ -376,7 +444,7 @@
         <name>Records_Updates</name>
         <label>Records Updates?</label>
         <locationX>314</locationX>
-        <locationY>2054</locationY>
+        <locationY>2510</locationY>
         <defaultConnector>
             <targetReference>Records_Selected</targetReference>
         </defaultConnector>
@@ -408,7 +476,7 @@
         <name>return_to_prior_screen</name>
         <label>return to prior screen</label>
         <locationX>556</locationX>
-        <locationY>2834</locationY>
+        <locationY>3290</locationY>
         <defaultConnector>
             <targetReference>Get_Draft_Record</targetReference>
         </defaultConnector>
@@ -424,6 +492,7 @@
                 </rightValue>
             </conditions>
             <connector>
+                <isGoTo>true</isGoTo>
                 <targetReference>Review_Draft_SAs</targetReference>
             </connector>
             <label>Yes</label>
@@ -448,7 +517,7 @@
         <name>Technicans_Found</name>
         <label>Technicans Found?</label>
         <locationX>1056</locationX>
-        <locationY>1214</locationY>
+        <locationY>1670</locationY>
         <defaultConnector>
             <targetReference>No_Technicians_Found</targetReference>
         </defaultConnector>
@@ -562,6 +631,11 @@
         <valueField>Id</valueField>
     </dynamicChoiceSets>
     <formulas>
+        <name>formulaSkillRequirement</name>
+        <dataType>String</dataType>
+        <expression>if(isblank({!varSkillsRequired}),&apos;No skills required&apos;,LEFT({!varSkillsRequired},LEN({!varSkillsRequired})-1))</expression>
+    </formulas>
+    <formulas>
         <name>formulaTimeZonesAreDifferent</name>
         <dataType>Boolean</dataType>
         <expression>{!MRDT_Get_Time_Zone_Info.territoryTimeZone} &lt;&gt; {!MRDT_Get_Time_Zone_Info.yourTimeZone}</expression>
@@ -579,11 +653,25 @@
     <interviewLabel>MR DT Service_Appointment Creator {!$Flow.CurrentDateTime}</interviewLabel>
     <label>MR DT Service_Appointment Creator</label>
     <loops>
+        <name>Build_display_field_for_skills_required</name>
+        <label>Build display field for skills required</label>
+        <locationX>1056</locationX>
+        <locationY>734</locationY>
+        <collectionReference>Get_Skill_Requirements</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>build_the_string</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>find_Existing_Service_Appointments</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
         <description>set MR Creation Status to Confirmed</description>
         <name>loop_through_selected_rows</name>
         <label>loop through selected rows</label>
         <locationX>72</locationX>
-        <locationY>2714</locationY>
+        <locationY>3170</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -597,7 +685,7 @@
         <name>Loop_to_Create_Assigned_Resources</name>
         <label>Loop to Create Assigned Resources</label>
         <locationX>314</locationX>
-        <locationY>3842</locationY>
+        <locationY>4298</locationY>
         <collectionReference>DraftSADataTable.outputSelectedRows</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -630,7 +718,7 @@
         <name>Create_ARs</name>
         <label>Create ARs</label>
         <locationX>314</locationX>
-        <locationY>4298</locationY>
+        <locationY>4754</locationY>
         <connector>
             <targetReference>info1</targetReference>
         </connector>
@@ -640,7 +728,7 @@
         <name>Delete_draft_SAs</name>
         <label>Delete draft SAs</label>
         <locationX>182</locationX>
-        <locationY>3626</locationY>
+        <locationY>4082</locationY>
         <connector>
             <targetReference>Loop_to_Create_Assigned_Resources</targetReference>
         </connector>
@@ -672,7 +760,7 @@
         <name>find_Existing_Service_Appointments</name>
         <label>find Earliest Existing Service Appointments</label>
         <locationX>1056</locationX>
-        <locationY>614</locationY>
+        <locationY>1070</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>find_Existing_Service_Appointments_0</targetReference>
@@ -702,7 +790,7 @@
         <name>find_Existing_Service_Appointments_0</name>
         <label>find Latest Existing Service Appointments</label>
         <locationX>1056</locationX>
-        <locationY>734</locationY>
+        <locationY>1190</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>get_the_default_territory_0</targetReference>
@@ -733,7 +821,7 @@
         <name>Get_Draft_Record</name>
         <label>Get Draft Record</label>
         <locationX>314</locationX>
-        <locationY>3386</locationY>
+        <locationY>3842</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Delete_Records</targetReference>
@@ -765,11 +853,34 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <name>Get_Skill_Requirements</name>
+        <label>Get Skill Requirements</label>
+        <locationX>1056</locationX>
+        <locationY>614</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Build_display_field_for_skills_required</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>RelatedRecordId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>getWorkOrder.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>SkillRequirement</object>
+        <sortField>MR_DT_Skill_Name_and_Level__c</sortField>
+        <sortOrder>Asc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <description>find San Francisco</description>
         <name>get_the_default_territory_0</name>
         <label>get the default territory</label>
         <locationX>1056</locationX>
-        <locationY>854</locationY>
+        <locationY>1310</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Select_Parameters</targetReference>
@@ -799,7 +910,7 @@
         <locationY>494</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>find_Existing_Service_Appointments</targetReference>
+            <targetReference>Get_Skill_Requirements</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -818,7 +929,7 @@
         <name>Trigger_Draft_SA_Delete</name>
         <label>Trigger Draft SA Delete</label>
         <locationX>314</locationX>
-        <locationY>1694</locationY>
+        <locationY>2150</locationY>
         <connector>
             <targetReference>MRDT_Get_Time_Zone_Info</targetReference>
         </connector>
@@ -848,7 +959,7 @@
         <name>Update_Confirmed_Records</name>
         <label>Update Confirmed Records</label>
         <locationX>72</locationX>
-        <locationY>3170</locationY>
+        <locationY>3626</locationY>
         <connector>
             <targetReference>Get_Draft_Record</targetReference>
         </connector>
@@ -858,7 +969,7 @@
         <name>Update_Edited_SAs</name>
         <label>Update Edited SAs</label>
         <locationX>50</locationX>
-        <locationY>2174</locationY>
+        <locationY>2630</locationY>
         <connector>
             <targetReference>Records_Selected</targetReference>
         </connector>
@@ -871,11 +982,12 @@
         <name>Error_Encountered</name>
         <label>Error Encountered</label>
         <locationX>314</locationX>
-        <locationY>2294</locationY>
+        <locationY>2750</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
+            <isGoTo>true</isGoTo>
             <targetReference>Review_Draft_SAs</targetReference>
         </connector>
         <fields>
@@ -890,7 +1002,7 @@
         <name>Error_EncounteredApexAction</name>
         <label>Error Encountered</label>
         <locationX>1744</locationX>
-        <locationY>1214</locationY>
+        <locationY>1670</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -906,7 +1018,7 @@
         <name>info1</name>
         <label>info1</label>
         <locationX>314</locationX>
-        <locationY>4418</locationY>
+        <locationY>4874</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -927,7 +1039,7 @@
         <name>No_Records_Selected</name>
         <label>No Records Selected</label>
         <locationX>556</locationX>
-        <locationY>2714</locationY>
+        <locationY>3170</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -956,11 +1068,12 @@
         <name>No_Technicians_Found</name>
         <label>No Technicians Found</label>
         <locationX>1480</locationX>
-        <locationY>1334</locationY>
+        <locationY>1790</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
+            <isGoTo>true</isGoTo>
             <targetReference>Select_Parameters</targetReference>
         </connector>
         <fields>
@@ -997,7 +1110,7 @@
         <name>Review_Draft_SAs</name>
         <label>Review Draft SAs</label>
         <locationX>314</locationX>
-        <locationY>1934</locationY>
+        <locationY>2390</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1053,7 +1166,7 @@
             <inputParameters>
                 <name>columnFields</name>
                 <value>
-                    <stringValue>AppointmentNumber,MR_Service_Resource__c,SchedStartTime,Duration,DurationType,SchedEndTime,MR_Creation_Status__c,Status,EarliestStartTime,DueDate</stringValue>
+                    <stringValue>AppointmentNumber,MR_Service_Resource__c,MR_DT_Percent_Availability__c,MR_DT_Conflict_Details__c,SchedStartTime,Duration,DurationType,SchedEndTime,MR_Creation_Status__c,Status,EarliestStartTime,DueDate</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1065,7 +1178,7 @@
             <inputParameters>
                 <name>columnWidths</name>
                 <value>
-                    <stringValue>AppointmentNumber:95, MR_Service_Resource__c:95, SchedStartTime:95, Duration:95, DurationType:95, SchedEndTime:95, MR_Creation_Status__c:51, Status:95, EarliestStartTime:95, DueDate:95</stringValue>
+                    <stringValue>AppointmentNumber:95, MR_Service_Resource__c:95, MR_DT_Percent_Availability__c:50, MR_DT_Conflict_Details__c:50, SchedStartTime:95, Duration:95, DurationType:95, SchedEndTime:95, MR_Creation_Status__c:51, Status:95, EarliestStartTime:95, DueDate:95</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1115,7 +1228,7 @@
         <name>Select_Parameters</name>
         <label>Enter parameters -  Step 1</label>
         <locationX>1056</locationX>
-        <locationY>974</locationY>
+        <locationY>1430</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1165,8 +1278,13 @@
             <isRequired>false</isRequired>
         </fields>
         <fields>
+            <name>SkillsRequiredDisplay</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Skills and Skill Levels Required&lt;/span&gt;&lt;/p&gt;&lt;p&gt;{!formulaSkillRequirement}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
             <name>saparminfo</name>
-            <fieldText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0);&quot;&gt;Service Appointment Parameters&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-size: 18px; background-color: rgb(255, 255, 255);&quot;&gt;Service Appointment Parameters&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
@@ -1215,6 +1333,18 @@
                     <fieldType>InputField</fieldType>
                     <helpText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;If selected, appointments will be created for Sundays.&lt;/span&gt;&lt;/p&gt;</helpText>
                     <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Include_Only_Weekends</name>
+                    <dataType>Boolean</dataType>
+                    <fieldText>Include Only Weekends</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <helpText>&lt;p&gt;If selected, appointments will not be created for Monday - Friday.&lt;/p&gt;&lt;p&gt;If selected, you must select at least Include Saturday, or Include Sunday or Both.&lt;/p&gt;</helpText>
+                    <isRequired>true</isRequired>
+                    <validationRule>
+                        <errorMessage>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68);&quot;&gt;If you select Include only Weekends, you must select at least Include Saturday, or Include Sunday or Both.&lt;/span&gt;&lt;/p&gt;</errorMessage>
+                        <formulaExpression>!{!Include_Only_Weekends} || ({!Include_Only_Weekends} &amp;&amp; ({!Include_Saturdays} || {!Include_Sundays}))</formulaExpression>
+                    </validationRule>
                 </fields>
                 <inputParameters>
                     <name>width</name>
@@ -1338,7 +1468,7 @@
         <name>Select_Resource</name>
         <label>Select Resource</label>
         <locationX>633</locationX>
-        <locationY>1334</locationY>
+        <locationY>1790</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1351,8 +1481,28 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
+            <name>SkillsRequiredDisplay1</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Skills and Skill Levels Required&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68);&quot;&gt;{!formulaSkillRequirement}&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
             <name>overlapWarningDisplay</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 16px; color: rgb(255, 0, 0);&quot;&gt;Warning&lt;/b&gt;&lt;/p&gt;&lt;p&gt;at least 1 technician has a Resource Absence or Service Appointment that overlaps with the data range you have selected.&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;color: rgb(255, 0, 0); font-size: 16px;&quot;&gt;Warning&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;at least 1 technician has a Resource Absence or Service Appointment that overlaps with the data range you have selected.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>overlapWarning</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
+            <name>overlapDebugInfo</name>
+            <fieldText>&lt;p&gt;Overlap Debug Information: &lt;/p&gt;&lt;p&gt;Note: in the next update, this detail will be presented on the SA table in the next step&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!outputOverlapDebug}&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
@@ -1388,7 +1538,7 @@
             <inputParameters>
                 <name>columnFields</name>
                 <value>
-                    <stringValue>MemberNumber,MR_Resource_Name__c,TerritoryType,MR_Service_Territory__c,EffectiveStartDate,EffectiveEndDate,MR_DT_Overlap__c</stringValue>
+                    <stringValue>MemberNumber,MR_Resource_Name__c,TerritoryType,MR_Service_Territory__c,EffectiveStartDate,EffectiveEndDate,MR_DT_Percent_Availability__c,MR_DT_Skill_Levels_Matched__c,MR_DT_Skills_Matched__c,MR_DT_Skill_Names_Matched__c</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1400,7 +1550,7 @@
             <inputParameters>
                 <name>columnWidths</name>
                 <value>
-                    <stringValue>MemberNumber:191, MR_Resource_Name__c:97, TerritoryType:191, MR_Service_Territory__c:97, EffectiveStartDate:191, EffectiveEndDate:191, MR_DT_Overlap__c:50</stringValue>
+                    <stringValue>MemberNumber:191, MR_Resource_Name__c:97, TerritoryType:191, MR_Service_Territory__c:97, EffectiveStartDate:191, EffectiveEndDate:191, MR_DT_Percent_Availability__c:50, MR_DT_Skill_Levels_Matched__c:50, MR_DT_Skills_Matched__c:50, MR_DT_Skill_Names_Matched__c:50</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1432,7 +1582,7 @@
         <name>Too_Many_Service_Appointments</name>
         <label>Too Many Service Appointments</label>
         <locationX>952</locationX>
-        <locationY>1694</locationY>
+        <locationY>2150</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1451,7 +1601,7 @@
             <targetReference>was_RecordId_provided</targetReference>
         </connector>
     </start>
-    <status>Active</status>
+    <status>Draft</status>
     <variables>
         <name>collARs</name>
         <dataType>SObject</dataType>
@@ -1528,6 +1678,20 @@
         <objectType>ServiceAppointment</objectType>
     </variables>
     <variables>
+        <name>outputOverlapDebug</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>overlapResultsJSON</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <name>overlapWarning</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
@@ -1576,6 +1740,13 @@
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <objectType>ServiceTerritoryMember</objectType>
+    </variables>
+    <variables>
+        <name>varSkillsRequired</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
     </variables>
     <variables>
         <name>workTypeName</name>
