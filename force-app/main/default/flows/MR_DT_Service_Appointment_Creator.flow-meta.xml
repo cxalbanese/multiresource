@@ -1243,6 +1243,7 @@
         <fields>
             <name>Select_Parameters_Section1</name>
             <fieldType>RegionContainer</fieldType>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Select_Parameters_Section1_Column1</name>
                 <fieldType>Region</fieldType>
@@ -1290,6 +1291,7 @@
         <fields>
             <name>Select_Parameters_Section2</name>
             <fieldType>RegionContainer</fieldType>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Select_Parameters_Section2_Column1</name>
                 <fieldType>Region</fieldType>
@@ -1416,6 +1418,7 @@
         <fields>
             <name>Select_Parameters_Section3</name>
             <fieldType>RegionContainer</fieldType>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Select_Parameters_Section3_Column1</name>
                 <fieldType>Region</fieldType>

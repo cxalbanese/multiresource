@@ -1317,7 +1317,7 @@
         <fields>
             <name>Update_SAs_or_Take_Other_Action_Screen_Section1</name>
             <fieldType>RegionContainer</fieldType>
-            <regionContainerType>SectionWithHeader</regionContainerType>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Update_SAs_or_Take_Other_Action_Screen_Section1_Column1</name>
                 <fieldType>Region</fieldType>
@@ -1365,7 +1365,7 @@
         <fields>
             <name>Update_SAs_or_Take_Other_Action_Screen_Section2</name>
             <fieldType>RegionContainer</fieldType>
-            <regionContainerType>SectionWithHeader</regionContainerType>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Update_SAs_or_Take_Other_Action_Screen_Section2_Column1</name>
                 <fieldType>Region</fieldType>
