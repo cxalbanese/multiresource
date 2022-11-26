@@ -108,13 +108,16 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
                     thesa.MR_Creation_Status__c = 'Draft';
                     //if there's a conflict for this Resource for this date, write it to the new SA
                     if(mapOverlaps.containsKey(thesa.MR_Service_Resource__c)) {
+                        thesa.MR_DT_Skill_Levels_Matched__c = mapOverlaps.get(thesa.MR_Service_Resource__c).skillLevelsMatched;
+                        thesa.MR_DT_Skill_Names_Matched__c = mapOverlaps.get(thesa.MR_Service_Resource__c).skillNamesMatched;
+                        thesa.MR_DT_Skills_Matched__c = mapOverlaps.get(thesa.MR_Service_Resource__c).skillsMatched;
                         map<date,MRDTresourceOverlaps.saConflictDetails> mapDateOverlap = mapOverlaps.get(thesa.MR_Service_Resource__c).mapSAConflictDetails;
                         if(mapDateOverlap.containsKey(theDate)) {
                             //this is the text field containing the list of SAs and RAs that are in conflict
                             thesa.MR_DT_Conflict_Details__c = mapDateOverlap.get(theDate).conflictDetails.trim();
                             if(thesa.Duration!=0)
                                 //this is the sum of those SAs and RAs in conflict/current SA duration
-                                thesa.MR_DT_Percent_Availability__c = ((mapDateOverlap.get(theDate).blockedHours / thesa.Duration)*100).format(); 
+                                thesa.MR_DT_Percent_Availability__c = math.max(0,((1- (mapDateOverlap.get(theDate).blockedHours / thesa.Duration))*100)).format(); 
                         }
                     }
                         
@@ -146,7 +149,10 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
                             status,
                             mr_creation_status__c,
                             mr_dt_conflict_details__c,
-                            mr_dt_percent_availability__c
+                            mr_dt_percent_availability__c,
+                            mr_dt_skill_levels_matched__c,
+                            mr_dt_skill_names_matched__c,
+                            mr_dt_skills_matched__c
                         from serviceappointment 
                             where 
                                 id in :listNewSAs])

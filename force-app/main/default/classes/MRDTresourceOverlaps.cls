@@ -24,6 +24,12 @@ public with sharing class MRDTresourceOverlaps {
     @AuraEnabled
     public decimal totalBlockedHours=0;  
     @AuraEnabled
+    public string skillsMatched='';
+    @AuraEnabled
+    public string skillLevelsMatched='';
+    @AuraEnabled
+    public string skillNamesMatched='';
+    @AuraEnabled
     public map<date,saConflictDetails> mapSAConflictDetails=null;
     public class saConflictDetails {
         public string conflictDetails='';

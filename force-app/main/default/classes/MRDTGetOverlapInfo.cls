@@ -14,7 +14,18 @@ public with sharing class MRDTGetOverlapInfo {
                                 boolean includeOnlyWeekends,
                                 string weekendDay1,
                                 string weekendDay2) {
+        //this is the number of days between the start and end date times                            
         integer numDays = startDateTime.date().daysBetween(endDateTime.date());
+        //this will be calculated to be the the number of days between the 2 dates coonsidering
+        //whether weekends are excluded or included or only weekends are selected
+        integer netNumDays=0;
+        for(integer x =0 ; x<numDays; x++) {
+            string dow = startDateTime.addDays(x).format('EEE');
+            if((dow == weekendDay1 && includeWeekendDay1) || 
+                (dow == weekendDay2 && includeWeekendDay2) || 
+                (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
+                    netNumDays++;
+        }
         //get the list of resource names 
         map<string,string> mapResourceName = new Map<string,string>();
         if(Schema.sObjectType.serviceresource.isQueryable()) {     
@@ -33,9 +44,12 @@ public with sharing class MRDTGetOverlapInfo {
             thisOverlap.percentAvailability=100;
             thisOverlap.stringnumberConflicts='0';
             thisOverlap.stringpercentAvailability='100';
+            thisOverlap.skillLevelsMatched='';
+            thisOverlap.skillNamesMatched='';
+            thisOverlap.skillsMatched='';
             //initialize the map of daily conflicts for each resource
             map<date,MRDTresourceOverlaps.saConflictDetails> mapSAConflictDetails=  new map<date,MRDTresourceOverlaps.saConflictDetails> ();
-            for(integer thisDayNumber=0;thisDayNumber < numDays;thisDayNumber++ ){
+            for(integer thisDayNumber=0;thisDayNumber <= numDays;thisDayNumber++ ){
                 MRDTresourceOverlaps.saConflictDetails sCD = new MRDTresourceOverlaps.saConflictDetails();
                 sCD.blockedHours=0;
                 sCD.conflictDetails='';
@@ -72,7 +86,7 @@ public with sharing class MRDTGetOverlapInfo {
                     (dow == weekendDay2 && includeWeekendDay2) || 
                     (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
                 mapSROverlapProfile.put(ar.ServiceResourceId,
-                    calcOverlap(ar.ServiceResourceId, ar.ServiceAppointment.SchedStartTime, ar.ServiceAppointment.DurationInMinutes, numDays, ar.ServiceAppointment.AppointmentNumber,ar.ServiceAppointment.Subject));
+                    calcOverlap(ar.ServiceResourceId, ar.ServiceAppointment.SchedStartTime, ar.ServiceAppointment.DurationInMinutes, netNumDays, ar.ServiceAppointment.AppointmentNumber,ar.ServiceAppointment.Subject));
             }
         }
     
@@ -101,7 +115,7 @@ public with sharing class MRDTGetOverlapInfo {
                     (dow == weekendDay2 && includeWeekendDay2) || 
                     (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
                         mapSROverlapProfile.put(ra.resourceid,
-                            calcOverlap(ra.ResourceId, ra.Start, ra.FSL__Duration_In_Minutes__c, numDays, ra.AbsenceNumber,ra.Type));
+                            calcOverlap(ra.ResourceId, ra.Start, ra.FSL__Duration_In_Minutes__c, netNumDays, ra.AbsenceNumber,ra.Type));
                 }
     }
 }
@@ -109,7 +123,6 @@ public with sharing class MRDTGetOverlapInfo {
         date arDate = startTime.date();
         MRDTresourceOverlaps thisOverlap = new MRDTresourceOverlaps();
         thisOverlap = mapSROverlapProfile.get(resourceId);
-        system.debug('^^^^^^^^^ this overlap retrieval ' + thisOverlap);
         thisOverlap.numberConflicts++;
         thisOverlap.totalBlockedHours+=duration/60;
         if(numdays!=0)
@@ -118,16 +131,12 @@ public with sharing class MRDTGetOverlapInfo {
             thisOverlap.percentAvailability=0;
         MRDTresourceOverlaps.saConflictDetails sCD = new MRDTresourceOverlaps.saConflictDetails();
         sCD = thisOverlap.mapSAConflictDetails.get(arDate);
-        system.debug('@@@@@@@@@@@@ this overlap map SA conflict details ' + sCD);
         sCD.blockedHours+=duration/60;
         if(sCD.conflictDetails!='')
             sCD.conflictDetails+=','+recordName+'-'+recordDesc;
         else 
             sCD.conflictDetails=recordName+'-'+recordDesc;
         thisOverlap.mapSAConflictDetails.put(arDate,sCD);
-        System.debug('********** res date conflict details' + resourceId + ' '+arDate + ' ' + sCD.conflictDetails ); 
-        System.debug('########## thisOverlap' + thisOverlap);
-        System.debug('!!!!!!!!!! thisOverlap.mapSAConflictDetails' + thisOverlap.mapSAConflictDetails);
         return(thisOverlap);      
     }
     

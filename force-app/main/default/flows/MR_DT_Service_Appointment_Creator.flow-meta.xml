@@ -208,7 +208,7 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
-    <apiVersion>55.0</apiVersion>
+    <apiVersion>56.0</apiVersion>
     <assignments>
         <name>Add_AR_to_collection</name>
         <label>Add AR to collection</label>
@@ -1118,6 +1118,11 @@
             <targetReference>Records_Updates</targetReference>
         </connector>
         <fields>
+            <name>SkillsRequiredDisplay2</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Skills and Skill Levels Required&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;{!formulaSkillRequirement}&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
             <name>SAGuidanceText</name>
             <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Please select the appointments you would like to &lt;/span&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;KEEP&lt;/b&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;. Use the select all checkbox at the top of the column to select every appointment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Edit the values for columns as well and use the Save button to save this changes.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
@@ -1166,7 +1171,7 @@
             <inputParameters>
                 <name>columnFields</name>
                 <value>
-                    <stringValue>AppointmentNumber,MR_Service_Resource__c,MR_DT_Percent_Availability__c,MR_DT_Conflict_Details__c,SchedStartTime,Duration,DurationType,SchedEndTime,MR_Creation_Status__c,Status,EarliestStartTime,DueDate</stringValue>
+                    <stringValue>AppointmentNumber,MR_Service_Resource__c,MR_DT_Percent_Availability__c,MR_DT_Conflict_Details__c,SchedStartTime,Duration,DurationType,SchedEndTime,MR_Creation_Status__c,Status,EarliestStartTime,DueDate,MR_DT_Skill_Levels_Matched__c,MR_DT_Skills_Matched__c,MR_DT_Skill_Names_Matched__c</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1178,7 +1183,7 @@
             <inputParameters>
                 <name>columnWidths</name>
                 <value>
-                    <stringValue>AppointmentNumber:95, MR_Service_Resource__c:95, MR_DT_Percent_Availability__c:50, MR_DT_Conflict_Details__c:50, SchedStartTime:95, Duration:95, DurationType:95, SchedEndTime:95, MR_Creation_Status__c:51, Status:95, EarliestStartTime:95, DueDate:95</stringValue>
+                    <stringValue>AppointmentNumber:95, MR_Service_Resource__c:95, MR_DT_Percent_Availability__c:50, MR_DT_Conflict_Details__c:50, SchedStartTime:95, Duration:95, DurationType:95, SchedEndTime:95, MR_Creation_Status__c:51, Status:95, EarliestStartTime:95, DueDate:95, MR_DT_Skill_Levels_Matched__c:50, MR_DT_Skills_Matched__c:50, MR_DT_Skill_Names_Matched__c:50</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1242,8 +1247,8 @@
         </fields>
         <fields>
             <name>Select_Parameters_Section1</name>
-            <fieldType>RegionContainer</fieldType>
-            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <fieldType>RegionContainer</fieldType> 
+                <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Select_Parameters_Section1_Column1</name>
                 <fieldType>Region</fieldType>

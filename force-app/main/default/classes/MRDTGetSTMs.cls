@@ -132,8 +132,18 @@ public With Sharing class MRDTGetSTMs {
             //now let's get the details of the overlaps with SAs and RAs
             MRDTGetOverlapInfo SARAMatcher = new MRDTGetOverlapInfo(setSRId,startDateTime,endDateTime,includeWeekendDay1,includeWeekendDay2,includeOnlyWeekends,weekendDay1,weekendDay2); 
             map<id,MRDTresourceOverlaps> SARAMap = SARAMatcher.mapSROverlapProfile;
-            String overlapResultsJSON = '';
+            //add to the overlaps the resource skills info
+            for(string thisSRId : SARAMap.keySet()){
+                MRDTresourceOverlaps thisOverlap = SARAMap.get(thisSRId);
+                if(mapResourceProfile.containsKey(thisSRId)) {
+                    thisOverlap.skillLevelsMatched=mapResourceProfile.get(thisSRId).skillLevelsMatched;
+                    thisOverlap.skillNamesMatched=mapResourceProfile.get(thisSRId).skillNamesMatched;
+                    thisOverlap.skillsMatched=mapResourceProfile.get(thisSRId).skillsMatched;
+                    SARAMap.put(thisSRId, thisOverlap);
+                }
+            }
             //if there are results in the map, then json serialize them into a string
+            String overlapResultsJSON = '';
             if(SARAMap!=null && SARAMap.size()>0) overlapResultsJSON=JSON.serialize(SARAmap);
             //build the debug warning
             string overlapDebugMessage='';

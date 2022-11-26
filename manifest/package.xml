@@ -11,6 +11,9 @@
         <members>ServiceAppointment.MR_Creation_Status__c</members>
         <members>ServiceAppointment.MR_DT_Conflict_Details__c</members>
         <members>ServiceAppointment.MR_DT_Percent_Availability__c</members>
+        <members>ServiceAppointment.MR_DT_Skill_Levels_Matched__c</members>
+        <members>ServiceAppointment.MR_DT_Skill_Names_Matched__c</members>
+        <members>ServiceAppointment.MR_DT_Skills_Matched__c</members>
         <members>WorkOrder.MR_Estimated_Calendar_Days__c</members>
         <members>WorkOrder.MR_Hours_Actual__c</members>
         <members>WorkOrder.MR_Hours_Completed__c</members>
