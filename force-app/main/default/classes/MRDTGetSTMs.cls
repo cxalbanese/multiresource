@@ -146,7 +146,7 @@ public With Sharing class MRDTGetSTMs {
             String overlapResultsJSON = '';
             if(SARAMap!=null && SARAMap.size()>0) overlapResultsJSON=JSON.serialize(SARAmap);
             //build the debug warning
-            string overlapDebugMessage='';
+            string overlapDebugMessage='# days selected: ' + SARAMap.values()[0].netNumDays.format()+'-';
             for(string thisSRId : SARAMap.keySet()){
                 MRDTresourceOverlaps thisRO = SARAMap.get(thisSRId);
                 if(thisRO.numberConflicts>0) {

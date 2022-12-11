@@ -10,6 +10,8 @@
 public with sharing class MRDTresourceOverlaps {
     public MRDTresourceOverlaps(){}
     @AuraEnabled
+    public Integer netNumDays=0;
+    @AuraEnabled
     public string resourceId='';
     @AuraEnabled
     public string resourceName='';

@@ -37,6 +37,7 @@ public with sharing class MRDTGetOverlapInfo {
         //intialize all of the days between the start and end for this resourc
         for(string thisResourceId :setResourceId){
             MRDTresourceOverlaps thisOverlap = new MRDTresourceOverlaps();
+            thisOverlap.netNumDays = netNumDays;
             thisOverlap.resourceId = thisResourceId;
             thisOverlap.resourceName = mapResourceName.get(thisResourceId);
             thisOverlap.numberConflicts=0;
@@ -78,7 +79,8 @@ public with sharing class MRDTGetOverlapInfo {
                     where 
                         /* serviceterritoryid in :listST and ******* removed in case there are secondary territories */
                         /* statuscategory not in  ('Canceled','None') and ******** add this back if there categories you want to filter */
-                        schedstarttime < :endDateTime and schedendtime > :startDateTime) ]; 
+                        schedstarttime < :endDateTime and schedendtime > :startDateTime)
+                Order by ServiceAppointment.SchedStartTime]; 
             //if we found SAs, lets add them to the overlapProfile     
             for(assignedResource ar : arList) {
                 string dow = ar.ServiceAppointment.SchedStartTime.format('EEE');
@@ -86,7 +88,7 @@ public with sharing class MRDTGetOverlapInfo {
                     (dow == weekendDay2 && includeWeekendDay2) || 
                     (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
                 mapSROverlapProfile.put(ar.ServiceResourceId,
-                    calcOverlap(ar.ServiceResourceId, ar.ServiceAppointment.SchedStartTime, ar.ServiceAppointment.DurationInMinutes, netNumDays, ar.ServiceAppointment.AppointmentNumber,ar.ServiceAppointment.Subject));
+                    calcOverlap(ar.ServiceResourceId, ar.ServiceAppointment.SchedStartTime, ar.ServiceAppointment.SchedEndTime, ar.ServiceAppointment.DurationInMinutes, netNumDays, ar.ServiceAppointment.AppointmentNumber,ar.ServiceAppointment.Subject));
             }
         }
     
@@ -107,7 +109,8 @@ public with sharing class MRDTGetOverlapInfo {
                     where 
                     ResourceId in :setResourceId and 
                     recordtypeid = :nonAvailRecordTypeId and 
-                    start < :endDateTime and end > :startDateTime ];
+                    start < :endDateTime and end > :startDateTime 
+                    order by Start];
             //if we found RAs, lets add them to the overlapProfile     
             for(resourceabsence ra : raList) {
                 string dow = ra.start.format('EEE');
@@ -115,11 +118,11 @@ public with sharing class MRDTGetOverlapInfo {
                     (dow == weekendDay2 && includeWeekendDay2) || 
                     (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
                         mapSROverlapProfile.put(ra.resourceid,
-                            calcOverlap(ra.ResourceId, ra.Start, ra.FSL__Duration_In_Minutes__c, netNumDays, ra.AbsenceNumber,ra.Type));
+                            calcOverlap(ra.ResourceId, ra.Start, ra.End, ra.FSL__Duration_In_Minutes__c, netNumDays, ra.AbsenceNumber,ra.Type));
                 }
     }
 }
-    public MRDTresourceOverlaps calcOverlap(string resourceId,datetime startTime,decimal duration,integer numDays,string recordName,string recordDesc) {
+    public MRDTresourceOverlaps calcOverlap(string resourceId,datetime startTime,datetime endTime,decimal duration,integer numDays,string recordName,string recordDesc) {
         date arDate = startTime.date();
         MRDTresourceOverlaps thisOverlap = new MRDTresourceOverlaps();
         thisOverlap = mapSROverlapProfile.get(resourceId);
@@ -132,10 +135,11 @@ public with sharing class MRDTGetOverlapInfo {
         MRDTresourceOverlaps.saConflictDetails sCD = new MRDTresourceOverlaps.saConflictDetails();
         sCD = thisOverlap.mapSAConflictDetails.get(arDate);
         sCD.blockedHours+=duration/60;
-        if(sCD.conflictDetails!='')
-            sCD.conflictDetails+=','+recordName+'-'+recordDesc;
+        string overlapString = recordName+'-'+recordDesc+'-'+startTime.format('h:mm a')+'-'+endTime.format('h:mm a');
+        if(sCD.conflictDetails!='' && sCD.conflictDetails.length()< 255-overlapString.length())
+            sCD.conflictDetails+=','+overlapString;
         else 
-            sCD.conflictDetails=recordName+'-'+recordDesc;
+            sCD.conflictDetails=overlapString;
         thisOverlap.mapSAConflictDetails.put(arDate,sCD);
         return(thisOverlap);      
     }

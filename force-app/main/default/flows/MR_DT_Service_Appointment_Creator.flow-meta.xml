@@ -1183,7 +1183,7 @@
             <inputParameters>
                 <name>columnWidths</name>
                 <value>
-                    <stringValue>AppointmentNumber:95, MR_Service_Resource__c:95, MR_DT_Percent_Availability__c:50, MR_DT_Conflict_Details__c:50, SchedStartTime:95, Duration:95, DurationType:95, SchedEndTime:95, MR_Creation_Status__c:51, Status:95, EarliestStartTime:95, DueDate:95, MR_DT_Skill_Levels_Matched__c:50, MR_DT_Skills_Matched__c:50, MR_DT_Skill_Names_Matched__c:50</stringValue>
+                    <stringValue>AppointmentNumber:95, MR_Service_Resource__c:105, MR_DT_Percent_Availability__c:115, MR_DT_Conflict_Details__c:115, SchedStartTime:200, Duration:80, DurationType:85, SchedEndTime:80, MR_Creation_Status__c:60, Status:75, EarliestStartTime:125, DueDate:100, MR_DT_Skill_Levels_Matched__c:120, MR_DT_Skills_Matched__c:275, MR_DT_Skill_Names_Matched__c:160</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1222,6 +1222,18 @@
                     <stringValue>CB_TRUE</stringValue>
                 </value>
             </inputParameters>
+            <inputParameters>
+                <name>columnLabels</name>
+                <value>
+                    <stringValue>MR_Service_Resource__c:Resource, MR_Creation_Status__c:Create/Update Status</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>columnWraps</name>
+                <value>
+                    <stringValue>AppointmentNumber:false, MR_Service_Resource__c:false, MR_DT_Percent_Availability__c:false, MR_DT_Conflict_Details__c:false, SchedStartTime:false, Duration:false, DurationType:true, SchedEndTime:false, MR_Creation_Status__c:true, Status:false, EarliestStartTime:false, DueDate:false, MR_DT_Skill_Levels_Matched__c:true, MR_DT_Skills_Matched__c:true, MR_DT_Skill_Names_Matched__c:true</stringValue>
+                </value>
+            </inputParameters>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
@@ -1247,8 +1259,8 @@
         </fields>
         <fields>
             <name>Select_Parameters_Section1</name>
-            <fieldType>RegionContainer</fieldType> 
-                <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <fieldType>RegionContainer</fieldType>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Select_Parameters_Section1_Column1</name>
                 <fieldType>Region</fieldType>
@@ -1558,7 +1570,7 @@
             <inputParameters>
                 <name>columnWidths</name>
                 <value>
-                    <stringValue>MemberNumber:191, MR_Resource_Name__c:97, TerritoryType:191, MR_Service_Territory__c:97, EffectiveStartDate:191, EffectiveEndDate:191, MR_DT_Percent_Availability__c:50, MR_DT_Skill_Levels_Matched__c:50, MR_DT_Skills_Matched__c:50, MR_DT_Skill_Names_Matched__c:50</stringValue>
+                    <stringValue>MemberNumber:125, MR_Resource_Name__c:130, TerritoryType:120, MR_Service_Territory__c:95, EffectiveStartDate:175, EffectiveEndDate:100, MR_DT_Percent_Availability__c:130, MR_DT_Skill_Levels_Matched__c:175, MR_DT_Skills_Matched__c:215, MR_DT_Skill_Names_Matched__c:355</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1577,6 +1589,18 @@
                 <name>cb_hideCheckboxColumn</name>
                 <value>
                     <stringValue>CB_FALSE</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>columnLabels</name>
+                <value>
+                    <stringValue>MR_Resource_Name__c:Resource, MR_Service_Territory__c:Territory</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>columnWraps</name>
+                <value>
+                    <stringValue>MemberNumber:false, MR_Resource_Name__c:false, TerritoryType:true, MR_Service_Territory__c:false, EffectiveStartDate:false, EffectiveEndDate:false, MR_DT_Percent_Availability__c:true, MR_DT_Skill_Levels_Matched__c:true, MR_DT_Skills_Matched__c:true, MR_DT_Skill_Names_Matched__c:true</stringValue>
                 </value>
             </inputParameters>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -1609,7 +1633,7 @@
             <targetReference>was_RecordId_provided</targetReference>
         </connector>
     </start>
-    <status>Draft</status>
+    <status>Active</status>
     <variables>
         <name>collARs</name>
         <dataType>SObject</dataType>
