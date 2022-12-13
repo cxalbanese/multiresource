@@ -13,12 +13,7 @@ public class MRDTAssignmentTestClass{
 
         Test.startTest();
         List<String> resultList = MRDTAssignment.MRDTAssignment(nestedServiceAppointmentList);
-        Test.stopTest();
-        
+        Test.stopTest();  
         System.assertEquals('Success', resultList[0]);
-
     }
-
-
-
 }

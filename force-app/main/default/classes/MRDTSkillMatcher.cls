@@ -146,5 +146,4 @@ public with sharing class MRDTSkillMatcher {
             setSkillLevelsNotMatched=new set<id>();
         }
     }
-
 }
