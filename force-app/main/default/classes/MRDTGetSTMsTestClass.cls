@@ -57,7 +57,6 @@ public class MRDTGetSTMsTestClass{
         payload.includeOnlyWeekends = false;
         payload.includeWeekendDay1 = false;
         payload.includeWeekendDay2 = false;
-system.debug('*#*#*# '+ payload);
         list<MRDTGetSTMs.inPayLoad> inputList = new list<MRDTGetSTMs.inPayLoad>{payload};
 
         Test.startTest();

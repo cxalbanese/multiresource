@@ -18,7 +18,6 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
     string weekendDay1 = 'Sat';
     string weekendDay2 = 'Sun';
     integer limitSAs = iPL.limitSAs;
-    system.debug('ipl = ' + iPL)  ;     
     string territoryid = iPL.territoryid;
     string workorderid = iPL.workorderid;
     string status = iPL.status;
