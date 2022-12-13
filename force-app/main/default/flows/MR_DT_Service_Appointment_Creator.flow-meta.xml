@@ -108,6 +108,14 @@
             <assignToReference>numSAs</assignToReference>
             <name>numSAs</name>
         </outputParameters>
+        <outputParameters>
+            <assignToReference>woSkillNamesMatchedSelected</assignToReference>
+            <name>woSkillNamesMatched</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>woSkillNamesNotMatchedSelected</assignToReference>
+            <name>woSkillNamesNotMatched</name>
+        </outputParameters>
     </actionCalls>
     <actionCalls>
         <description>returns a list of STMS that have the skill and territory if specified</description>
@@ -187,6 +195,14 @@
         <outputParameters>
             <assignToReference>collectionSTMs</assignToReference>
             <name>stmList</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>woSkillNamesMatched</assignToReference>
+            <name>woSkillNamesMatched</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>woSkillNamesNotMatched</assignToReference>
+            <name>woSkillNamesNotMatched</name>
         </outputParameters>
     </actionCalls>
     <actionCalls>
@@ -630,6 +646,7 @@
         <sortOrder>Desc</sortOrder>
         <valueField>Id</valueField>
     </dynamicChoiceSets>
+    <environments>Default</environments>
     <formulas>
         <name>formulaSkillRequirement</name>
         <dataType>String</dataType>
@@ -1123,6 +1140,21 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
+            <name>SkillsNotPresentSelectedDisplay</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 16px;&quot;&gt;Skills Required and not present in the technicians below&lt;/span&gt;&lt;/p&gt;&lt;p&gt;{!woSkillNamesNotMatchedSelected}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>woSkillNamesNotMatchedSelected</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
             <name>SAGuidanceText</name>
             <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Please select the appointments you would like to &lt;/span&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;KEEP&lt;/b&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;. Use the select all checkbox at the top of the column to select every appointment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Edit the values for columns as well and use the Save button to save this changes.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
@@ -1260,7 +1292,6 @@
         <fields>
             <name>Select_Parameters_Section1</name>
             <fieldType>RegionContainer</fieldType>
-            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Select_Parameters_Section1_Column1</name>
                 <fieldType>Region</fieldType>
@@ -1294,6 +1325,7 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
         </fields>
         <fields>
             <name>SkillsRequiredDisplay</name>
@@ -1308,7 +1340,6 @@
         <fields>
             <name>Select_Parameters_Section2</name>
             <fieldType>RegionContainer</fieldType>
-            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Select_Parameters_Section2_Column1</name>
                 <fieldType>Region</fieldType>
@@ -1426,6 +1457,7 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
         </fields>
         <fields>
             <name>selectTechniciansText</name>
@@ -1435,7 +1467,6 @@
         <fields>
             <name>Select_Parameters_Section3</name>
             <fieldType>RegionContainer</fieldType>
-            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <fields>
                 <name>Select_Parameters_Section3_Column1</name>
                 <fieldType>Region</fieldType>
@@ -1480,6 +1511,7 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
@@ -1504,6 +1536,21 @@
             <name>SkillsRequiredDisplay1</name>
             <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Skills and Skill Levels Required&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68);&quot;&gt;{!formulaSkillRequirement}&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>SkillsNotMatchedDisplay</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 16px;&quot;&gt;Skills Required and not present in the technicians below&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;{!woSkillNamesNotMatched}&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>woSkillNamesNotMatched</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
         </fields>
         <fields>
             <name>overlapWarningDisplay</name>
@@ -1782,6 +1829,34 @@
     </variables>
     <variables>
         <name>workTypeName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>woSkillNamesMatched</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>woSkillNamesMatchedSelected</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>woSkillNamesNotMatched</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>woSkillNamesNotMatchedSelected</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>

@@ -29,7 +29,8 @@ public With Sharing class MRDTGetSTMs {
         Set<String> setSRId = new Set<String>();
         map<id,decimal> mapSkillsRequired = new map<id,decimal>();
         list<SkillRequirement> skillList = new List<SkillRequirement>();
-        map<id,MRDTSkillMatcher.resourceProfile> mapResourceProfile = new map<id,MRDTSkillMatcher.resourceProfile>();       
+        map<id,MRDTSkillMatcher.resourceProfile> mapResourceProfile = new map<id,MRDTSkillMatcher.resourceProfile>(); 
+        MRDTSkillMatcher.woSkillProfile woSkillProfile = new MRDTSkillMatcher.woSkillProfile();
         try{
             //get the list of skills requried for the work order
             if(Schema.SObjectType.WorkOrder.isQueryable() && 
@@ -128,6 +129,7 @@ public With Sharing class MRDTGetSTMs {
                 //this class determines the skill matching profile for the tech
                 MRDTSkillMatcher skillMatcher = new MRDTSkillMatcher(mapSkillsRequired,setSRId,startDateTime,endDateTime);
                 mapResourceProfile = skillMatcher.mapSRSkillProfile;
+                woSkillProfile = skillMatcher.thisWoSkillProfile;
             }       
             //now let's get the details of the overlaps with SAs and RAs
             MRDTGetOverlapInfo SARAMatcher = new MRDTGetOverlapInfo(setSRId,startDateTime,endDateTime,includeWeekendDay1,includeWeekendDay2,includeOnlyWeekends,weekendDay1,weekendDay2); 
@@ -197,6 +199,8 @@ public With Sharing class MRDTGetSTMs {
             oPL.overlapWarning = mapResourceOverlap.size()>0 ? 'warning' : '';
             oPL.overlapDebugMessage=overlapDebugMessage;
             oPL.overlapResultsJSON=overlapResultsJSON;
+            oPL.woSkillNamesMatched=woSkillProfile.skillsMatched;
+            oPL.woSkillNamesNotMatched=woSkillProfile.skillsNotMatched;
 
             return new list<outPayLoad>{oPL};
         }
@@ -236,6 +240,10 @@ public With Sharing class MRDTGetSTMs {
         public string overlapDebugMessage;
         @invocableVariable
         public string overlapResultsJSON;
+        @invocableVariable
+        public string woSkillNamesMatched;
+        @invocableVariable
+        public string woSkillNamesNotMatched;
     }
 
 }

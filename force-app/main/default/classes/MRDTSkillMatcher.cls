@@ -9,6 +9,8 @@ public with sharing class MRDTSkillMatcher {
     public map<id,resourceProfile> mapSRSkillProfile = new map<id,resourceProfile>();
     //simple list of skill ids and names
     public map<id,string> mapSkillNames = new map<id,string>();
+    //set of skill levels matched and not matched for WO
+    public woSkillProfile thisWoSkillProfile = new woSkillProfile();
     //main class
     public MRDTSkillMatcher(map<id,Decimal> mapSkillsNeeded,set<string> setResourceId,datetime startDateTime,datetime endDateTime) {
         //loop through all of the resources and initialize the match skills to blanks
@@ -70,7 +72,8 @@ public with sharing class MRDTSkillMatcher {
                             if(rP.skillsMatched!='')
                                 rP.skillsMatched+=',';
                             rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
-                            rp.skillCounter++;
+                            rP.setSkillLevelsMatched.add(thisSRS.SkillId);
+                            rP.skillCounter++;
                         }
                         //add this skill to skillNamesMatched - remember we don't care about skill levels for this field
                         if(rP.skillNamesMatched!='')
@@ -83,6 +86,29 @@ public with sharing class MRDTSkillMatcher {
                         resourceProfile rP = mapSRSkillProfile.get(thisId); 
                         rP.skillLevelsMatched = rP.skillCounter.format()+'/'+mapSkillsNeeded.size();
                         mapSRSkillProfile.put(thisId,rP);
+                    }
+                    //build the summary list of skills matched for the WO and not matched
+                    //initialize sets to the wo skills required
+                    for(id thisSkillId : mapSkillsNeeded.keySet()) {
+                        thisWoSkillProfile.setSkillLevelsMatched.add(thisSkillId);
+                        thisWoSkillProfile.setSkillLevelsNotMatched.add(thisSkillId);
+                    }
+                    //loop through all of the resources and remove matched skills from the WO not matched set
+                    for(id thisSRId : mapSRSkillProfile.keySet()) {
+                        if(thisWoSkillProfile.setSkillLevelsNotMatched.size()>0) 
+                            thisWoSkillProfile.setSkillLevelsNotMatched.removeAll(mapSRSkillProfile.get(thisSRId).setSkillLevelsMatched);
+                    }
+                    //if there are WO skills not matched, remove them from the list of WO skills matched
+                    if(thisWoSkillProfile.setSkillLevelsNotMatched.size()>0) thisWoSkillProfile.setSkillLevelsMatched.removeAll(thisWoSkillProfile.setSkillLevelsNotMatched);
+                    //build the WO skills matched string
+                    for(id thisSkillId: thisWoSkillProfile.setSkillLevelsMatched){
+                        if(thisWoSkillProfile.skillsMatched!='') thisWoSkillProfile.skillsMatched+=', ';
+                        thisWoSkillProfile.skillsMatched+=mapSkillNames.get(thisSkillId);
+                    }
+                    //build the WO skills not matched string
+                    for(id thisSkillId: thisWoSkillProfile.setSkillLevelsNotMatched){
+                        if(thisWoSkillProfile.skillsNotMatched!='') thisWoSkillProfile.skillsNotMatched+=', ';
+                        thisWoSkillProfile.skillsNotMatched+=mapSkillNames.get(thisSkillId);
                     }
                 }
             }
@@ -100,12 +126,32 @@ public with sharing class MRDTSkillMatcher {
         public string skillNamesMatched='';
         //stores total number of skill and level matched. used to set value for skillLevelsMatched
         public Decimal skillCounter=0;
+        //list of skill ids matched
+        public set<id> setSkillLevelsMatched;
 
         public resourceProfile(){
             skillsMatched='';
             skillLevelsMatched='';
             skillNamesMatched='';
             skillCounter=0;
+            setSkillLevelsMatched=new set<id>();
+        }
+    }
+    Public Class woSkillProfile {
+        //stores list of skill and level matched
+        public string skillsMatched='';
+        //list of skill ids matched
+        public set<id> setSkillLevelsMatched;
+        //stores list of skill and level not matched
+        public string skillsNotMatched='';
+        //list of skill ids matched
+        public set<id> setSkillLevelsNotMatched;
+
+        public woSkillProfile(){
+            skillsMatched='';
+            setSkillLevelsMatched=new set<id>();
+            skillsNotMatched='';
+            setSkillLevelsNotMatched=new set<id>();
         }
     }
 

@@ -25,9 +25,16 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
     string taskDescription = iPL.taskDescription;
     date starting = iPL.starting;
     date until = iPL.until;
+    Datetime startDateTime =  datetime.newinstance(iPL.starting.year(),iPL.starting.month(),iPL.starting.day());
+    Datetime endDateTime = datetime.newinstance(iPL.until.year(),iPL.until.month(),iPL.until.day()).adddays(1);
     string startTime = iPL.startTime;
     integer duration = iPL.defaultDuration;  
     string overlapResultsJSON = iPL.overlapResultsJSON;
+    Set<String> setSRId = new Set<String>();
+    map<id,decimal> mapSkillsRequired = new map<id,decimal>();
+    list<SkillRequirement> skillList = new List<SkillRequirement>();
+    map<id,MRDTSkillMatcher.resourceProfile> mapResourceProfile = new map<id,MRDTSkillMatcher.resourceProfile>(); 
+    MRDTSkillMatcher.woSkillProfile woSkillProfile = new MRDTSkillMatcher.woSkillProfile();
     set<string> setWeekdays = new set<string>{'Mon','Tue','Wed','Thu','Fri'};
     if(duration < 0 || duration > 18) duration = 8;
 
@@ -157,9 +164,28 @@ public static list<WODTScheduleOutput> MRDTMV (list<WODTSchedulePayload> inPaylo
                             where 
                                 id in :listNewSAs])
                     listSavedSAs.add(sa);
-           saOutput.listSA = new list<serviceappointment>(listSavedSAs);
-           saOutput.numSAs = listNewSAs.size();
-           return new list<WODTScheduleOutput>{saOutput};
+            //this next set of code builds the list of missing skills for the WO
+            //build a set of selected Service Resource Ids
+            for(ServiceTerritoryMember stm :listSTM) {
+                setSRId.add(stm.ServiceResourceId);
+            }
+            //get the list of skills requried for the work order
+            if(Schema.SObjectType.WorkOrder.isQueryable() && 
+                Schema.SObjectType.SkillRequirement.isQueryable()) {
+                skillList = [select id,skillid,skilllevel from SkillRequirement where RelatedRecordId=:workorderid];
+                for(SkillRequirement sR : skillList) mapSkillsRequired.put(sR.skillid,sR.skilllevel);
+            }   
+            //if skills are required on the WO, let's calculate the missing skills
+            If(mapSkillsRequired.size()> 0) {    
+                MRDTSkillMatcher skillMatcher = new MRDTSkillMatcher(mapSkillsRequired,setSRId,startDateTime,endDateTime);
+                mapResourceProfile = skillMatcher.mapSRSkillProfile;
+                woSkillProfile = skillMatcher.thisWoSkillProfile;                
+            }
+            saOutput.listSA = new list<serviceappointment>(listSavedSAs);
+            saOutput.numSAs = listNewSAs.size();
+            saOutput.woSkillNamesMatched = woSkillProfile.skillsMatched;
+            saOutput.woSkillNamesNotMatched = woSkillProfile.skillsNotMatched;
+            return new list<WODTScheduleOutput>{saOutput};
            }
        if(listNewSAs.size()>limitSAs) {
            return new list<WODTScheduleOutput>{saOutput};
@@ -194,5 +220,7 @@ public class WODTSchedulePayload {
 public class WODTScheduleOutput {
   
 @invocableVariable public list<serviceappointment> listSA;
-@invocableVariable public integer numSAs;}
+@invocableVariable public integer numSAs;
+@invocableVariable public string woSkillNamesMatched;
+@invocableVariable public string woSkillNamesNotMatched;}
 }
