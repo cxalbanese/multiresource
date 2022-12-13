@@ -59,7 +59,6 @@ public with sharing class MRDTGetOverlapInfo {
             thisOverlap.mapSAConflictDetails = mapSAConflictDetails;
             mapSROverlapProfile.put(thisResourceId,thisOverlap);
         }
-        system.debug('(((((((((( initial map for resource ' + mapSROverlapProfile);
         //let's check overlaps with Service Appointments
         list<assignedresource> arList = new list<assignedresource>();
         if(Schema.sObjectType.assignedresource.isQueryable() && Schema.sObjectType.serviceappointment.isQueryable()){
