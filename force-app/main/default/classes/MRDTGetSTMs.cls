@@ -1,4 +1,4 @@
-//MRDTGetSTMs Author: Chris Albanese, Version 1, Created Dec 16, 2021
+//MRDTGetSTMs Author: Chris Albanese, Version 1, Created Dec 16, 2021, Updated Dec 13, 2022
 //Purpose: get a list of active service territory member records for the selected territory and skill
 //Called by: Flow: MR_DT_Service_Appointment_Review and MR_DT_Service_Appointment_Creator
 //Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
@@ -188,7 +188,6 @@ public With Sharing class MRDTGetSTMs {
                         //MR_DT_Overlap__c = % availability
                         if(SARAMap.containsKey(stm.ServiceResourceId)) {
                             stm.MR_DT_Percent_Availability__c = SARAMap.get(stm.ServiceResourceId).percentAvailability.format();
-                            system.debug('**** inside of sara map' + stm.MR_DT_Percent_Availability__c);
                         }
                     }
                 }

@@ -13,11 +13,7 @@ public with sharing class MRDTSkillMatcher {
     public woSkillProfile thisWoSkillProfile = new woSkillProfile();
     //main class
     public MRDTSkillMatcher(map<id,Decimal> mapSkillsNeeded,set<string> setResourceId,datetime startDateTime,datetime endDateTime) {
-        //loop through all of the resources and initialize the match skills to blanks
-        system.debug('******************** parameter info: mapSkillsNeeded size = ' + mapSkillsNeeded.size());
-        system.debug('******************** parameter info: setResourceId size = ' + setResourceId.size());
-        system.debug('******************** parameter info: start date = ' + startDateTime);
-        system.debug('******************** parameter info: end date = ' + endDateTime);       
+        //loop through all of the resources and initialize the match skills to blanks   
         if(Schema.sObjectType.skill.isQueryable()&& Schema.sObjectType.ServiceResourceSkill.isQueryable()) 
             try{
                 for(id thisResourceId : setResourceId) {
@@ -26,11 +22,8 @@ public with sharing class MRDTSkillMatcher {
                     rP.skillLevelsMatched='';
                     rP.skillNamesMatched='';
                     rP.skillCounter=0;
-                    system.debug('********** rp = '+rP);
-                    system.debug('********** thisResourceId = '+thisResourceId);
                     mapSRSkillProfile.put(thisResourceId,rP);
                 }
-                system.debug('******* mapSRSkillProfile size = ' + mapSRSkillProfile.size());
                 //if we don't need any skills then no need to process anything
                 if(mapSkillsNeeded!=null) {
                     //build the list of skill ids and names and put them in a map
@@ -42,7 +35,6 @@ public with sharing class MRDTSkillMatcher {
                         where 
                         id in :mapSkillsNeeded.keySet()]);
                     for(Skill thisSkill: listSkill) mapSkillNames.put(thisSkill.Id,thisSkill.MasterLabel);
-                    system.debug('****** skill name size ' + mapSkillNames.size());
                     //find the list of skills that each resource has regardless of skill level
                     list<ServiceResourceSkill> listSRSkills = new List<ServiceResourceSkill>();
                     listSRSkills = [select 
@@ -144,7 +136,7 @@ public with sharing class MRDTSkillMatcher {
         public set<id> setSkillLevelsMatched;
         //stores list of skill and level not matched
         public string skillsNotMatched='';
-        //list of skill ids matched
+        //list of skill ids not matched
         public set<id> setSkillLevelsNotMatched;
 
         public woSkillProfile(){
