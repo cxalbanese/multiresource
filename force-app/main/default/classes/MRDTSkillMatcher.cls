@@ -54,13 +54,14 @@ public with sharing class MRDTSkillMatcher {
                             skillDisplay=thisSRS.SkillLevel.format();
                         resourceProfile rP = mapSRSkillProfile.get(thisSRS.ServiceResourceId);
                         //if the skill and the level match then add this skill to skillsMatched and increment skill counter
-                        if(mapSkillsNeeded.get(thisSRS.SkillId)==null && thisSRS.skillLevel==null){
-                            if(rP.skillsMatched!='')
-                                rP.skillsMatched+=',';
-                            rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
-                            rp.skillCounter++;
-                        }
-                        if( mapSkillsNeeded.get(thisSRS.SkillId)==null || (thisSRS.SkillLevel != null && thisSRS.SkillLevel>= mapSkillsNeeded.get(thisSRS.SkillId)) ){
+                        // if(mapSkillsNeeded.get(thisSRS.SkillId)==null){
+                        //     if(rP.skillsMatched!='')
+                        //         rP.skillsMatched+=',';
+                        //     rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
+                        //     rp.skillCounter++;
+                        // }
+                        system.debug('****** srs ' + thisSRS.skilllevel + ' *** mapskills ' + mapSkillsNeeded.get(thisSRS.SkillId));
+                        if(mapSkillsNeeded.get(thisSRS.SkillId)==-1 || (mapSkillsNeeded.get(thisSRS.SkillId)!=null && (thisSRS.SkillLevel != null && thisSRS.SkillLevel>= mapSkillsNeeded.get(thisSRS.SkillId))) ){
                             if(rP.skillsMatched!='')
                                 rP.skillsMatched+=',';
                             rP.skillsMatched=rP.skillsMatched+mapSkillNames.get(thisSRS.SkillId)+'-'+skillDisplay;
@@ -100,12 +101,18 @@ public with sharing class MRDTSkillMatcher {
                     //build the WO skills not matched string
                     for(id thisSkillId: thisWoSkillProfile.setSkillLevelsNotMatched){
                         if(thisWoSkillProfile.skillsNotMatched!='') thisWoSkillProfile.skillsNotMatched+=', ';
-                        thisWoSkillProfile.skillsNotMatched+=mapSkillNames.get(thisSkillId);
+                        //since -1 represents a blank skill level, convert it back to a 0 for the display
+                        if(mapSkillsNeeded.get(thisSkillId)==-1) 
+                            thisWoSkillProfile.skillsNotMatched+=mapSkillNames.get(thisSkillId)+'-0';
+                        else        
+                        thisWoSkillProfile.skillsNotMatched+=mapSkillNames.get(thisSkillId)+'-'+mapSkillsNeeded.get(thisSkillId).format();
+                        
                     }
                 }
             }
             catch(Exception e) {
                 //the empty map will be returned
+                system.debug('*****exceptiono info ' + mapSkillsNeeded);
             }
     }
 

@@ -36,7 +36,13 @@ public With Sharing class MRDTGetSTMs {
             if(Schema.SObjectType.WorkOrder.isQueryable() && 
                 Schema.SObjectType.SkillRequirement.isQueryable()) {
                 skillList = [select id,skillid,skilllevel from SkillRequirement where RelatedRecordId=:woId];
-                for(SkillRequirement sR : skillList) mapSkillsRequired.put(sR.skillid,sR.skilllevel);
+                //convert null skill levels to -1 since we can't pass null inside of a map to another method
+                for(SkillRequirement sR : skillList) {
+                    if(sr.SkillLevel != null) 
+                        mapSkillsRequired.put(sR.skillid,sR.skilllevel);
+                    else 
+                        mapSkillsRequired.put(sr.SkillId,-1);
+                    }
             }
             //get the list of service territory members
             if(Schema.sObjectType.serviceterritory.isQueryable())
