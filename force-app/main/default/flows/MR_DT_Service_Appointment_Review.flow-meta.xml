@@ -4,7 +4,7 @@
         <name>get_filtered_STMS</name>
         <label>get filtered STMS</label>
         <locationX>2393</locationX>
-        <locationY>2150</locationY>
+        <locationY>2606</locationY>
         <actionName>MRDTGetSTMs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -18,7 +18,25 @@
         <inputParameters>
             <name>endDate</name>
             <value>
-                <elementReference>lastEndDate</elementReference>
+                <elementReference>formulaLastEndDateDate</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeOnlyWeekends</name>
+            <value>
+                <elementReference>Include_Only_Weekends</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeWeekendDay1</name>
+            <value>
+                <elementReference>Include_Saturdays</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>includeWeekendDay2</name>
+            <value>
+                <elementReference>Include_Sundays</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -34,11 +52,25 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>startDate</name>
+            <name>inWoId</name>
             <value>
-                <elementReference>firstStartDate</elementReference>
+                <elementReference>getWorkOrder.Id</elementReference>
             </value>
         </inputParameters>
+        <inputParameters>
+            <name>startDate</name>
+            <value>
+                <elementReference>formulaFirstStartDateDate</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>outputOverlapDebug</assignToReference>
+            <name>overlapDebugMessage</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>overlapResultsJSON</assignToReference>
+            <name>overlapResultsJSON</name>
+        </outputParameters>
         <outputParameters>
             <assignToReference>overlapWarning</assignToReference>
             <name>overlapWarning</name>
@@ -46,6 +78,14 @@
         <outputParameters>
             <assignToReference>collectionSTMs</assignToReference>
             <name>stmList</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>woSkillNamesMatched</assignToReference>
+            <name>woSkillNamesMatched</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>woSkillNamesNotMatched</assignToReference>
+            <name>woSkillNamesNotMatched</name>
         </outputParameters>
     </actionCalls>
     <actionCalls>
@@ -127,7 +167,7 @@
         <name>Reassign_Technicians</name>
         <label>Reassign Technicians</label>
         <locationX>1766</locationX>
-        <locationY>2630</locationY>
+        <locationY>3086</locationY>
         <actionName>MRDTReassignTechs</actionName>
         <actionType>apex</actionType>
         <connector>
@@ -177,6 +217,29 @@
         </assignmentItems>
         <connector>
             <targetReference>loop_through_selected_change_tech_records</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>build_the_string</name>
+        <label>build the string</label>
+        <locationX>2481</locationX>
+        <locationY>2270</locationY>
+        <assignmentItems>
+            <assignToReference>varSkillsRequired</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Build_display_field_for_skills_required.MR_DT_Skill_Name_and_Level__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varSkillsRequired</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>,</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Build_display_field_for_skills_required</targetReference>
         </connector>
     </assignments>
     <choices>
@@ -312,7 +375,7 @@
         <name>Successful</name>
         <label>Successful?</label>
         <locationX>1766</locationX>
-        <locationY>2750</locationY>
+        <locationY>3206</locationY>
         <defaultConnector>
             <targetReference>info1_0</targetReference>
         </defaultConnector>
@@ -337,7 +400,7 @@
         <name>Tech_Selected</name>
         <label>Tech Selected?</label>
         <locationX>2096</locationX>
-        <locationY>2510</locationY>
+        <locationY>2966</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>YesTechSelected</name>
@@ -359,7 +422,7 @@
         <name>Technicans_Found</name>
         <label>Technicans Found?</label>
         <locationX>2393</locationX>
-        <locationY>2270</locationY>
+        <locationY>2726</locationY>
         <defaultConnector>
             <targetReference>No_Technicians_Found</targetReference>
         </defaultConnector>
@@ -620,15 +683,33 @@
         <sortOrder>Desc</sortOrder>
         <valueField>Id</valueField>
     </dynamicChoiceSets>
+    <environments>Default</environments>
     <formulas>
         <name>formulaFirstStartDate</name>
         <dataType>DateTime</dataType>
         <expression>if({!loop_through_selected_change_tech_records.SchedStartTime} &lt; {!firstStartDate},{!loop_through_selected_change_tech_records.SchedStartTime},{!firstStartDate})</expression>
     </formulas>
     <formulas>
+        <description>this is the actual date of the earliest start date / time</description>
+        <name>formulaFirstStartDateDate</name>
+        <dataType>Date</dataType>
+        <expression>DATEVALUE({!firstStartDate})</expression>
+    </formulas>
+    <formulas>
         <name>formulaLastEndDate</name>
         <dataType>DateTime</dataType>
         <expression>if({!loop_through_selected_change_tech_records.SchedEndTime} &gt; {!lastEndDate},{!loop_through_selected_change_tech_records.SchedEndTime},{!lastEndDate})</expression>
+    </formulas>
+    <formulas>
+        <description>Actual date of last sched end time</description>
+        <name>formulaLastEndDateDate</name>
+        <dataType>Date</dataType>
+        <expression>DATEVALUE({!lastEndDate})</expression>
+    </formulas>
+    <formulas>
+        <name>formulaSkillRequirement</name>
+        <dataType>String</dataType>
+        <expression>if(isblank({!varSkillsRequired}),&apos;No skills required&apos;,LEFT({!varSkillsRequired},LEN({!varSkillsRequired})-1))</expression>
     </formulas>
     <formulas>
         <name>formulaToday</name>
@@ -642,6 +723,20 @@
     </formulas>
     <interviewLabel>MR DT Service Appointment Review {!$Flow.CurrentDateTime}</interviewLabel>
     <label>MR DT Service Appointment Review</label>
+    <loops>
+        <name>Build_display_field_for_skills_required</name>
+        <label>Build display field for skills required</label>
+        <locationX>2393</locationX>
+        <locationY>2150</locationY>
+        <collectionReference>Get_Skill_Requirements</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>build_the_string</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Technician_Filtering</targetReference>
+        </noMoreValuesConnector>
+    </loops>
     <loops>
         <name>loop_through_selected_change_tech_records</name>
         <label>loop through selected change tech records</label>
@@ -746,13 +841,36 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <name>Get_Skill_Requirements</name>
+        <label>Get Skill Requirements</label>
+        <locationX>2393</locationX>
+        <locationY>2030</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Build_display_field_for_skills_required</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>RelatedRecordId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>getWorkOrder.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>SkillRequirement</object>
+        <sortField>MR_DT_Skill_Name_and_Level__c</sortField>
+        <sortOrder>Asc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>get_the_default_territory</name>
         <label>get the default territory</label>
         <locationX>2393</locationX>
         <locationY>1910</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Technician_Filtering</targetReference>
+            <targetReference>Get_Skill_Requirements</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -1014,7 +1132,7 @@
         <name>info1</name>
         <label>info1</label>
         <locationX>1634</locationX>
-        <locationY>2870</locationY>
+        <locationY>3326</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1035,7 +1153,7 @@
         <name>info1_0</name>
         <label>info1</label>
         <locationX>1898</locationX>
-        <locationY>2870</locationY>
+        <locationY>3326</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1056,7 +1174,7 @@
         <name>No_Technicians_Found</name>
         <label>No Technicians Found</label>
         <locationX>2690</locationX>
-        <locationY>2390</locationY>
+        <locationY>2846</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1098,7 +1216,7 @@
         <name>Select_Resource</name>
         <label>Select Resource</label>
         <locationX>2096</locationX>
-        <locationY>2390</locationY>
+        <locationY>2846</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1118,6 +1236,26 @@
                 <conditionLogic>and</conditionLogic>
                 <conditions>
                     <leftValueReference>overlapWarning</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
+            <name>SkillsRequiredDisplay1</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Skills and Skill Levels Required&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;{!formulaSkillRequirement}&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>SkillsNotMatchedDisplay</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 16px;&quot;&gt;Skills Required and not present in the technicians below&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;{!woSkillNamesNotMatched}&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>woSkillNamesNotMatched</leftValueReference>
                     <operator>IsNull</operator>
                     <rightValue>
                         <booleanValue>false</booleanValue>
@@ -1148,7 +1286,7 @@
             <inputParameters>
                 <name>columnFields</name>
                 <value>
-                    <stringValue>MemberNumber,MR_Resource_Name__c,TerritoryType,MR_Service_Territory__c,EffectiveStartDate,EffectiveEndDate,MR_DT_Overlap__c</stringValue>
+                    <stringValue>MemberNumber,MR_Resource_Name__c,TerritoryType,MR_Service_Territory__c,EffectiveStartDate,EffectiveEndDate,MR_DT_Percent_Availability__c,MR_DT_Skill_Levels_Matched__c,MR_DT_Skills_Matched__c,MR_DT_Skill_Names_Matched__c</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1160,7 +1298,7 @@
             <inputParameters>
                 <name>columnWidths</name>
                 <value>
-                    <stringValue>MemberNumber:159, MR_Resource_Name__c:159, TerritoryType:159, MR_Service_Territory__c:159, EffectiveStartDate:159, EffectiveEndDate:159, MR_DT_Overlap__c:50</stringValue>
+                    <stringValue>MemberNumber:105, MR_Resource_Name__c:145, TerritoryType:100, MR_Service_Territory__c:135, EffectiveStartDate:175, EffectiveEndDate:115, MR_DT_Percent_Availability__c:130, MR_DT_Skill_Levels_Matched__c:155, MR_DT_Skills_Matched__c:165, MR_DT_Skill_Names_Matched__c:160</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1191,6 +1329,12 @@
                 <name>cb_singleRowSelection</name>
                 <value>
                     <stringValue>CB_TRUE</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>columnWraps</name>
+                <value>
+                    <stringValue>MemberNumber:false, MR_Resource_Name__c:true, TerritoryType:true, MR_Service_Territory__c:false, EffectiveStartDate:false, EffectiveEndDate:true, MR_DT_Percent_Availability__c:false, MR_DT_Skill_Levels_Matched__c:true, MR_DT_Skills_Matched__c:true, MR_DT_Skill_Names_Matched__c:true</stringValue>
                 </value>
             </inputParameters>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -1236,7 +1380,7 @@
         <name>Technician_Filtering</name>
         <label>Technician Filtering</label>
         <locationX>2393</locationX>
-        <locationY>2030</locationY>
+        <locationY>2486</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1268,6 +1412,34 @@
             <fieldText>Skill</fieldText>
             <fieldType>DropdownBox</fieldType>
             <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Include_Saturdays</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Include Saturdays</fieldText>
+            <fieldType>InputField</fieldType>
+            <helpText>&lt;p&gt;If selected, availability calculation will include Saturdays, if applicable.&lt;/p&gt;</helpText>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Include_Sundays</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Include Sundays</fieldText>
+            <fieldType>InputField</fieldType>
+            <helpText>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68);&quot;&gt;If selected, availability calculation will include Sundays, if applicable.&lt;/span&gt;&lt;/p&gt;</helpText>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Include_Only_Weekends</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Include Only Weekends</fieldText>
+            <fieldType>InputField</fieldType>
+            <helpText>&lt;p&gt;If selected, the availability calculation will not include M-F.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;If selected, you must select at least Include Saturday, or Include Sunday or Both.&lt;/p&gt;</helpText>
+            <isRequired>true</isRequired>
+            <validationRule>
+                <errorMessage>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68);&quot;&gt;If you select Include only Weekends, you must select at least Include Saturday, or Include Sunday or Both.&lt;/span&gt;&lt;/p&gt;</errorMessage>
+                <formulaExpression>!{!Include_Only_Weekends} || ({!Include_Only_Weekends} &amp;&amp; ({!Include_Saturdays} || {!Include_Sundays}))</formulaExpression>
+            </validationRule>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
@@ -1350,6 +1522,7 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -1409,6 +1582,7 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -1676,6 +1850,20 @@
         <objectType>ServiceAppointment</objectType>
     </variables>
     <variables>
+        <name>outputOverlapDebug</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>overlapResultsJSON</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <name>overlapWarning</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
@@ -1733,7 +1921,28 @@
         <objectType>ServiceTerritoryMember</objectType>
     </variables>
     <variables>
+        <name>varSkillsRequired</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <name>workTypeName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>woSkillNamesMatched</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>woSkillNamesNotMatched</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>

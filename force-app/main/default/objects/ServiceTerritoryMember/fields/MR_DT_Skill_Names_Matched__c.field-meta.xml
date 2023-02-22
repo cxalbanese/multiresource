@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MR_DT_Skill_Names_Matched__c</fullName>
+    <description>Stores the list of skills matched regardless of whether the levels match versus what&apos;s required on the work order</description>
+    <externalId>false</externalId>
+    <label>Skill Name Match</label>
+    <length>1000</length>
+    <trackHistory>false</trackHistory>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

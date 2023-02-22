@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MR_DT_Conflict_Details__c</fullName>
+    <description>This is a Text string - Concatenating the &quot;SAs Number + Subject&quot; and the &quot;RA Number + Type&quot; of the SA&apos;s and RAs that conflict with this date range.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is a Text string - Concatenating the &quot;SAs Number + Subject&quot; and the &quot;RA Number + Type&quot; of the SA&apos;s and RAs that conflict with this date range.</inlineHelpText>
+    <label>Conflict Details</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

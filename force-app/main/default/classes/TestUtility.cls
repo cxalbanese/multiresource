@@ -138,6 +138,9 @@ public with sharing class TestUtility {
 
         WorkOrder testWorkOrder = new WorkOrder();
         insert testWorkOrder;
+        Skill testSkill = [SELECT Id FROM Skill LIMIT 1];
+        SkillRequirement woSkill = new SkillRequirement(RelatedRecordId = testWorkOrder.Id, SkillId = testSkill.Id, SkillLevel=1);
+        insert woSkill;
         return testWorkOrder;
 
     }
@@ -262,7 +265,7 @@ public with sharing class TestUtility {
 
         Skill testSkill = [SELECT Id FROM Skill LIMIT 1];
 
-        ServiceResourceSkill resourceSkill = new ServiceResourceSkill(ServiceResourceId = serviceResourceId, SkillId = testSkill.Id, EffectiveStartDate = Datetime.now().addDays(-10));
+        ServiceResourceSkill resourceSkill = new ServiceResourceSkill(ServiceResourceId = serviceResourceId, SkillId = testSkill.Id, EffectiveStartDate = Datetime.now().addDays(-10),SkillLevel=1);
         insert resourceSkill;
         return resourceSkill;
 

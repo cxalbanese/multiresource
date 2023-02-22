@@ -64,6 +64,31 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>ServiceAppointment.MR_DT_Conflict_Details__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>ServiceAppointment.MR_DT_Percent_Availability__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>ServiceAppointment.MR_DT_Skill_Levels_Matched__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>ServiceAppointment.MR_DT_Skill_Names_Matched__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>ServiceAppointment.MR_DT_Skills_Matched__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>ServiceAppointment.MR_Parent_Work_Order__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -78,6 +103,26 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>true</editable>
+        <field>ServiceTerritoryMember.MR_DT_Percent_Availability__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>ServiceTerritoryMember.MR_DT_Skill_Levels_Matched__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>ServiceTerritoryMember.MR_DT_Skill_Names_Matched__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>ServiceTerritoryMember.MR_DT_Skills_Matched__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>false</editable>
         <field>ServiceTerritoryMember.MR_Resource_Name__c</field>
         <readable>true</readable>
@@ -85,6 +130,16 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>ServiceTerritoryMember.MR_Service_Territory__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>SkillRequirement.MR_DT_Skill_Name_and_Level__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>SkillRequirement.SkillLevel</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

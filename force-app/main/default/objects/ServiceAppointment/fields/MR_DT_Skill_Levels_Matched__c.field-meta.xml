@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MR_DT_Skill_Levels_Matched__c</fullName>
+    <description>Stores the number of skills matched vs required - for example 3 / 5, representing the tech had 3 skills with the necessary skill level out of the 5 required.</description>
+    <externalId>false</externalId>
+    <label># Skills Matched</label>
+    <length>25</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

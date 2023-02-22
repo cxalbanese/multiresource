@@ -11,11 +11,16 @@ public class MRDTGetSTMsTestClass{
         ServiceResourceSkill resourceSkill = TestUtility.createServiceResourceSkill(sr.Id);
         ServiceTerritoryMember stm = TestUtility.createServiceTerritoryMember(sr.Id, st.Id, Datetime.now().addDays(-1));
         ResourceAbsence ra = TestUtility.createResourceAbsence(sr.Id, Datetime.now(), Datetime.now().addHours(4));
+        WorkOrder wo = TestUtility.createWorkOrder();
         MRDTGetSTMs.inPayLoad payload = new MRDTGetSTMs.inPayLoad();
         payload.inTerritoryId = 'All';
         payload.inSkillId = 'All';
         payload.startDate = date.today();
         payload.enddate = date.today().adddays(7);
+        payload.inWoId =wo.Id;
+        payload.includeOnlyWeekends = false;
+        payload.includeWeekendDay1 = false;
+        payload.includeWeekendDay2 = false;
 
         list<MRDTGetSTMs.inPayLoad> inputList = new list<MRDTGetSTMs.inPayLoad>{payload};
 
@@ -48,7 +53,10 @@ public class MRDTGetSTMsTestClass{
         payload.inSkillId = 'All';
         payload.startDate = date.today();
         payload.enddate = date.today().adddays(7);
-
+        payload.inWoId =wo.Id;
+        payload.includeOnlyWeekends = false;
+        payload.includeWeekendDay1 = false;
+        payload.includeWeekendDay2 = false;
         list<MRDTGetSTMs.inPayLoad> inputList = new list<MRDTGetSTMs.inPayLoad>{payload};
 
         Test.startTest();
@@ -82,6 +90,10 @@ public class MRDTGetSTMsTestClass{
         payload.inSkillId = 'All';
         payload.startDate = date.today();
         payload.enddate = date.today().adddays(7);
+        payload.inWoId =wo.Id;
+        payload.includeOnlyWeekends = false;
+        payload.includeWeekendDay1 = false;
+        payload.includeWeekendDay2 = false;
 
         list<MRDTGetSTMs.inPayLoad> inputList = new list<MRDTGetSTMs.inPayLoad>{payload};
 
@@ -106,11 +118,16 @@ public class MRDTGetSTMsTestClass{
         ServiceResourceSkill resourceSkill = TestUtility.createServiceResourceSkill(sr.Id);
         ServiceTerritoryMember stm = TestUtility.createServiceTerritoryMember(sr.Id, st.Id, Datetime.now().addDays(-1));
         ResourceAbsence ra = TestUtility.createResourceAbsence(sr.Id, Datetime.now(), Datetime.now().addHours(4));
+        WorkOrder wo = TestUtility.createWorkOrder();
         MRDTGetSTMs.inPayLoad payload = new MRDTGetSTMs.inPayLoad();
         payload.inTerritoryId = 'All';
         payload.inSkillId = resourceSkill.SkillId;
         payload.startDate = date.today();
         payload.enddate = date.today().adddays(7);
+        payload.inWoId =wo.Id;
+        payload.includeOnlyWeekends = false;
+        payload.includeWeekendDay1 = false;
+        payload.includeWeekendDay2 = false;
 
         list<MRDTGetSTMs.inPayLoad> inputList = new list<MRDTGetSTMs.inPayLoad>{payload};
 
@@ -135,11 +152,16 @@ public class MRDTGetSTMsTestClass{
         ServiceResourceSkill resourceSkill = TestUtility.createServiceResourceSkill(sr.Id);
         ServiceTerritoryMember stm = TestUtility.createServiceTerritoryMember(sr.Id, st.Id, Datetime.now().addDays(-1));
         ResourceAbsence ra = TestUtility.createResourceAbsence(sr.Id, Datetime.now(), Datetime.now().addHours(4));
+        WorkOrder wo = TestUtility.createWorkOrder();
         MRDTGetSTMs.inPayLoad payload = new MRDTGetSTMs.inPayLoad();
         payload.inTerritoryId = st.Id;
         payload.inSkillId = 'All';
         payload.startDate = date.today();
         payload.enddate = date.today().adddays(7);
+        payload.inWoId =wo.Id;
+        payload.includeOnlyWeekends = false;
+        payload.includeWeekendDay1 = false;
+        payload.includeWeekendDay2 = false;
 
         list<MRDTGetSTMs.inPayLoad> inputList = new list<MRDTGetSTMs.inPayLoad>{payload};
 
@@ -164,11 +186,16 @@ public class MRDTGetSTMsTestClass{
         ServiceResourceSkill resourceSkill = TestUtility.createServiceResourceSkill(sr.Id);
         ServiceTerritoryMember stm = TestUtility.createServiceTerritoryMember(sr.Id, st.Id, Datetime.now().addDays(-1));
         ResourceAbsence ra = TestUtility.createResourceAbsence(sr.Id, Datetime.now(), Datetime.now().addHours(4));
+        WorkOrder wo = TestUtility.createWorkOrder();
         MRDTGetSTMs.inPayLoad payload = new MRDTGetSTMs.inPayLoad();
         payload.inTerritoryId = st.Id;
         payload.inSkillId = resourceSkill.SkillId;
         payload.startDate = date.today();
         payload.enddate = date.today().adddays(7);
+        payload.inWoId =wo.Id;
+        payload.includeOnlyWeekends = false;
+        payload.includeWeekendDay1 = false;
+        payload.includeWeekendDay2 = false;
 
         list<MRDTGetSTMs.inPayLoad> inputList = new list<MRDTGetSTMs.inPayLoad>{payload};
 
