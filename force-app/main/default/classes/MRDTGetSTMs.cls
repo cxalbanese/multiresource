@@ -1,4 +1,5 @@
-//MRDTGetSTMs Author: Chris Albanese, Version 1, Created Dec 16, 2021, Updated Dec 13, 2022
+//MRDTGetSTMs Author: Chris Albanese, Version 1, Created Dec 16, 2021, Updated Mar 09, 2023
+//Updated March 9, 2023 to limit list of STMs to just SRs who have at least 1 WO Skill Required
 //Purpose: get a list of active service territory member records for the selected territory and skill
 //Called by: Flow: MR_DT_Service_Appointment_Review and MR_DT_Service_Appointment_Creator
 //Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
@@ -77,11 +78,14 @@ public With Sharing class MRDTGetSTMs {
             for(ServiceTerritoryMember stm :listSTM) {
                 setSRId.add(stm.ServiceResourceId);
             }
-            //if all skills then just use the list of STM.ServiceResourceIds else filter out only the resources who have the effective skill
-            if(Schema.sObjectType.ServiceResourceSkill.isQueryable() && skillId != 'All') {
-                listSRSkill = [select id,ServiceResourceId from ServiceResourceSkill where ServiceResourceId in :setSRId and SkillId = :skillId and ((EffectiveStartDate <= :startDateTime and EffectiveEndDate = null) or (EffectiveStartDate <= :startDateTime and EffectiveEndDate >= :endDateTime))];                
+            //if all skills and the WO has skills required then just use the list of STM.ServiceResourceIds else filter out only the resources who have the effective skill
+            if(Schema.sObjectType.ServiceResourceSkill.isQueryable() && skillId != 'All' && mapSkillsRequired.size()>0) {
+//                listSRSkill = [select id,ServiceResourceId from ServiceResourceSkill where ServiceResourceId in :setSRId and SkillId = :skillId and ((EffectiveStartDate <= :startDateTime and EffectiveEndDate = null) or (EffectiveStartDate <= :startDateTime and EffectiveEndDate >= :endDateTime))];                
+                listSRSkill = [select id,ServiceResourceId,SkillId from ServiceResourceSkill where ServiceResourceId in :setSRId and ((EffectiveStartDate <= :startDateTime and EffectiveEndDate = null) or (EffectiveStartDate <= :startDateTime and EffectiveEndDate >= :endDateTime))];                
                 for(ServiceResourceSkill srs : listSRSkill) {
-                    listSRId.add(srs.ServiceResourceId);
+                    //if the service resource has this WO Skill required or the WO has no skills required then add the SR to the list
+                    if(mapSkillsRequired.size()==0 || mapSkillsRequired.containsKey(srs.SkillId)) 
+                        listSRId.add(srs.ServiceResourceId);
                 }
                 for(ServiceTerritoryMember stm : listSTM) {
                     if(listSRID.contains(stm.ServiceResourceId)){
@@ -131,7 +135,8 @@ public With Sharing class MRDTGetSTMs {
                 }
             }
             //if skills are required on the WO, let's build out the skill matching profile for the techs
-            If(mapSkillsRequired.size()> 0 && setSRId.size()>0) {
+//cxa debug            If(mapSkillsRequired.size()> 0 && setSRId.size()>0) {
+            If(setSRId.size()>0) {
                 //this class determines the skill matching profile for the tech
                 MRDTSkillMatcher skillMatcher = new MRDTSkillMatcher(mapSkillsRequired,setSRId,startDateTime,endDateTime);
                 mapResourceProfile = skillMatcher.mapSRSkillProfile;

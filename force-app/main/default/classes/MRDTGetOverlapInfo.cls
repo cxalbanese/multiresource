@@ -1,4 +1,5 @@
 //MRDTGetOverlapInfo Author: Chris Albanese, Version 1, Created Oct 31, 2022
+//updated March 10, 2023 to handle multi-day resource absence and simply availability calculation
 //Purpose: get a list of overlapping SAs, RAs for a list of Technicians
 //Called by: Flow: MR_DT_Service_Appointment_Review and MR_DT_Service_Appointment_Creator
 //Disclaimer: Use at your own risk: this code is provided as a concept illustrator to manage multiple service appointments for a work order
@@ -26,6 +27,8 @@ public with sharing class MRDTGetOverlapInfo {
                 (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
                     netNumDays++;
         }
+        //updated 3/25/2023 subtract 1 second from end date to make sure we don't include overlaps past the end date
+        endDateTime=endDateTime.addSeconds(-1);
         //get the list of resource names 
         map<string,string> mapResourceName = new Map<string,string>();
         if(Schema.sObjectType.serviceresource.isQueryable()) {     
@@ -59,6 +62,7 @@ public with sharing class MRDTGetOverlapInfo {
             thisOverlap.mapSAConflictDetails = mapSAConflictDetails;
             mapSROverlapProfile.put(thisResourceId,thisOverlap);
         }
+        list<ovlapExploded> ovlapExplodedList = new list<ovlapExploded>();  
         //let's check overlaps with Service Appointments
         list<assignedresource> arList = new list<assignedresource>();
         if(Schema.sObjectType.assignedresource.isQueryable() && Schema.sObjectType.serviceappointment.isQueryable()){
@@ -82,12 +86,7 @@ public with sharing class MRDTGetOverlapInfo {
                 Order by ServiceAppointment.SchedStartTime]; 
             //if we found SAs, lets add them to the overlapProfile     
             for(assignedResource ar : arList) {
-                string dow = ar.ServiceAppointment.SchedStartTime.format('EEE');
-                if((dow == weekendDay1 && includeWeekendDay1) || 
-                    (dow == weekendDay2 && includeWeekendDay2) || 
-                    (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
-                mapSROverlapProfile.put(ar.ServiceResourceId,
-                    calcOverlap(ar.ServiceResourceId, ar.ServiceAppointment.SchedStartTime, ar.ServiceAppointment.SchedEndTime, ar.ServiceAppointment.DurationInMinutes, netNumDays, ar.ServiceAppointment.AppointmentNumber,ar.ServiceAppointment.Subject));
+                ovlapExplodedList.addAll(explodeOverlap(ar.ServiceResourceId, ar.ServiceAppointment.SchedStartTime, ar.ServiceAppointment.SchedEndTime, ar.ServiceAppointment.AppointmentNumber, ar.ServiceAppointment.Subject,startDateTime,endDateTime));   
             }
         }
     
@@ -110,29 +109,78 @@ public with sharing class MRDTGetOverlapInfo {
                     recordtypeid = :nonAvailRecordTypeId and 
                     start < :endDateTime and end > :startDateTime 
                     order by Start];
-            //if we found RAs, lets add them to the overlapProfile     
-            for(resourceabsence ra : raList) {
-                string dow = ra.start.format('EEE');
-                if((dow == weekendDay1 && includeWeekendDay1) || 
-                    (dow == weekendDay2 && includeWeekendDay2) || 
-                    (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
-                        mapSROverlapProfile.put(ra.resourceid,
-                            calcOverlap(ra.ResourceId, ra.Start, ra.End, ra.FSL__Duration_In_Minutes__c, netNumDays, ra.AbsenceNumber,ra.Type));
-                }
+            for(resourceabsence ra : ralist) {
+                ovlapExplodedList.addAll(explodeOverlap(ra.ResourceId, ra.Start, ra.End, ra.AbsenceNumber, ra.Type,startDateTime,endDateTime));   
+
+            }
+    }            
+    for(ovlapExploded ra : ovlapExplodedList) {
+        string dow = ra.startDateTime.format('EEE');
+        if((dow == weekendDay1 && includeWeekendDay1) || 
+            (dow == weekendDay2 && includeWeekendDay2) || 
+            (dow != weekendDay1 && dow != weekendDay2 && !includeOnlyWeekends))
+                mapSROverlapProfile.put(ra.resourceid,
+                    calcOverlap(ra.resourceId, ra.startDateTime, ra.endDateTime, ra.durationInMinutes, netNumDays, ra.ovlapNumber,ra.type));
     }
 }
+    public list<ovlapExploded> explodeOverlap(string resourceId,datetime startTime,datetime endTime,string recordName,string recordDesc,datetime startDateTime, Datetime endDateTime) {
+        //we will expand multi-day resource absences and service appointments into daily pieces
+        //if RA/SA is mult-day then day1 start = ra/sa start and end = day 1 23:59
+        //day x = day x 00:00 ->  day x 23:59
+        //last day start = 00:00 and end = ra/sa end 
+        //calc the # days long the RA/SA is
+        list<ovlapExploded> ovlapExplodedList = new list<ovlapExploded>();   
+        integer numDaysRASA = startTime.date().daysBetween(endTime.date());     
+        //loop through the number of days long the RA/SA is, even if it's < 1 day           
+        for(Integer x = 0; x <= numDaysRASA; x++  ){
+            DateTime rasaStartDateTime = startTime;
+            DateTime rasaEndDateTime = endTime;
+            //if it's less than 1 day or we are at day 1 set the start time
+            if(x==0) rasaStartDateTime = startTime;           
+            //if it's less than 1 day set the end time = ra.end     
+            if(numDaysRASA == 0) rasaEndDateTime = endTime; 
+            //if it's longer than 1 day increment to the next day               
+            if(x>0) rasaStartDateTime = datetime.newInstance(startTime.date().adddays(x),time.newInstance(0, 0, 0, 0));
+            //if we're at the last day, set the end time = ra/sa.End                
+            if (x > 0 && x == numDaysRASA) rasaEndDateTime = endTime;
+            //if there's more than 1 day and we're not at the end send the end time to the end of the current day                
+            if ( x < numDaysRASA && numDaysRASA > 0) {
+                //if this is the first day of a multi-day RA/SA set the end of the day to midnight
+                if(x == 0)
+                    rasaEndDateTime = datetime.newInstance(startTime.date(),time.newInstance(23, 59, 59, 0));
+                else                        
+                    rasaEndDateTime = rasaStartDateTime.addHours(23).addMinutes(59).addSeconds(59); 
+            }
+            //add the exploded RA/SA to the list
+            //updated 3/25/2023 added check to eliminate before/after of multi-day ra or sa
+            if(rasaStartDateTime.date() >= startDateTime.date() && rasaEndDateTime.date()<=endDateTime.date() ) {
+                ovlapExploded rasaEX = new ovlapExploded();
+                rasaEX.resourceId = resourceId;
+                rasaEX.ovlapNumber = recordName;
+                rasaEX.startDateTime = rasaStartDateTime;
+                rasaEX.endDateTime = rasaEndDateTime;
+                rasaEX.type = recordDesc;
+                rasaEX.durationInMinutes = ((rasaEndDateTime.getTime() - rasaStartDateTime.getTime()) / 1000) / 60;
+                ovlapExplodedList.add(rasaEX);
+            }
+        }
+        return ovlapExplodedList;
+    }
     public MRDTresourceOverlaps calcOverlap(string resourceId,datetime startTime,datetime endTime,decimal duration,integer numDays,string recordName,string recordDesc) {
         date arDate = startTime.date();
         MRDTresourceOverlaps thisOverlap = new MRDTresourceOverlaps();
         thisOverlap = mapSROverlapProfile.get(resourceId);
-        thisOverlap.numberConflicts++;
+        MRDTresourceOverlaps.saConflictDetails sCD = new MRDTresourceOverlaps.saConflictDetails();
+        sCD = thisOverlap.mapSAConflictDetails.get(arDate);
+        //cxa added if statement to have overlap indicated once per day regardless of how many overlaps were detected in a single day
+        if(sCD.blockedHours==0) thisOverlap.numberConflicts++;
         thisOverlap.totalBlockedHours+=duration/60;
         if(numdays!=0)
             thisOverlap.percentAvailability=(1-thisOverlap.numberConflicts/numDays)*100;     
         else 
             thisOverlap.percentAvailability=0;
-        MRDTresourceOverlaps.saConflictDetails sCD = new MRDTresourceOverlaps.saConflictDetails();
-        sCD = thisOverlap.mapSAConflictDetails.get(arDate);
+        //cxa moved to higher in this method MRDTresourceOverlaps.saConflictDetails sCD = new MRDTresourceOverlaps.saConflictDetails();
+        //cxa moved to higher in this method sCD = thisOverlap.mapSAConflictDetails.get(arDate);
         sCD.blockedHours+=duration/60;
         string overlapString = recordName+'-'+recordDesc+'-'+startTime.format('h:mm a')+'-'+endTime.format('h:mm a');
         if(sCD.conflictDetails!='' && sCD.conflictDetails.length()< 255-overlapString.length())
@@ -141,6 +189,15 @@ public with sharing class MRDTGetOverlapInfo {
             sCD.conflictDetails=overlapString;
         thisOverlap.mapSAConflictDetails.put(arDate,sCD);
         return(thisOverlap);      
+    }
+    public class ovlapExploded{
+        public String ovlapNumber;
+        public DateTime startDateTime;
+        public DateTime endDateTime;
+        public Double durationInMinutes;
+        public String type;
+        public Id resourceId;
+
     }
     
 }

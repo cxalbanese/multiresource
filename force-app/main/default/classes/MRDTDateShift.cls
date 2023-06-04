@@ -45,7 +45,7 @@ public With Sharing class MRDTDateShift {
                 sa.earlieststarttime = sa.earlieststarttime.adddays(dateDaysOffset);
                 sa.duedate = sa.duedate.adddays(dateDaysOffset);
                 sa.schedstarttime = sa.schedstarttime.adddays(dateDaysOffset);
-                sa.schedendtime = sa.schedstarttime.addhours(dateDaysOffset);
+                sa.schedendtime = sa.schedendtime.adddays(dateDaysOffset);
 
         }
 

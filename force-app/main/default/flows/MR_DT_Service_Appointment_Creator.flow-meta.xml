@@ -327,8 +327,9 @@
         </connector>
     </assignments>
     <choices>
+        <description>Updated Label to &quot;Not Specified&quot;. Selecting this will result in all Service Resources for the selected Service Territory will be displayed in the selection table.</description>
         <name>All</name>
-        <choiceText>All</choiceText>
+        <choiceText>Not Specified</choiceText>
         <dataType>String</dataType>
         <value>
             <stringValue>All</stringValue>
@@ -348,6 +349,15 @@
         <dataType>String</dataType>
         <value>
             <stringValue>Dispatched</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <description>Selecting this choice will limit the Service Resources displayed to just those in the specified Service Territory who have at least 1 of the required skills on the Work Order. This will not consider the skill level.</description>
+        <name>MatchWO</name>
+        <choiceText>Match at least 1 WO Required Skill</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>MatchWO</stringValue>
         </value>
     </choices>
     <choices>
@@ -1495,11 +1505,12 @@
                 <fields>
                     <name>Skill</name>
                     <choiceReferences>All</choiceReferences>
-                    <choiceReferences>rcsSkills</choiceReferences>
+                    <choiceReferences>MatchWO</choiceReferences>
                     <dataType>String</dataType>
-                    <defaultSelectedChoiceReference>All</defaultSelectedChoiceReference>
+                    <defaultSelectedChoiceReference>MatchWO</defaultSelectedChoiceReference>
                     <fieldText>Skill</fieldText>
                     <fieldType>DropdownBox</fieldType>
+                    <helpText>&lt;p&gt;Selecting &quot;Match at least 1 WO Required Skill&quot; will select only those Service Resources in the selected Service Territory who have at least 1 of the required skills on the WO, regardless of Skill Level.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&quot;Not Specified&quot; will select all Service Resources in the selected Service Territory.&lt;/p&gt;</helpText>
                     <isRequired>true</isRequired>
                 </fields>
                 <inputParameters>
