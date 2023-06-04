@@ -16,7 +16,7 @@ Some jobs require a group of resources with varied skills, to go on-site over th
 1. Install Base and Screen Base packs (https://unofficialsf.com/flow-action-and-screen-component-basepacks/)
 2. Install Datatable (https://unofficialsf.com/datatable-lightning-web-component-for-flow-screens-2/)
 3. Install the Service Appointment Generator package 
-    1. Sandbox Installation Link: https://login.salesforce.com/packaging/installPackage.apexp?p0=04t8c000000O9ih&isdtp=p1
+    1. Sandbox Installation Link: https://test.salesforce.com/packaging/installPackage.apexp?p0=04t8c000000a89S
     2. GitHub Repository: https://github.com/cxalbanese/multiresource.git 
 4. Deactivate the Validation Rule on Service Appointment [Dont_allow_scheduled_or_dispatched].
 5. Assign the permission set called [MR_DT_Permission_Set] to the admin users and the scheduling users who will use this package.
